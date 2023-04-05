@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ScheduleMADI.GroupPage">
+
+    <VerticalStackLayout VerticalOptions="Center">
+        <HorizontalStackLayout HorizontalOptions="Center">
+        <Grid RowSpacing="20" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Frame >
+                    <Label Text="Группа:" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center"/>
+                </Frame>
+            <Frame Grid.Row="1">
+                    <SearchBar TextChanged="SearchBar_TextChanged" Placeholder="1бАС1" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" />
+
+                </Frame>
+                <Frame Grid.Row="2">
+                    <ListView x:Name="searchResults" />
+                </Frame>
+        </Grid>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+    
+</ContentPage>

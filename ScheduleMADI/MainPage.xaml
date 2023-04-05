@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:ScheduleMADI"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ScheduleMADI.MainPage">
+    <ContentPage.Behaviors>
+        <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
+    </ContentPage.Behaviors>
+
+    <ScrollView Orientation="Vertical" VerticalOptions="Center" HorizontalOptions="Center">
+        <StackLayout>
+            <controls:SubjectCard CardDay="Еженедельно"
+                              CardName="Сети и телекоммуникации"
+                              CardProf="Самодин А.А."
+                              CardRoom="710л"
+                              CardTime="08:15 - 09:45"
+                              CardType="Лекции"/>
+
+            <controls:SubjectCard CardDay="Числитель"
+                              CardName="Информационные технологии на транспорте"
+                              CardProf="Якубович А.Н."
+                              CardRoom="618л"
+                              CardTime="09:55 - 11:25"
+                              CardType="Практические занятия / семинар"/>
+            <controls:SubjectCard CardDay="Еженедельно"
+                              CardName="Сети и телекоммуникации"
+                              CardProf="Самодин А.А."
+                              CardRoom="710л"
+                              CardTime="08:15 - 09:45"
+                              CardType="Лекции"/>
+            <controls:SubjectCard CardDay="Еженедельно"
+                              CardName="Сети и телекоммуникации"
+                              CardProf="Самодин А.А."
+                              CardRoom="710л"
+                              CardTime="08:15 - 09:45"
+                              CardType="Лекции"/>
+
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>
