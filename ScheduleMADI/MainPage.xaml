@@ -3,13 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:ScheduleMADI"
              xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="ScheduleMADI.MainPage">
+             x:Class="ScheduleMADI.MainPage" Loaded="ContentPage_Loaded">
     <ContentPage.Behaviors>
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
     </ContentPage.Behaviors>
 
-    <ScrollView Orientation="Vertical" VerticalOptions="Center" HorizontalOptions="Center">
-        <StackLayout>
+    <ScrollView Orientation="Vertical">
+        <StackLayout  VerticalOptions="Center" HorizontalOptions="Center">
+            
+            <DatePicker Format="d MMMM, dddd"  HorizontalOptions="Center" Margin="15"/>
+            
             <controls:SubjectCard CardDay="Еженедельно"
                               CardName="Сети и телекоммуникации"
                               CardProf="Самодин А.А."

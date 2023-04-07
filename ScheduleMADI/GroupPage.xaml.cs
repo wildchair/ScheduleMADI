@@ -6,10 +6,9 @@ public partial class GroupPage : ContentPage
 		InitializeComponent();
 	}
 
-
-
-    private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
-    {
+	private void Entry_TextChanged(object sender, TextChangedEventArgs e)
+	{
+        //if (Groups.id_group.Any(x => x.Value.Equals(Finder.Text)))
 
     }
 }

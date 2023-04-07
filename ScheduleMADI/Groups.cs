@@ -1,6 +1,5 @@
 ﻿namespace ScheduleMADI
 {
-
     public static class Groups
     {
         public static Dictionary<string, string> id_group = new();
@@ -33,7 +32,6 @@
                 string id = buff[0], name = buff[1];
                 id_group.Add(id, name);
             }
-            return;
         }
         public async static Task GetShedule()
         {
@@ -53,7 +51,7 @@
             //{
             //    Html = responseString
             //};
-            return;
+
         }
     }
 }

@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ScheduleMADI.GroupPage">
 
-    <VerticalStackLayout VerticalOptions="Center">
-        <HorizontalStackLayout HorizontalOptions="Center">
+    <VerticalStackLayout >
+
         <Grid RowSpacing="20" Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -18,14 +18,14 @@
                     <Label Text="Группа:" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center"/>
                 </Frame>
             <Frame Grid.Row="1">
-                    <SearchBar TextChanged="SearchBar_TextChanged" Placeholder="1бАС1" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" />
+                    <Entry x:Name="Finder" TextChanged="Entry_TextChanged" Placeholder="1бАС1" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" />
 
                 </Frame>
                 <Frame Grid.Row="2">
-                    <ListView x:Name="searchResults" />
+                
                 </Frame>
         </Grid>
-        </HorizontalStackLayout>
+
     </VerticalStackLayout>
     
 </ContentPage>
