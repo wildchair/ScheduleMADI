@@ -1,3 +1,6 @@
+using System.Collections.Specialized;
+using System.ComponentModel;
+
 namespace ScheduleMADI;
 
 public partial class SubjectCard : ContentView

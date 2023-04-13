@@ -35,9 +35,9 @@
 
                     <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding CardName, FallbackValue='Card Name'}" LineBreakMode="WordWrap" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
 
-                    <Label Grid.Row="2" Text="{Binding CardProf, FallbackValue='Card Prof'}"/>
+                <Label Grid.Row="2" VerticalOptions="End" Text="{Binding CardProf, FallbackValue='Card Prof'}"/>
 
-                    <Label Grid.Row="2" Grid.Column="1" HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room'}"/>
+                <Label Grid.Row="2" Grid.Column="1" VerticalOptions="End" HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room'}"/>
                 </Grid>
             </Frame>
         </Grid>

@@ -3,42 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:ScheduleMADI"
              xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="ScheduleMADI.MainPage" Loaded="ContentPage_Loaded">
+             x:Class="ScheduleMADI.MainPage" x:Name="this"
+             Loaded="ContentPage_Loaded" BindingContext="{x:Reference this}">
     <ContentPage.Behaviors>
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
     </ContentPage.Behaviors>
 
     <ScrollView Orientation="Vertical">
-        <StackLayout  VerticalOptions="Center" HorizontalOptions="Center">
-            
-            <DatePicker Format="d MMMM, dddd"  HorizontalOptions="Center" Margin="15"/>
-            
-            <controls:SubjectCard CardDay="Еженедельно"
-                              CardName="Сети и телекоммуникации"
-                              CardProf="Самодин А.А."
-                              CardRoom="710л"
-                              CardTime="08:15 - 09:45"
-                              CardType="Лекции"/>
-
-            <controls:SubjectCard CardDay="Числитель"
-                              CardName="Информационные технологии на транспорте"
-                              CardProf="Якубович А.Н."
-                              CardRoom="618л"
-                              CardTime="09:55 - 11:25"
-                              CardType="Практические занятия / семинар"/>
-            <controls:SubjectCard CardDay="Еженедельно"
-                              CardName="Сети и телекоммуникации"
-                              CardProf="Самодин А.А."
-                              CardRoom="710л"
-                              CardTime="08:15 - 09:45"
-                              CardType="Лекции"/>
-            <controls:SubjectCard CardDay="Еженедельно"
-                              CardName="Сети и телекоммуникации"
-                              CardProf="Самодин А.А."
-                              CardRoom="710л"
-                              CardTime="08:15 - 09:45"
-                              CardType="Лекции"/>
-
+        
+        <StackLayout x:Name="mainStack" VerticalOptions="Center" HorizontalOptions="Center">
+            <DatePicker Format="d MMMM, dddd"  HorizontalOptions="Center" Margin="15" DateSelected="DatePicker_DateSelected"/>
+            <CollectionView x:Name="lst">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <controls:SubjectCard 
+                                  CardDay="{Binding CardDay}" CardName="{Binding CardName}"
+                                  CardProf="{Binding CardProf}" CardRoom="{Binding CardRoom}"
+                                  CardTime="{Binding CardTime}" CardType="{Binding CardType}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </StackLayout>
     </ScrollView>
 
