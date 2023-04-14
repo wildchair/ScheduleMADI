@@ -10,11 +10,11 @@
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
     </ContentPage.Behaviors>
 
-    <ScrollView Orientation="Vertical">
-        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-            <DatePicker x:Name="datePicker" Format="d MMMM, dddd"  HorizontalOptions="Center" Margin="15" 
-                        DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" 
-                        MaximumDate="{Binding MaxDate}"/>
+    <ScrollView Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+        <StackLayout VerticalOptions="Center">
+            <DatePicker x:Name="datePicker" Format="d MMMM, dddd" HorizontalOptions="Center" Margin="15"
+                            DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" 
+                            MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
             <CollectionView ItemsSource="{Binding Cards}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

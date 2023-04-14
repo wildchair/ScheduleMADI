@@ -5,13 +5,9 @@
         internal static List<Day> days = new();
 
         public static bool reloaded = false;
-        public static string Week { get => week; set => week = value; }
-        private static string week;//текущая неделя
 
         public static Dictionary<string, string> id_groups = new();//словарь групп
 
-        public static KeyValuePair<string, string> ID = new(value: "3бАСУ1", key: "8716");
-        
 
         public async static Task GetWeek()
         {
@@ -21,7 +17,7 @@
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            Week = responseString switch
+            WeekMADI.Week = responseString switch
             {
                 "{\"aaData\":[\"\\u0437\"]}" => "Знаменатель",
                 "{\"aaData\":[\"\\u0447\"]}" => "Числитель",
@@ -138,7 +134,8 @@
                                     lesson.Room = buff;
                                     break;
                                 case 5:
-                                    lesson.Prof = buff;
+                                    var a = buff.Split();
+                                    lesson.Prof = a[0] + " " + a[^1];
                                     break;
                             }
                         }
@@ -152,7 +149,8 @@
                             continue;
                         else break;
                     }
-                    days.Add(day);
+                    
+                        days.Add(day);
                 }
 
                 if (buff.Contains("Полнодневные занятия"))
@@ -200,7 +198,18 @@
                         lesson.Day = buff;
 
                         day.Lessons.Add(lesson);
-                        days.Add(day);
+
+                        if (days.Any(x => x.Name == day.Name))//объедиение одинаковых дней
+                            for (int i = 0; i < days.Count; i++)
+                            {
+                                if (days[i].Name == day.Name)
+                                {
+                                    days[i].Lessons = days[i].Lessons.Concat(day.Lessons).ToList();
+                                    break;
+                                }
+                            }
+                        else
+                            days.Add(day);
                         buff = reader.ReadLine();
                     }
                     while (!buff.Contains("</table>"));
