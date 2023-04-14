@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ScheduleMADI.GroupPage">
+             x:Class="ScheduleMADI.GroupPage" x:Name="this" BindingContext="{x:Reference this}">
 
     <VerticalStackLayout >
 
@@ -14,16 +14,15 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Frame >
+                <Frame>
                     <Label Text="Группа:" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center"/>
                 </Frame>
             <Frame Grid.Row="1">
-                    <Entry x:Name="Finder" TextChanged="Entry_TextChanged" Placeholder="1бАС1" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" />
-
-                </Frame>
+                <Entry x:Name="entry" TextChanged="Entry_TextChanged" Placeholder="1бАС1" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" />
+            </Frame>
                 <Frame Grid.Row="2">
-                
-                </Frame>
+                <Button Text="{Binding Button_text}" IsEnabled="{Binding Button_is_enabled}" Clicked="Button_Clicked"/>
+            </Frame>
         </Grid>
 
     </VerticalStackLayout>

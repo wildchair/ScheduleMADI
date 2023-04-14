@@ -4,16 +4,18 @@
              xmlns:controls="clr-namespace:ScheduleMADI"
              xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ScheduleMADI.MainPage" x:Name="this"
-             Loaded="ContentPage_Loaded" BindingContext="{x:Reference this}">
+             Loaded="ContentPage_Loaded"  BindingContext="{x:Reference this}"
+             Appearing="This_Appearing">
     <ContentPage.Behaviors>
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
     </ContentPage.Behaviors>
 
     <ScrollView Orientation="Vertical">
-        
-        <StackLayout x:Name="mainStack" VerticalOptions="Center" HorizontalOptions="Center">
-            <DatePicker Format="d MMMM, dddd"  HorizontalOptions="Center" Margin="15" DateSelected="DatePicker_DateSelected"/>
-            <CollectionView x:Name="lst">
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+            <DatePicker x:Name="datePicker" Format="d MMMM, dddd"  HorizontalOptions="Center" Margin="15" 
+                        DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" 
+                        MaximumDate="{Binding MaxDate}"/>
+            <CollectionView ItemsSource="{Binding Cards}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <controls:SubjectCard 
@@ -25,5 +27,4 @@
             </CollectionView>
         </StackLayout>
     </ScrollView>
-
 </ContentPage>

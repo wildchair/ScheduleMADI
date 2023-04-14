@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:ScheduleMADI">
 
     <TabBar>
-        <Tab Title="Расписание"  >
+        <Tab Title="Расписание">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
         </Tab>
 

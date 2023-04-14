@@ -2,10 +2,17 @@
 {
     public static class ParseMADI
     {
-        internal static List<Day> days = new(1);
-        public static string week;
+        internal static List<Day> days = new();
 
-        public static Dictionary<string, string> id_group = new();
+        public static bool reloaded = false;
+        public static string Week { get => week; set => week = value; }
+        private static string week;//текущая неделя
+
+        public static Dictionary<string, string> id_groups = new();//словарь групп
+
+        public static KeyValuePair<string, string> ID = new(value: "3бАСУ1", key: "8716");
+        
+
         public async static Task GetWeek()
         {
             HttpClient httpClient = new();
@@ -14,7 +21,7 @@
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            week = responseString switch
+            Week = responseString switch
             {
                 "{\"aaData\":[\"\\u0437\"]}" => "Знаменатель",
                 "{\"aaData\":[\"\\u0447\"]}" => "Числитель",
@@ -48,11 +55,15 @@
                 buff.RemoveAll(str => str.Length == 0);
 
                 string id = buff[0], name = buff[1];
-                id_group.Add(id, name);
+                id_groups.Add(id, name);
             }
         }
         public async static Task GetShedule(string gp_id)
         {
+            days.Clear();
+            days.Add(new Day(DayOfWeek.Sunday)
+            { Lessons = new List<Lesson>() { new Lesson { Name = "Выходной день", Day = "Еженедельно" } } });
+
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "tab", "7" },
@@ -66,6 +77,8 @@
 
             StringReader reader = new(responseString);
 
+            reloaded = true;
+
             string buff;
             while ((buff = reader.ReadLine()) != null)
             {
@@ -74,7 +87,7 @@
 
                     buff = ParseDataHTML(buff);
                     DayOfWeek dayOfWeek = DayOfWeek.Monday;
-                    switch(buff)
+                    switch (buff)
                     {
                         case "Понедельник":
                             dayOfWeek = DayOfWeek.Monday;
@@ -109,19 +122,25 @@
                             buff = ParseDataHTML(buff);
                             switch (i)
                             {
-                                case 0: lesson.Time = buff;
+                                case 0:
+                                    lesson.Time = buff;
                                     break;
-                                case 1: lesson.Name = buff;
+                                case 1:
+                                    lesson.Name = buff;
                                     break;
-                                case 2: lesson.Type = buff;
+                                case 2:
+                                    lesson.Type = buff;
                                     break;
-                                case 3: lesson.Day = buff;
+                                case 3:
+                                    lesson.Day = buff;
                                     break;
-                                case 4: lesson.Room = buff;
+                                case 4:
+                                    lesson.Room = buff;
                                     break;
-                                case 5: lesson.Prof = buff;
+                                case 5:
+                                    lesson.Prof = buff;
                                     break;
-                            } 
+                            }
                         }
                         day.Lessons.Add(lesson);
 
@@ -137,7 +156,7 @@
                 }
 
                 if (buff.Contains("Полнодневные занятия"))
-                {          
+                {
                     reader.ReadLine();
                     reader.ReadLine();
 
@@ -178,7 +197,7 @@
 
                         buff = reader.ReadLine();
                         buff = ParseDataHTML(buff);
-                        lesson.Type = buff;
+                        lesson.Day = buff;
 
                         day.Lessons.Add(lesson);
                         days.Add(day);
