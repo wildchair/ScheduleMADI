@@ -4,9 +4,8 @@ namespace ScheduleMADI;
 
 public partial class MainPage : ContentPage
 {
-    public ObservableCollection<SubjectCard> Cards { get => cards; set => cards = value; }
-    private ObservableCollection<SubjectCard> cards = new();
-
+    public ObservableCollection<DayView> CarouselDay { get => carouselDay; set => carouselDay = value; }
+    private ObservableCollection<DayView> carouselDay = new() { new DayView() };
     public DateTime MinDate { get => minDate; set => minDate = value; }
     private DateTime minDate = DateTime.Now.AddMonths(-1);
     public DateTime MaxDate { get => maxDate; set => maxDate = value; }
@@ -71,13 +70,13 @@ public partial class MainPage : ContentPage
         var day = ParseMADI.days.Single(x => x.Name == e.NewDate.DayOfWeek);
         var weekByDate = WeekMADI.WeekByDate(today, e.NewDate);
 
-        Cards.Clear();
+        CarouselDay[0].Cards.Clear();
         
         foreach (var lesson in day.Lessons)
             if (lesson.Day == weekByDate || lesson.Day == "Еженедельно"
                 || (weekByDate == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
                 || (weekByDate == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
-                Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
+                CarouselDay[0].Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
     }
 
     private async void Entry_TextChanged(object sender, TextChangedEventArgs e)
@@ -97,13 +96,13 @@ public partial class MainPage : ContentPage
 
             var day = ParseMADI.days.Single(x => x.Name == today.DayOfWeek);
 
-            Cards.Clear();
+            CarouselDay[0].Cards.Clear();
 
             foreach (var lesson in day.Lessons)
                 if (lesson.Day == WeekMADI.Week || lesson.Day == "Еженедельно"
                     || (WeekMADI.Week == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
                     || (WeekMADI.Week == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
-                    Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
+                    CarouselDay[0].Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
             Datepicker_is_enabled = true;
             datePicker.Date = today.Date;
             return;
