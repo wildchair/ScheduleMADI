@@ -9,29 +9,31 @@
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
     </ContentPage.Behaviors>
 
-    <ScrollView Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-        <StackLayout VerticalOptions="Center">
-            <Grid Margin="15">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+    <StackLayout>
+        <Grid Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
 
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                <DatePicker x:Name="datePicker" Format="d MMMM, dddd" HorizontalOptions="Start"
+            <DatePicker x:Name="datePicker" Format="d MMMM, dddd" HorizontalOptions="Start"
                             DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" 
                             MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
 
-                <Label Grid.Column="1" Text="Группа:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
-                <Entry Grid.Column="2" Placeholder="1бАС1" HorizontalTextAlignment="End" VerticalTextAlignment="Center"
+            <Label Grid.Column="1" Text="Группа:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+            <Entry Grid.Column="2" Placeholder="1бАС1" HorizontalTextAlignment="End" VerticalTextAlignment="Center"
                        TextChanged="Entry_TextChanged" Text="{Binding EntryText}"/>
 
-            </Grid>
+        </Grid>
 
+        <Border></Border>
+
+        <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
             <CollectionView ItemsSource="{Binding Cards}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -42,6 +44,6 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </StackLayout>
-    </ScrollView>
+        </ScrollView>
+    </StackLayout>
 </ContentPage>

@@ -70,7 +70,9 @@ public partial class MainPage : ContentPage
     {
         var day = ParseMADI.days.Single(x => x.Name == e.NewDate.DayOfWeek);
         var weekByDate = WeekMADI.WeekByDate(today, e.NewDate);
+
         Cards.Clear();
+
         foreach (var lesson in day.Lessons)
             if (lesson.Day == weekByDate || lesson.Day == "Еженедельно"
                 || (weekByDate == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
@@ -94,7 +96,9 @@ public partial class MainPage : ContentPage
             }
 
             var day = ParseMADI.days.Single(x => x.Name == today.DayOfWeek);
+
             Cards.Clear();
+
             foreach (var lesson in day.Lessons)
                 if (lesson.Day == WeekMADI.Week || lesson.Day == "Еженедельно"
                     || (WeekMADI.Week == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
