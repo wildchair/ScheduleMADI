@@ -105,9 +105,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="GroupPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="SubjectCard.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

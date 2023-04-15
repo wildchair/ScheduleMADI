@@ -4,17 +4,34 @@
              xmlns:controls="clr-namespace:ScheduleMADI"
              xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ScheduleMADI.MainPage" x:Name="this"
-             Loaded="ContentPage_Loaded"  BindingContext="{x:Reference this}"
-             Appearing="This_Appearing">
+             Loaded="ContentPage_Loaded"  BindingContext="{x:Reference this}">
     <ContentPage.Behaviors>
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
     </ContentPage.Behaviors>
 
     <ScrollView Orientation="Vertical" HorizontalOptions="CenterAndExpand">
         <StackLayout VerticalOptions="Center">
-            <DatePicker x:Name="datePicker" Format="d MMMM, dddd" HorizontalOptions="Center" Margin="15"
+            <Grid Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <DatePicker x:Name="datePicker" Format="d MMMM, dddd" HorizontalOptions="Start"
                             DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" 
                             MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
+
+                <Label Grid.Column="1" Text="Группа:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                <Entry Grid.Column="2" Placeholder="1бАС1" HorizontalTextAlignment="End" VerticalTextAlignment="Center"
+                       TextChanged="Entry_TextChanged" Text="{Binding EntryText}"/>
+
+            </Grid>
+
             <CollectionView ItemsSource="{Binding Cards}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

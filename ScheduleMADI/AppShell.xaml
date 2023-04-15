@@ -10,9 +10,9 @@
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
         </Tab>
 
-        <Tab Title="Группа" >
+        <!--<Tab Title="Группа" >
             <ShellContent ContentTemplate="{DataTemplate local:GroupPage}"/>
-        </Tab>
+        </Tab>-->
     </TabBar>
 
 </Shell>

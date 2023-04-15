@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Net.Sockets;
 
 namespace ScheduleMADI;
 
@@ -12,6 +11,20 @@ public partial class MainPage : ContentPage
     private DateTime minDate = DateTime.Now.AddMonths(-1);
     public DateTime MaxDate { get => maxDate; set => maxDate = value; }
     private DateTime maxDate = DateTime.Now.AddMonths(2);
+
+    public string EntryText
+    {
+        get => entryText;
+        set
+        {
+            if (entryText != value)
+            {
+                entryText = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    private string entryText;
 
     private DateTime today = DateTime.Now.Date;
 
@@ -50,25 +63,7 @@ public partial class MainPage : ContentPage
         if (!Preferences.Default.ContainsKey("id_group"))
             return;
         IdMADI.Id = IdMADI.LoadSavedID();
-
-        try
-        {
-            await ParseMADI.GetShedule($"{IdMADI.Id.Key}");
-        }
-        catch
-        {
-            await DisplayAlert("Ошибка", "Не удалось загрузить расписание :(\nВозможно, нет соединения с интернетом.", "Ок");
-            return;
-        }
-
-        var day = ParseMADI.days.Single(x => x.Name == today.DayOfWeek);
-        foreach (var lesson in day.Lessons)
-            if (lesson.Day == WeekMADI.Week || lesson.Day == "Еженедельно" 
-                || (WeekMADI.Week == "Знаменатель" && lesson.Day=="Знам. 1 раз в месяц") 
-                || (WeekMADI.Week == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
-                Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
-        Datepicker_is_enabled = true;
-        return;
+        EntryText = IdMADI.Id.Value;
     }
 
     private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
@@ -83,10 +78,21 @@ public partial class MainPage : ContentPage
                 Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
     }
 
-    private void This_Appearing(object sender, EventArgs e)
+    private async void Entry_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if(ParseMADI.reloaded)
+        if (ParseMADI.id_groups.Any(x => x.Value.ToLower().Equals(e.NewTextValue.ToLower())))
         {
+            IdMADI.Id = ParseMADI.id_groups.Where(x => x.Value.ToLower().Equals(e.NewTextValue.ToLower())).Single();
+            try
+            {
+                await ParseMADI.GetShedule(IdMADI.Id.Key);
+            }
+            catch
+            {
+                await DisplayAlert("Ошибка", "Не удалось загрузить расписание :(\nВозможно, нет соединения с интернетом.", "Ок");
+                return;
+            }
+
             var day = ParseMADI.days.Single(x => x.Name == today.DayOfWeek);
             Cards.Clear();
             foreach (var lesson in day.Lessons)
@@ -94,9 +100,9 @@ public partial class MainPage : ContentPage
                     || (WeekMADI.Week == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
                     || (WeekMADI.Week == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
                     Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
-            ParseMADI.reloaded = false;
             Datepicker_is_enabled = true;
             datePicker.Date = today.Date;
+            return;
         }
     }
 }
