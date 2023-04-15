@@ -34,7 +34,7 @@
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CollectionView ItemsSource="{Binding Cards}">
+            <CollectionView x:Name="collView" ItemsSource="{Binding Cards}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <controls:SubjectCard 

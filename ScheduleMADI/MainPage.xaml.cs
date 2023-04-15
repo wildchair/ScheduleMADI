@@ -72,7 +72,7 @@ public partial class MainPage : ContentPage
         var weekByDate = WeekMADI.WeekByDate(today, e.NewDate);
 
         Cards.Clear();
-
+        
         foreach (var lesson in day.Lessons)
             if (lesson.Day == weekByDate || lesson.Day == "Еженедельно"
                 || (weekByDate == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
