@@ -5,7 +5,7 @@ namespace ScheduleMADI;
 public partial class MainPage : ContentPage
 {
     public ObservableCollection<DayView> CarouselDay { get => carouselDay; set => carouselDay = value; }
-    private ObservableCollection<DayView> carouselDay = new() { new DayView() };
+    private ObservableCollection<DayView> carouselDay = new() { new DayView(), new DayView(), new DayView() };
     public DateTime MinDate { get => minDate; set => minDate = value; }
     private DateTime minDate = DateTime.Now.AddMonths(-1);
     public DateTime MaxDate { get => maxDate; set => maxDate = value; }
@@ -67,16 +67,19 @@ public partial class MainPage : ContentPage
 
     private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
     {
-        var day = ParseMADI.days.Single(x => x.Name == e.NewDate.DayOfWeek);
-        var weekByDate = WeekMADI.WeekByDate(today, e.NewDate);
+        for (int i = 0; i < 3; i++)
+        {
+            var day = ParseMADI.days.Single(x => x.Name == e.NewDate.AddDays(i).DayOfWeek);
+            var weekByDate = WeekMADI.WeekByDate(today, e.NewDate);
 
-        CarouselDay[0].Cards.Clear();
-        
-        foreach (var lesson in day.Lessons)
-            if (lesson.Day == weekByDate || lesson.Day == "Еженедельно"
-                || (weekByDate == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
-                || (weekByDate == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
-                CarouselDay[0].Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
+            CarouselDay[i].Cards.Clear();
+
+            foreach (var lesson in day.Lessons)
+                if (lesson.Day == weekByDate || lesson.Day == "Еженедельно"
+                    || (weekByDate == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
+                    || (weekByDate == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
+                    CarouselDay[i].Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
+        }
     }
 
     private async void Entry_TextChanged(object sender, TextChangedEventArgs e)
@@ -93,19 +96,27 @@ public partial class MainPage : ContentPage
                 await DisplayAlert("Ошибка", "Не удалось загрузить расписание :(\nВозможно, нет соединения с интернетом.", "Ок");
                 return;
             }
+            for (int i = 0; i < 3; i++)
+            {
+                var day = ParseMADI.days.Single(x => x.Name == today.AddDays(i).DayOfWeek);
 
-            var day = ParseMADI.days.Single(x => x.Name == today.DayOfWeek);
+                CarouselDay[i].Cards.Clear();
 
-            CarouselDay[0].Cards.Clear();
+                foreach (var lesson in day.Lessons)
+                    if (lesson.Day == WeekMADI.Week || lesson.Day == "Еженедельно"
+                        || (WeekMADI.Week == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
+                        || (WeekMADI.Week == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
+                        CarouselDay[i].Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
+            }
 
-            foreach (var lesson in day.Lessons)
-                if (lesson.Day == WeekMADI.Week || lesson.Day == "Еженедельно"
-                    || (WeekMADI.Week == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
-                    || (WeekMADI.Week == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
-                    CarouselDay[0].Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
             Datepicker_is_enabled = true;
             datePicker.Date = today.Date;
             return;
         }
+    }
+
+    private void CarouselView_RemainingItemsThresholdReached(object sender, EventArgs e)
+    {
+
     }
 }

@@ -34,7 +34,8 @@
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CarouselView ItemsSource="{Binding CarouselDay}" Loop="False" HorizontalOptions="FillAndExpand">
+            <CarouselView ItemsSource="{Binding CarouselDay}" Loop="False" HorizontalOptions="FillAndExpand"
+                          RemainingItemsThreshold="2" RemainingItemsThresholdReached="CarouselView_RemainingItemsThresholdReached">
                 <CarouselView.ItemTemplate>
                     <DataTemplate>
                         <CollectionView x:Name="collView" ItemsSource="{Binding Cards}">
