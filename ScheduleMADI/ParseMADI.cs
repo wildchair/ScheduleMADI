@@ -51,7 +51,8 @@
                 buff.RemoveAll(str => str.Length == 0);
 
                 string id = buff[0], name = buff[1];
-                id_groups.Add(id, name);
+                if (!id_groups.ContainsKey(id))
+                    id_groups.Add(id, name);
             }
         }
         public async static Task GetShedule(string gp_id)
@@ -149,8 +150,8 @@
                             continue;
                         else break;
                     }
-                    
-                        days.Add(day);
+
+                    days.Add(day);
                 }
 
                 if (buff.Contains("Полнодневные занятия"))
