@@ -29,10 +29,13 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<SignAssembly>False</SignAssembly>
-		<Title>ScheduleMADI</Title>
 		<Authors>WildChair</Authors>
 		<PackageIcon></PackageIcon>
 		<PlatformTarget>AnyCPU</PlatformTarget>
+		<NeutralLanguage>ru</NeutralLanguage>
+		<Product>$(AssemblyName)</Product>
+		<Title>Расписание</Title>
+		<DefaultLanguage>ru</DefaultLanguage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
@@ -48,36 +51,70 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	  <Optimize>True</Optimize>
+	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
+		<AndroidSigningKeyStore>..\shedule.keystore</AndroidSigningKeyStore>
+		<AndroidSigningStorePass></AndroidSigningStorePass>
+		<AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass></AndroidSigningKeyPass>
+		<ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+		<ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+		<ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
+	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
+	</PropertyGroup>
+
+	
 	<ItemGroup>
 		<!-- App Icon -->
 
@@ -115,7 +152,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiIcon Include="Resources\AppIcon\appicon.svg" />
+	  <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#dae1ec" />
 	</ItemGroup>
 
 	<ItemGroup>

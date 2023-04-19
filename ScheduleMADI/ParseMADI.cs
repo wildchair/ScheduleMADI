@@ -37,23 +37,44 @@
 
             var response = await httpClient.PostAsync("https://www.madi.ru/tplan/tasks/task3,7_fastview.php", content);
             var responseString = await response.Content.ReadAsStringAsync();
-            var str = responseString.Split(' ').ToList();
-            str.RemoveAll(str => !str.Contains("value"));
-            char[] charsToTrim = { '<', '>', '/', 'l', 'i', '"' };
-            for (int i = 0; i < str.Count; i++)
-            {
-                str[i] = str[i].Remove(0, 7).Replace('<', ' ').Replace('>', ' ').Replace('/', ' ').Replace('l', ' ').Replace('i', ' ').Replace('"', ' ');
-            }
 
-            foreach (var item in str)
-            {
-                var buff = item.Split(" ").ToList();
-                buff.RemoveAll(str => str.Length == 0);
+            StringReader reader = new(responseString);
 
-                string id = buff[0], name = buff[1];
+            for (int i = 0; i < 11; i++)
+                reader.ReadLine();
+            var list_buff = reader.ReadLine().Split("</li>").ToList();
+            list_buff.RemoveAll(x => x == string.Empty);
+            reader.Close();
+
+            foreach (var buff in list_buff)
+            {
+                var group_buff = ParseDataHTML(buff).Trim().Split("\"").ToList();
+                group_buff.RemoveAll(x => x == string.Empty);
+                var id = group_buff[0].Trim();
+                var name = group_buff[1].Replace(" ", String.Empty);
                 if (!id_groups.ContainsKey(id))
                     id_groups.Add(id, name);
             }
+
+
+
+            //var str = responseString.Split(' ').ToList();
+            //str.RemoveAll(str => !str.Contains("value"));
+            //char[] charsToTrim = { '<', '>', '/', 'l', 'i', '"' };
+            //for (int i = 0; i < str.Count; i++)
+            //{
+            //    str[i] = str[i].Remove(0, 7).Replace('<', ' ').Replace('>', ' ').Replace('/', ' ').Replace('l', ' ').Replace('i', ' ').Replace('"', ' ');
+            //}
+
+            //foreach (var item in str)
+            //{
+            //    var buff = item.Split(" ").ToList();
+            //    buff.RemoveAll(str => str.Length == 0);
+
+            //    string id = buff[0], name = buff[1];
+            //    if (!id_groups.ContainsKey(id))
+            //        id_groups.Add(id, name);
+            //}
         }
         public async static Task GetShedule(string gp_id)
         {
@@ -221,7 +242,8 @@
         private static string? ParseDataHTML(string? data, List<string> strToDelete = null)
         {
             strToDelete ??= new() { "table class=\"timetable\"", "colspan=6", "style=\"white-space:pre-wrap\"",
-                                         "<", ">", "/", "br", "th", "tr", "td", "b", "colspan=\"2\"", "rowspan=\"1\"" };
+                                    "<", ">", "/", "br", "th", "tr", "td", "b", "colspan=\"2\"",
+                                    "rowspan=\"1\"", "li", "class", "value=" };
             foreach (var str in strToDelete)
                 data = data.Replace(str, string.Empty).Trim();
             return data;

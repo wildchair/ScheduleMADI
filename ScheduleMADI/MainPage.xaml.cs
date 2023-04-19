@@ -42,6 +42,20 @@ public partial class MainPage : ContentPage
     }
     private bool datepicker_is_enabled = false;
 
+    public bool Entry_is_enabled
+    {
+        get => entry_is_enabled;
+        set
+        {
+            if (entry_is_enabled != value)
+            {
+                entry_is_enabled = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    private bool entry_is_enabled = true;
+
     public MainPage()
     {
         InitializeComponent();
@@ -84,6 +98,9 @@ public partial class MainPage : ContentPage
     {
         if (ParseMADI.id_groups.Any(x => x.Value.ToLower().Equals(e.NewTextValue.ToLower())))
         {
+            Entry_is_enabled = false;
+            Entry_is_enabled = true;
+
             IdMADI.Id = ParseMADI.id_groups.Where(x => x.Value.ToLower().Equals(e.NewTextValue.ToLower())).Single();
             try
             {

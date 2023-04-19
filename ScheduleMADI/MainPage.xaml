@@ -27,7 +27,7 @@
 
             <Label Grid.Column="1" Text="Группа:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
             <Entry Grid.Column="2" Placeholder="1бАС1" HorizontalTextAlignment="End" VerticalTextAlignment="Center"
-                       TextChanged="Entry_TextChanged" Text="{Binding EntryText}"/>
+                       TextChanged="Entry_TextChanged" Text="{Binding EntryText}" IsEnabled="{Binding Entry_is_enabled}"/>
 
         </Grid>
 
