@@ -1,13 +1,13 @@
-﻿namespace ScheduleMADI
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using System.Collections.ObjectModel;
+
+namespace ScheduleMADI
 {
     public static class ParseMADI
     {
-        internal static List<Day> days = new();
-
         public static bool reloaded = false;
 
         public static Dictionary<string, string> id_groups = new();//словарь групп
-
 
         public async static Task GetWeek()
         {
@@ -76,11 +76,17 @@
             //        id_groups.Add(id, name);
             //}
         }
-        public async static Task GetShedule(string gp_id)
+        public async static Task<List<Day>> GetShedule(string gp_id)
         {
-            days.Clear();
-            days.Add(new Day(DayOfWeek.Sunday)
-            { Lessons = new List<Lesson>() { new Lesson { Name = "Выходной день", Day = "Еженедельно" } } });
+            List<Day> days = new()
+            {
+                new Day(DayOfWeek.Monday), new Day(DayOfWeek.Tuesday),
+                new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
+                new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
+                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } } }
+            };
+
 
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
@@ -96,6 +102,10 @@
             StringReader reader = new(responseString);
 
             reloaded = true;
+
+            foreach (var day in days)
+                if (day.Name != DayOfWeek.Sunday)
+                    day.Lessons.Clear();
 
             string buff;
             while ((buff = reader.ReadLine()) != null)
@@ -126,7 +136,7 @@
                             dayOfWeek = DayOfWeek.Saturday;
                             break;
                     }
-                    var day = new Day(dayOfWeek);
+                    var day = days.Find(x => x.Name == dayOfWeek);
 
                     for (int i = 0; i < 9; i++)//пропуск шапки
                         reader.ReadLine();
@@ -141,26 +151,27 @@
                             switch (i)
                             {
                                 case 0:
-                                    lesson.Time = buff;
+                                    lesson.CardTime = buff;
                                     break;
                                 case 1:
-                                    lesson.Name = buff;
+                                    lesson.CardName = buff;
                                     break;
                                 case 2:
-                                    lesson.Type = buff;
+                                    lesson.CardType = buff;
                                     break;
                                 case 3:
-                                    lesson.Day = buff;
+                                    lesson.CardDay = buff;
                                     break;
                                 case 4:
-                                    lesson.Room = buff;
+                                    lesson.CardRoom = buff;
                                     break;
                                 case 5:
                                     var a = buff.Split();
-                                    lesson.Prof = a[0] + " " + a[^1];
+                                    lesson.CardProf = a[0] + " " + a[^1];
                                     break;
                             }
                         }
+
                         day.Lessons.Add(lesson);
 
                         string scout = string.Empty;//отслеживание границы между днями
@@ -171,8 +182,6 @@
                             continue;
                         else break;
                     }
-
-                    days.Add(day);
                 }
 
                 if (buff.Contains("Полнодневные занятия"))
@@ -206,38 +215,30 @@
                                 dayOfWeek = DayOfWeek.Saturday;
                                 break;
                         }
-                        var day = new Day(dayOfWeek);
+                        var day = days.Find(x => x.Name == dayOfWeek);
 
                         var lesson = new Lesson();
                         reader.ReadLine();
 
                         buff = reader.ReadLine();
                         buff = ParseDataHTML(buff);
-                        lesson.Name = buff;
+                        lesson.CardName = buff;
 
                         buff = reader.ReadLine();
                         buff = ParseDataHTML(buff);
-                        lesson.Day = buff;
+                        lesson.CardDay = buff;
+
 
                         day.Lessons.Add(lesson);
 
-                        if (days.Any(x => x.Name == day.Name))//объедиение одинаковых дней
-                            for (int i = 0; i < days.Count; i++)
-                            {
-                                if (days[i].Name == day.Name)
-                                {
-                                    days[i].Lessons = days[i].Lessons.Concat(day.Lessons).ToList();
-                                    break;
-                                }
-                            }
-                        else
-                            days.Add(day);
                         buff = reader.ReadLine();
                     }
                     while (!buff.Contains("</table>"));
                     break;
                 }
             }
+
+            return days;
         }
         private static string? ParseDataHTML(string? data, List<string> strToDelete = null)
         {

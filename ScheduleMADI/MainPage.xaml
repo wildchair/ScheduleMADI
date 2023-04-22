@@ -34,16 +34,22 @@
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CollectionView ItemsSource="{Binding Cards}">
-                <CollectionView.ItemTemplate>
+            <CarouselView x:Name="daysCarousel" ItemsSource="{Binding Days}">
+                <CarouselView.ItemTemplate>
                     <DataTemplate>
-                        <controls:SubjectCard 
+                        <CollectionView ItemsSource="{Binding Lessons}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:SubjectCard 
                                   CardDay="{Binding CardDay}" CardName="{Binding CardName}"
                                   CardProf="{Binding CardProf}" CardRoom="{Binding CardRoom}"
                                   CardTime="{Binding CardTime}" CardType="{Binding CardType}"/>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
         </ScrollView>
     </StackLayout>
 </ContentPage>

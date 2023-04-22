@@ -4,9 +4,10 @@ namespace ScheduleMADI;
 
 public partial class MainPage : ContentPage
 {
-    public ObservableCollection<SubjectCard> Cards { get => cards; set => cards = value; }
-    private ObservableCollection<SubjectCard> cards = new();
+    private List<Day> shedule;//фулл расписание 
 
+    public ObservableCollection<Day> Days { get => days; set { days = value; OnPropertyChanged(); } }
+    private ObservableCollection<Day> days = new();
     public DateTime MinDate { get => minDate; set => minDate = value; }
     private DateTime minDate = DateTime.Now.AddMonths(-1);
     public DateTime MaxDate { get => maxDate; set => maxDate = value; }
@@ -82,16 +83,7 @@ public partial class MainPage : ContentPage
 
     private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
     {
-        var day = ParseMADI.days.Single(x => x.Name == e.NewDate.DayOfWeek);
-        var weekByDate = WeekMADI.WeekByDate(today, e.NewDate);
 
-        Cards.Clear();
-
-        foreach (var lesson in day.Lessons)
-            if (lesson.Day == weekByDate || lesson.Day == "Еженедельно"
-                || (weekByDate == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
-                || (weekByDate == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
-                Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
     }
 
     private async void Entry_TextChanged(object sender, TextChangedEventArgs e)
@@ -104,7 +96,7 @@ public partial class MainPage : ContentPage
             IdMADI.Id = ParseMADI.id_groups.Where(x => x.Value.ToLower().Equals(e.NewTextValue.ToLower())).Single();
             try
             {
-                await ParseMADI.GetShedule(IdMADI.Id.Key);
+                shedule = await ParseMADI.GetShedule(IdMADI.Id.Key);
             }
             catch
             {
@@ -112,18 +104,79 @@ public partial class MainPage : ContentPage
                 return;
             }
 
-            var day = ParseMADI.days.Single(x => x.Name == today.DayOfWeek);
+            List<Day> days1 = new List<Day>()
+            {
+            new Day(DayOfWeek.Monday, new ObservableCollection<Lesson>(), "Числитель"),
+            new Day(DayOfWeek.Tuesday, new ObservableCollection<Lesson>(), "Числитель"),
+            new Day(DayOfWeek.Wednesday, new ObservableCollection<Lesson>(), "Числитель"),
+            new Day(DayOfWeek.Thursday, new ObservableCollection<Lesson>(), "Числитель"),
+            new Day(DayOfWeek.Friday, new ObservableCollection<Lesson>(), "Числитель"),
+            new Day(DayOfWeek.Saturday, new ObservableCollection<Lesson>(), "Числитель"),
+            new Day(DayOfWeek.Sunday, new ObservableCollection < Lesson >(), "Числитель")
+            };
+            List<Day> days2 = new List<Day>()
+            {
+            new Day(DayOfWeek.Monday, new ObservableCollection<Lesson>(), "Знаменатель"),
+            new Day(DayOfWeek.Tuesday, new ObservableCollection<Lesson>(), "Знаменатель"),
+            new Day(DayOfWeek.Wednesday, new ObservableCollection<Lesson>(),"Знаменатель"),
+            new Day(DayOfWeek.Thursday, new ObservableCollection<Lesson>(), "Знаменатель"),
+            new Day(DayOfWeek.Friday, new ObservableCollection<Lesson>(), "Знаменатель"),
+            new Day(DayOfWeek.Saturday, new ObservableCollection<Lesson>(), "Знаменатель"),
+            new Day(DayOfWeek.Sunday, new ObservableCollection < Lesson >(), "Знаменатель")
+            };
 
-            Cards.Clear();
+            for (int i = 0; i < 7; i++)
+                foreach (var lesson in shedule[i].Lessons)
+                    if (lesson.CardDay == "Еженедельно")
+                    {
+                        days1[i].Lessons.Add(new Lesson
+                        {
+                            CardDay = lesson.CardDay,
+                            CardName = lesson.CardName,
+                            CardProf = lesson.CardProf,
+                            CardRoom = lesson.CardRoom,
+                            CardTime = lesson.CardTime,
+                            CardType = lesson.CardType
+                        });
+                        days2[i].Lessons.Add(new Lesson
+                        {
+                            CardDay = lesson.CardDay,
+                            CardName = lesson.CardName,
+                            CardProf = lesson.CardProf,
+                            CardRoom = lesson.CardRoom,
+                            CardTime = lesson.CardTime,
+                            CardType = lesson.CardType
+                        });
+                    }
+                    else if (lesson.CardDay == "Числитель" || lesson.CardDay == "Числ. 1 раз в месяц")
+                    {
+                        days1[i].Lessons.Add(new Lesson
+                        {
+                            CardDay = lesson.CardDay,
+                            CardName = lesson.CardName,
+                            CardProf = lesson.CardProf,
+                            CardRoom = lesson.CardRoom,
+                            CardTime = lesson.CardTime,
+                            CardType = lesson.CardType
+                        });
+                    }
+                    else
+                    {
+                        days2[i].Lessons.Add(new Lesson
+                        {
+                            CardDay = lesson.CardDay,
+                            CardName = lesson.CardName,
+                            CardProf = lesson.CardProf,
+                            CardRoom = lesson.CardRoom,
+                            CardTime = lesson.CardTime,
+                            CardType = lesson.CardType
+                        });
+                    }
+            Days.Clear();
+            Days = new ObservableCollection<Day>(days1.Concat(days2));
+            shedule.Clear();
 
-            foreach (var lesson in day.Lessons)
-                if (lesson.Day == WeekMADI.Week || lesson.Day == "Еженедельно"
-                    || (WeekMADI.Week == "Знаменатель" && lesson.Day == "Знам. 1 раз в месяц")
-                    || (WeekMADI.Week == "Числитель" && lesson.Day == "Числ. 1 раз в месяц"))
-                    Cards.Add(new SubjectCard { CardDay = lesson.Day, CardName = lesson.Name, CardProf = lesson.Prof, CardRoom = lesson.Room, CardTime = lesson.Time, CardType = lesson.Type });
-            Datepicker_is_enabled = true;
-            datePicker.Date = today.Date;
-            return;
+            daysCarousel.ScrollTo(8);//сделать на двухсторонней привязке данных, мейби заработает. Не скроллит, оставляет первый элемент
         }
     }
 }

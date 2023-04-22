@@ -8,19 +8,12 @@
             set
             { 
                 week = value;
-                //weekLoadDate = DateTime.Now.Date;//
             }
         }
         private static string week;//текущая неделя
-        //private static DateTime weekLoadDate;///
 
         public static string WeekByDate(DateTime now_date,DateTime date)
         {
-            //var now_date = DateTime.Now.Date;
-
-            //if (0 != DateTime.Compare(now_date, weekLoadDate))//протестировать в полночь на понедельник,
-            //    Week = WeekByDate(now_date);
-
             string weekByDate = Week;
             
 

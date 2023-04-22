@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ScheduleMADI
 {
-    internal class Lesson
+    public class Lesson
     {
 #nullable enable
-        public string? Time { get; set; }
-        public string? Day { get; set; }
-        public string? Type { get; set; }
-        public string? Name { get; set; }
-        public string? Prof { get; set; }
-        public string? Room { get; set; }
+        public string? CardTime { get; set; }
+        public string? CardDay { get; set; }
+        public string? CardType { get; set; }
+        public string? CardName { get; set; }
+        public string? CardProf { get; set; }
+        public string? CardRoom { get; set; }
 #nullable disable
     }
 }
