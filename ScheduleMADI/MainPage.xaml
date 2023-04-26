@@ -21,8 +21,8 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <DatePicker x:Name="datePicker" Format="d MMMM, dddd" HorizontalOptions="Start"
-                            DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" 
+            <DatePicker     Format="d MMMM, dddd" HorizontalOptions="Start"
+                            DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" Date="{Binding DatepickerDate}"
                             MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
 
             <Label Grid.Column="1" Text="Группа:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
@@ -34,13 +34,13 @@
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CarouselView x:Name="daysCarousel" ItemsSource="{Binding Days}">
+            <CarouselView x:Name="carousel" ItemsSource="{Binding Days}" Loop="True" PeekAreaInsets="0">
                 <CarouselView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="controls:Day">
                         <CollectionView ItemsSource="{Binding Lessons}">
                             <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <controls:SubjectCard 
+                                <DataTemplate x:DataType="controls:Lesson">
+                                    <controls:SubjectCard
                                   CardDay="{Binding CardDay}" CardName="{Binding CardName}"
                                   CardProf="{Binding CardProf}" CardRoom="{Binding CardRoom}"
                                   CardTime="{Binding CardTime}" CardType="{Binding CardType}"/>

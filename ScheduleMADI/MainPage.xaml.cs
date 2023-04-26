@@ -1,17 +1,31 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using System.Collections.ObjectModel;
 
 namespace ScheduleMADI;
-
+[XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class MainPage : ContentPage
 {
-    private List<Day> shedule;//фулл расписание 
+    private List<Day> schedule;//фулл расписание группы
 
-    public ObservableCollection<Day> Days { get => days; set { days = value; OnPropertyChanged(); } }
+    public ObservableCollection<Day> Days { get => days; set { days = value; OnPropertyChanged(); } }//расписание в карусели
     private ObservableCollection<Day> days = new();
-    public DateTime MinDate { get => minDate; set => minDate = value; }
-    private DateTime minDate = DateTime.Now.AddMonths(-1);
-    public DateTime MaxDate { get => maxDate; set => maxDate = value; }
-    private DateTime maxDate = DateTime.Now.AddMonths(2);
+    public DateTime MinDate { get => minDate; }//минимальная дата для датапикера
+    private readonly DateTime minDate = DateTime.Now.AddMonths(-1);
+    public DateTime MaxDate { get => maxDate; }//максимальна дата для датапикера
+    private readonly DateTime maxDate = DateTime.Now.AddMonths(2);
+    public Day CarouselCurrentDay
+    {
+        get => carouselCurrentDay;
+        set
+        {
+            if (carouselCurrentDay != value)
+            {
+                carouselCurrentDay = value;
+                OnPropertyChanged();
+            }
+        }
+    }//текущий день в карусели
+    private Day carouselCurrentDay;
 
     public string EntryText
     {
@@ -26,9 +40,36 @@ public partial class MainPage : ContentPage
         }
     }
     private string entryText;
+    public bool Entry_is_enabled
+    {
+        get => entry_is_enabled;
+        set
+        {
+            if (entry_is_enabled != value)
+            {
+                entry_is_enabled = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    private bool entry_is_enabled = false;
 
     private DateTime today = DateTime.Now.Date;
 
+    public DateTime DatepickerDate
+    {
+        get => datepickerDate;
+        set
+        {
+            if (datepickerDate != value)
+            {
+                datepickerDate = value;
+                OnPropertyChanged();
+            }
+
+        }
+    }//текущая дата в датапикере
+    private DateTime datepickerDate = DateTime.Now.Date;
     public bool Datepicker_is_enabled
     {
         get => datepicker_is_enabled;
@@ -42,20 +83,6 @@ public partial class MainPage : ContentPage
         }
     }
     private bool datepicker_is_enabled = false;
-
-    public bool Entry_is_enabled
-    {
-        get => entry_is_enabled;
-        set
-        {
-            if (entry_is_enabled != value)
-            {
-                entry_is_enabled = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-    private bool entry_is_enabled = true;
 
     public MainPage()
     {
@@ -72,6 +99,8 @@ public partial class MainPage : ContentPage
         catch
         {
             await DisplayAlert("Ошибка", "Не удалось загрузить расписание :(\nВозможно, нет соединения с интернетом.", "Ок");
+            Entry_is_enabled = true;
+            Datepicker_is_enabled = false;
             return;
         }
 
@@ -79,10 +108,13 @@ public partial class MainPage : ContentPage
             return;
         IdMADI.Id = IdMADI.LoadSavedID();
         EntryText = IdMADI.Id.Value;
+        Entry_is_enabled = true;
     }
 
     private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
     {
+        if (Days.Count != 0)
+            carousel.ScrollTo(Days.Single(x => x.Name == e.NewDate.DayOfWeek && x.TypeOfWeek == WeekMADI.WeekByDate(today, e.NewDate)), animate: false);
 
     }
 
@@ -96,7 +128,7 @@ public partial class MainPage : ContentPage
             IdMADI.Id = ParseMADI.id_groups.Where(x => x.Value.ToLower().Equals(e.NewTextValue.ToLower())).Single();
             try
             {
-                shedule = await ParseMADI.GetShedule(IdMADI.Id.Key);
+                schedule = await ParseMADI.GetShedule(IdMADI.Id.Key);
             }
             catch
             {
@@ -125,8 +157,8 @@ public partial class MainPage : ContentPage
             new Day(DayOfWeek.Sunday, new ObservableCollection < Lesson >(), "Знаменатель")
             };
 
-            for (int i = 0; i < 7; i++)
-                foreach (var lesson in shedule[i].Lessons)
+            for (int i = 0; i < 7; i++)//Сборка итогового двухнедельного расписания
+                foreach (var lesson in schedule[i].Lessons)
                     if (lesson.CardDay == "Еженедельно")
                     {
                         days1[i].Lessons.Add(new Lesson
@@ -172,11 +204,15 @@ public partial class MainPage : ContentPage
                             CardType = lesson.CardType
                         });
                     }
-            Days.Clear();
-            Days = new ObservableCollection<Day>(days1.Concat(days2));
-            shedule.Clear();
 
-            daysCarousel.ScrollTo(8);//сделать на двухсторонней привязке данных, мейби заработает. Не скроллит, оставляет первый элемент
+            schedule.Clear();
+            Days.Clear();
+
+            Days = days1.Concat(days2).ToObservableCollection();
+
+            carousel.ScrollTo(Days.Single(x => x.Name == today.DayOfWeek && x.TypeOfWeek == WeekMADI.Week), animate: false);
+
+            Datepicker_is_enabled = true;
         }
     }
 }
