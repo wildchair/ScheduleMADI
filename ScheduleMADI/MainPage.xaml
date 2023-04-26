@@ -34,7 +34,7 @@
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CarouselView x:Name="carousel" ItemsSource="{Binding Days}" Loop="True" PeekAreaInsets="0">
+            <CarouselView x:Name="carousel" ItemsSource="{Binding Days}" Loop="True" PeekAreaInsets="0" CurrentItem="{Binding CarouselCurrentDay}">
                 <CarouselView.ItemTemplate>
                     <DataTemplate x:DataType="controls:Day">
                         <CollectionView ItemsSource="{Binding Lessons}">
