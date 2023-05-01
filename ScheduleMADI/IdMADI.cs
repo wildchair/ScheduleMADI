@@ -1,4 +1,6 @@
-﻿namespace ScheduleMADI
+﻿using System.ComponentModel;
+
+namespace ScheduleMADI
 {
     internal static class IdMADI
     {
@@ -13,6 +15,7 @@
                 Preferences.Default.Set("name_group", value.Value);
             }
         }
+
         public static KeyValuePair<string, string> LoadSavedID()
         {
          return new KeyValuePair<string, string>(Preferences.Default.Get("id_group", "8810"), 

@@ -10,9 +10,9 @@
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
         </Tab>
 
-        <!--<Tab Title="Группа" >
-            <ShellContent ContentTemplate="{DataTemplate local:GroupPage}"/>
-        </Tab>-->
+        <Tab Title="Настройки">
+            <ShellContent ContentTemplate="{DataTemplate local:SettingPage}"/>
+        </Tab>
     </TabBar>
 
 </Shell>

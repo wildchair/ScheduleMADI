@@ -4,7 +4,7 @@
              xmlns:controls="clr-namespace:ScheduleMADI"
              xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ScheduleMADI.MainPage" x:Name="this"
-             Loaded="ContentPage_Loaded"  BindingContext="{x:Reference this}">
+             BindingContext="{x:Reference this}" Appearing="Mainpage_Appearing">
     <ContentPage.Behaviors>
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
     </ContentPage.Behaviors>
@@ -13,7 +13,6 @@
         <Grid Margin="15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
 
             </Grid.ColumnDefinitions>
@@ -25,31 +24,29 @@
                             DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" Date="{Binding DatepickerDate}"
                             MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
 
-            <Label Grid.Column="1" Text="Группа:" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
-            <Entry Grid.Column="2" Placeholder="1бАС1" HorizontalTextAlignment="End" VerticalTextAlignment="Center"
-                       TextChanged="Entry_TextChanged" Text="{Binding EntryText}" IsEnabled="{Binding Entry_is_enabled}"/>
+            
+            <Label Grid.Column="1" HorizontalTextAlignment="End" VerticalTextAlignment="Center" 
+                   Text="{Binding GroupLabel}"/>
 
         </Grid>
 
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CarouselView x:Name="carousel" ItemsSource="{Binding Days}" Loop="True" PeekAreaInsets="0">
-                <CarouselView.ItemTemplate>
-                    <DataTemplate x:DataType="controls:Day">
-                        <CollectionView ItemsSource="{Binding Lessons}">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="controls:Lesson">
-                                    <controls:SubjectCard
+            <CollectionView ItemsSource="{Binding CurrentDay.Lessons}" EmptyView="{Binding EmptyString}">
+                <CollectionView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired ="2"/>
+                </CollectionView.GestureRecognizers>
+        
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="controls:Lesson">
+                        <controls:SubjectCard
                                   CardDay="{Binding CardDay}" CardName="{Binding CardName}"
                                   CardProf="{Binding CardProf}" CardRoom="{Binding CardRoom}"
                                   CardTime="{Binding CardTime}" CardType="{Binding CardType}"/>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
                     </DataTemplate>
-                </CarouselView.ItemTemplate>
-            </CarouselView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </ScrollView>
     </StackLayout>
 </ContentPage>
