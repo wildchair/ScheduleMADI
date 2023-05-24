@@ -4,7 +4,7 @@
              x:Class="ScheduleMADI.SettingPage"
              x:Name="settingpage" BindingContext="{x:Reference settingpage}"
              Appearing="Settingpage_Appearing">
-    <StackLayout VerticalOptions="Center">
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
 
         <Grid Margin="15" ColumnSpacing="15" RowSpacing="15"
           HorizontalOptions="Center" VerticalOptions="Center">

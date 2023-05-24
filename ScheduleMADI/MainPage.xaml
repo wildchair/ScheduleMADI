@@ -35,7 +35,7 @@
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
             <CollectionView ItemsSource="{Binding CurrentDay.Lessons}" EmptyView="{Binding EmptyString}">
                 <CollectionView.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired ="2"/>
+                    <TapGestureRecognizer x:Name="TapRecognizer" Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired ="2"/>
                 </CollectionView.GestureRecognizers>
         
                 <CollectionView.ItemTemplate>

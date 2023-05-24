@@ -86,7 +86,8 @@ public partial class MainPage : ContentPage
 
     private async void Mainpage_Appearing(object sender, EventArgs e)
     {
-        if(ParseMADI.id_groups.Count == 0 || WeekMADI.Week == null)
+        TapRecognizer.NumberOfTapsRequired = 0;
+        if (ParseMADI.id_groups.Count == 0 || WeekMADI.Week == null)
         {
             EmptyString = "Загрузка расписания...";
             try
@@ -104,7 +105,6 @@ public partial class MainPage : ContentPage
 
         if (IdMADI.Id.Value != null && IdMADI.Id.Value == oldID)
             return;
-        
 
         if (IdMADI.Id.Value != null) ;//////////////
         else if (!Preferences.Default.ContainsKey("id_group"))
@@ -204,6 +204,7 @@ public partial class MainPage : ContentPage
         else
             CurrentDay = schedule.Find(x => x.Name == today.DayOfWeek && x.TypeOfWeek == WeekMADI.Week);
         Datepicker_is_enabled = true;
+        TapRecognizer.NumberOfTapsRequired = 2;
 
         if (!Preferences.Default.ContainsKey("tap_instr"))
         {
