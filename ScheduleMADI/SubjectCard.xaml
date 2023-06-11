@@ -2,42 +2,51 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ScheduleMADI.SubjectCard"
-             x:Name="this" Margin="15" >
+             x:Name="this" Margin="9" >
 
-    <Grid BindingContext="{x:Reference this}" HeightRequest="150">
+    <Grid BindingContext="{x:Reference this}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="1.5*" />
                 <RowDefinition Height="6*" />
             </Grid.RowDefinitions>
 
-            <Label Text="{Binding CardTime, FallbackValue='Card Time'}" HorizontalTextAlignment="Start" />
+        <Frame IsVisible="true" Padding="5" BackgroundColor="DarkGreen" HorizontalOptions="Start" VerticalOptions="Center">
+            <Label Text="{Binding CardTime, FallbackValue='Card Time'}" HorizontalTextAlignment="Center" 
+                   VerticalOptions="Center" VerticalTextAlignment="Center"/>
+        </Frame>
 
-            <Label Grid.Column="1" HorizontalTextAlignment="End" Text="{Binding CardDay, FallbackValue='Card Day'}"/>
+        <Frame Padding="5" Grid.Column="1" HorizontalOptions="End">
+            <Label HorizontalTextAlignment="End" Text="{Binding CardDay, FallbackValue='Card Day'}"/>
+        </Frame>
 
-            <Frame Grid.Row="1" Grid.ColumnSpan="2" >
 
-                <Grid>
+        <Frame Grid.Row="1" Grid.ColumnSpan="2">
+
+            <Grid RowSpacing="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="1.5*" />
+                        <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row ="0" Grid.ColumnSpan="2" Text="{Binding CardType, FallbackValue='Card Type'}" HorizontalTextAlignment="Start"/>
+                    <Label Grid.Row ="0" Grid.ColumnSpan="2" Text="{Binding CardType, FallbackValue='Card Type'}" 
+                           HorizontalTextAlignment="Start"/>
 
-                    <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding CardName, FallbackValue='Card Name'}" LineBreakMode="WordWrap" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                    <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding CardName, FallbackValue='Card Name'}" 
+                           LineBreakMode="TailTruncation" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
 
-                <Label Grid.Row="2" VerticalOptions="End" Text="{Binding CardProf, FallbackValue='Card Prof'}"/>
+                <Label Grid.Row="2" Text="{Binding CardProf, FallbackValue='Card Prof'}"/>
 
-                <Label Grid.Row="2" Grid.Column="1" VerticalOptions="End" HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room'}"/>
+                <Label Grid.Row="2" Grid.Column="1"  HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room'}"
+                       />
                 </Grid>
             </Frame>
         </Grid>
