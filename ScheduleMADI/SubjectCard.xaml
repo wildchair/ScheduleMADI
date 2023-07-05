@@ -14,15 +14,21 @@
                 <RowDefinition Height="6*" />
             </Grid.RowDefinitions>
 
-        <Frame IsVisible="true" Padding="5" BackgroundColor="DarkGreen" HorizontalOptions="Start" VerticalOptions="Center">
+        <!--<Frame Padding="5" HorizontalOptions="Start" VerticalOptions="Center">
             <Label Text="{Binding CardTime, FallbackValue='Card Time'}" HorizontalTextAlignment="Center" 
                    VerticalOptions="Center" VerticalTextAlignment="Center"/>
         </Frame>
 
         <Frame Padding="5" Grid.Column="1" HorizontalOptions="End">
             <Label HorizontalTextAlignment="End" Text="{Binding CardDay, FallbackValue='Card Day'}"/>
-        </Frame>
+        </Frame>-->
 
+        <Label Text="{Binding CardTime, FallbackValue='Card Time'}" HorizontalTextAlignment="Center" 
+               VerticalOptions="Center" VerticalTextAlignment="Center"
+               Padding="5" HorizontalOptions="Start"/>
+
+        <Label HorizontalTextAlignment="End" Text="{Binding CardDay, FallbackValue='Card Day'}"
+               Padding="5" Grid.Column="1" HorizontalOptions="End"/>
 
         <Frame Grid.Row="1" Grid.ColumnSpan="2">
 
@@ -45,8 +51,7 @@
 
                 <Label Grid.Row="2" Text="{Binding CardProf, FallbackValue='Card Prof'}"/>
 
-                <Label Grid.Row="2" Grid.Column="1"  HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room'}"
-                       />
+                <Label Grid.Row="2" Grid.Column="1"  HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room'}"/>
                 </Grid>
             </Frame>
         </Grid>
