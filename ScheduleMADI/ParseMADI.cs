@@ -13,7 +13,7 @@ namespace ScheduleMADI
         {
             HttpClient httpClient = new();
 
-            var response = await httpClient.GetAsync("https://www.madi.ru/tplan/calendar.php");
+            var response = await httpClient.GetAsync("https://raspisanie.madi.ru/tplan/calendar.php");
 
             var responseString = await response.Content.ReadAsStringAsync();
 
@@ -35,7 +35,7 @@ namespace ScheduleMADI
                 { "task_id", "7" }
             });
 
-            var response = await httpClient.PostAsync("https://www.madi.ru/tplan/tasks/task3,7_fastview.php", content);
+            var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             StringReader reader = new(responseString);
@@ -96,7 +96,7 @@ namespace ScheduleMADI
             });
 
             HttpClient httpClient = new();
-            var response = await httpClient.PostAsync("https://www.madi.ru/tplan/tasks/tableFiller.php", content);
+            var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             StringReader reader = new(responseString);
