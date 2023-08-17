@@ -1,0 +1,32 @@
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+
+namespace ScheduleMADI;
+public partial class MainPage : ContentPage
+{
+    public MainPage()
+    {
+        InitializeComponent();
+        BindingContext = new MainPageVM();
+    }
+
+    private async void Mainpage_Appearing(object sender, EventArgs e)
+    {
+        if (!Preferences.Default.ContainsKey("tap_instr"))
+        {
+            await DisplayAlert("Подсказка", "Двойное касание правой/левой части экрана позволяет переключаться между днями." +
+                "Конкретную дату можно выбрать в календаре.", "Ок");
+            Preferences.Default.Set("tap_instr", 1);
+        }
+    }
+
+    //private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    //{
+    //    Vibration.Vibrate(100);
+    //    if (Window.Width / 2 > e.GetPosition(null).Value.X && DatepickerDate > MinDate)
+    //        DatepickerDate = DatepickerDate.AddDays(-1);
+    //    else if (Window.Width / 2 < e.GetPosition(null).Value.X && DatepickerDate < MaxDate)
+    //        DatepickerDate = DatepickerDate.AddDays(1);
+    //}
+
+}

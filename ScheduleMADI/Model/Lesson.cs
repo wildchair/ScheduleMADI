@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleMADI
 {
-    public class Lesson
+    public class Lesson//можно не реализовывать интерфейс, если не будет подкапотных изменений конкретно лессона
     {
 #nullable enable
         public string? CardTime { get; set; }

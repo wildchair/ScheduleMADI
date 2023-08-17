@@ -1,12 +1,9 @@
-﻿using CommunityToolkit.Maui.Core.Extensions;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace ScheduleMADI
 {
     public static class ParseMADI
     {
-        public static bool reloaded = false;
-
         public static Dictionary<string, string> id_groups = new();//словарь групп
 
         public async static Task GetWeek()
@@ -48,46 +45,20 @@ namespace ScheduleMADI
 
             foreach (var buff in list_buff)
             {
-                var group_buff = ParseDataHTML(buff).Trim().Split("\"").ToList();
+                var group_buff = CutHTML(buff).Trim().Split("\"").ToList();
                 group_buff.RemoveAll(x => x == string.Empty);
-                var id = group_buff[0].Trim();
-                var name = group_buff[1].Replace(" ", String.Empty);
-                if (!id_groups.ContainsKey(id))
-                    id_groups.Add(id, name);
+                try//в полученном html могут быть айди группы без имен
+                {
+                    var id = group_buff[0].Trim();
+                    var name = group_buff[1].Replace(" ", String.Empty);
+                    if (!id_groups.ContainsKey(id))
+                        id_groups.Add(id, name);
+                }
+                catch (ArgumentOutOfRangeException) { continue; }
             }
-
-
-
-            //var str = responseString.Split(' ').ToList();
-            //str.RemoveAll(str => !str.Contains("value"));
-            //char[] charsToTrim = { '<', '>', '/', 'l', 'i', '"' };
-            //for (int i = 0; i < str.Count; i++)
-            //{
-            //    str[i] = str[i].Remove(0, 7).Replace('<', ' ').Replace('>', ' ').Replace('/', ' ').Replace('l', ' ').Replace('i', ' ').Replace('"', ' ');
-            //}
-
-            //foreach (var item in str)
-            //{
-            //    var buff = item.Split(" ").ToList();
-            //    buff.RemoveAll(str => str.Length == 0);
-
-            //    string id = buff[0], name = buff[1];
-            //    if (!id_groups.ContainsKey(id))
-            //        id_groups.Add(id, name);
-            //}
         }
         public async static Task<List<Day>> GetShedule(string gp_id)
         {
-            List<Day> days = new()
-            {
-                new Day(DayOfWeek.Monday), new Day(DayOfWeek.Tuesday),
-                new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
-                new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
-                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
-                { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } } }
-            };
-
-
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "tab", "7" },
@@ -99,9 +70,46 @@ namespace ScheduleMADI
             var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
-            StringReader reader = new(responseString);
+            if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
+                throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
+            else
+                return ParseHTML(responseString);
+        }
 
-            reloaded = true;
+        public async static Task<List<Day>> GetShedule()
+        {
+            await Task.Delay(5000);
+            return new()
+            {
+                new Day(DayOfWeek.Monday){Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Понедельник 1", CardDay = "Еженедельно" } } }, 
+                new Day(DayOfWeek.Tuesday){Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Вторник 1", CardDay = "Еженедельно" } } },
+                new Day(DayOfWeek.Wednesday){Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Среда 1", CardDay = "Еженедельно" } } }, 
+                new Day(DayOfWeek.Thursday){Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Четверг 1", CardDay = "Еженедельно" } } },
+                new Day(DayOfWeek.Friday){Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Пятница 1", CardDay = "Еженедельно" } } }, 
+                new Day(DayOfWeek.Saturday){Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Суббота 1", CardDay = "Еженедельно" } } },
+                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } } }
+            };
+        }
+
+        private static List<Day> ParseHTML(string html)
+        {
+            List<Day> days = new()
+            {
+                new Day(DayOfWeek.Monday), new Day(DayOfWeek.Tuesday),
+                new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
+                new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
+                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } } }
+            };
+
+            StringReader reader = new(html);
 
             foreach (var day in days)
                 if (day.Name != DayOfWeek.Sunday)
@@ -113,7 +121,7 @@ namespace ScheduleMADI
                 if (buff.Contains("colspan=6"))//отслеживание начала дня
                 {
 
-                    buff = ParseDataHTML(buff);
+                    buff = CutHTML(buff);
                     DayOfWeek dayOfWeek = DayOfWeek.Monday;
                     switch (buff)
                     {
@@ -147,7 +155,7 @@ namespace ScheduleMADI
                         for (int i = 0; i < 6; i++)//парсинг данных Lesson-а
                         {
                             buff = reader.ReadLine();
-                            buff = ParseDataHTML(buff);
+                            buff = CutHTML(buff);
                             switch (i)
                             {
                                 case 0:
@@ -192,7 +200,7 @@ namespace ScheduleMADI
                     do
                     {
                         buff = reader.ReadLine();
-                        buff = ParseDataHTML(buff);
+                        buff = CutHTML(buff);
                         DayOfWeek dayOfWeek = DayOfWeek.Monday;
                         switch (buff)
                         {
@@ -221,11 +229,11 @@ namespace ScheduleMADI
                         reader.ReadLine();
 
                         buff = reader.ReadLine();
-                        buff = ParseDataHTML(buff);
+                        buff = CutHTML(buff);
                         lesson.CardName = buff;
 
                         buff = reader.ReadLine();
-                        buff = ParseDataHTML(buff);
+                        buff = CutHTML(buff);
                         lesson.CardDay = buff;
 
 
@@ -237,10 +245,10 @@ namespace ScheduleMADI
                     break;
                 }
             }
-
             return days;
         }
-        private static string? ParseDataHTML(string? data, List<string> strToDelete = null)
+
+        private static string? CutHTML(string? data, List<string> strToDelete = null)
         {
             strToDelete ??= new() { "table class=\"timetable\"", "colspan=6", "style=\"white-space:pre-wrap\"",
                                     "<", ">", "/", "br", "th", "tr", "td", "b", "colspan=\"2\"",
@@ -249,6 +257,11 @@ namespace ScheduleMADI
                 data = data.Replace(str, string.Empty).Trim();
             return data;
         }
+    }
+    class ParseMADIException : Exception
+    {
+        public ParseMADIException(string message)
+            : base(message) { }
     }
 }
 

@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ScheduleMADI.SettingPage"
-             x:Name="settingpage" BindingContext="{x:Reference settingpage}"
-             Appearing="Settingpage_Appearing">
+             x:Name="settingpage">
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
 
         <Grid Margin="15" ColumnSpacing="15" RowSpacing="15"
@@ -21,10 +20,11 @@
 
 
             <Label Text="Группа:" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" />
-            <Entry Grid.Column="1" HorizontalTextAlignment="Center"  Text="{Binding EntryText}" TextChanged="Entry_TextChanged"
-                   Placeholder="1бАС1"/>
-            <Button Grid.Column="2" HorizontalOptions="Center" IsEnabled="{Binding Button_is_enabled}"
-                    Clicked="Button_Clicked" Text="{Binding ButtonText}"/>
+            <Entry Grid.Column="1" HorizontalTextAlignment="Center" Text="{Binding EntryText}"
+                   Placeholder="1бАС1" IsEnabled="{Binding Entry_is_enabled}"/>
+            <Button Grid.Column="2" HorizontalOptions="Center"
+                    Command="{Binding SaveGroup}" 
+                    Text="{Binding ButtonText}"/>
 
             <Label Grid.Row="1" Text="Поддержать разработчика:" 
                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>

@@ -4,7 +4,7 @@
              xmlns:controls="clr-namespace:ScheduleMADI"
              xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ScheduleMADI.MainPage" x:Name="this"
-             BindingContext="{x:Reference this}" Appearing="Mainpage_Appearing">
+             Loaded="Mainpage_Appearing">
     <ContentPage.Behaviors>
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent" />
     </ContentPage.Behaviors>
@@ -21,7 +21,8 @@
             </Grid.RowDefinitions>
 
             <DatePicker     Format="d MMMM, dddd" HorizontalOptions="Start"
-                            DateSelected="DatePicker_DateSelected" MinimumDate="{Binding MinDate}" Date="{Binding DatepickerDate}"
+                            MinimumDate="{Binding MinDate}" 
+                            Date="{Binding withoutCarouselVM.DatepickerDate }"
                             MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
 
             
@@ -33,9 +34,10 @@
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CollectionView ItemsSource="{Binding CurrentDay.Lessons}" EmptyView="{Binding EmptyString}">
+            <CollectionView ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
+                            EmptyView="{Binding EmptyString}">
                 <CollectionView.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="TapRecognizer" Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired ="2"/>
+                    <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums}"/>
                 </CollectionView.GestureRecognizers>
         
                 <CollectionView.ItemTemplate>
