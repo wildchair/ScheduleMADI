@@ -195,6 +195,7 @@ namespace ScheduleMADI
 
             while (true)
             {
+                withoutCarouselVM.TapNums = 0;
                 EmptyString = "Загрузка расписания...";
 
                 try

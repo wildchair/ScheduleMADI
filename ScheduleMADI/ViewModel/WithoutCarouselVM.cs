@@ -64,7 +64,7 @@ namespace ScheduleMADI
         {
             if (e.PropertyName == nameof(mainPageVM.Schedule))
             {
-                if(mainPageVM.Schedule == null) 
+                if (mainPageVM.Schedule == null)
                 {
                     CurrentDay = null;
                     return;

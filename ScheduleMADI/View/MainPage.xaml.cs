@@ -4,10 +4,12 @@ using System.ComponentModel;
 namespace ScheduleMADI;
 public partial class MainPage : ContentPage
 {
+    MainPageVM mainPageVM = new();
     public MainPage()
     {
         InitializeComponent();
-        BindingContext = new MainPageVM();
+        BindingContext = mainPageVM;
+        //BindingContext = new MainPageVM();
     }
 
     private async void Mainpage_Appearing(object sender, EventArgs e)
@@ -20,13 +22,13 @@ public partial class MainPage : ContentPage
         }
     }
 
-    //private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
-    //{
-    //    Vibration.Vibrate(100);
-    //    if (Window.Width / 2 > e.GetPosition(null).Value.X && DatepickerDate > MinDate)
-    //        DatepickerDate = DatepickerDate.AddDays(-1);
-    //    else if (Window.Width / 2 < e.GetPosition(null).Value.X && DatepickerDate < MaxDate)
-    //        DatepickerDate = DatepickerDate.AddDays(1);
-    //}
+    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    {
+        Vibration.Vibrate(100);
+        if (Window.Width / 2 > e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate > mainPageVM.MinDate)
+            mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(-1);
+        else if (Window.Width / 2 < e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate < mainPageVM.MaxDate)
+            mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(1);
+    }
 
 }

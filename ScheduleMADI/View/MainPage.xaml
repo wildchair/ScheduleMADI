@@ -37,7 +37,8 @@
             <CollectionView ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
                             EmptyView="{Binding EmptyString}">
                 <CollectionView.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums}"/>
+                    <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums}"
+                                          Tapped="TapGestureRecognizer_Tapped"/>
                 </CollectionView.GestureRecognizers>
         
                 <CollectionView.ItemTemplate>
