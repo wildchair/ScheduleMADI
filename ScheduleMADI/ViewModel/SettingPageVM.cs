@@ -57,6 +57,7 @@ namespace ScheduleMADI
 
         public SettingPageVM()
         {
+            //ParseMADI.PropertyChanged += OnLoadingChanged;
             SaveGroup = new Command(() =>
             {
                 IdMADI.Id = ParseMADI.id_groups.Where(x => x.Value.ToLower().Equals(EntryText.ToLower())).Single();
@@ -77,13 +78,17 @@ namespace ScheduleMADI
                 }
                 ButtonText = "Сохранить";
 
-                return ParseMADI.id_groups.Any(x => x.Value.ToLower().Equals(EntryText.ToLower()));// проверка существования введенной группы
+                return ParseMADI.id_groups.Any(x => x.Value.ToLower().Equals(EntryText.ToLower()))/* && !ParseMADI.Loading*/;// проверка существования введенной группы
             });
 
             if (IdMADI.Id.Value != null)
                 EntryText = IdMADI.Id.Value;
         }
 
+        //private void OnLoadingChanged(object sender, PropertyChangedEventArgs e)
+        //{
+        //    ((Command)SaveGroup).ChangeCanExecute();
+        //}
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

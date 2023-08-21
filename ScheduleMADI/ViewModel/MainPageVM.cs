@@ -158,11 +158,11 @@ namespace ScheduleMADI
                 GroupLabel = IdMADI.Id.Value;
         }
 
-        private async Task<bool> LoadFirstData()
+        private async Task<bool> LoadFirstData()//загрузка с нуля
         {
             Datepicker_is_enabled = false;
 
-            while (true)
+            for (int j = 0; j < 4; j++)
             {
                 EmptyString = "Загрузка групп и недели...";
 
@@ -175,6 +175,11 @@ namespace ScheduleMADI
                 }
                 catch
                 {
+                    if (j == 3)
+                    {
+                        EmptyString = "Не удалось подключиться. Проверьте соединение с интернетом и перезапустите приложение.";
+                        return false;
+                    }
                     for (int i = 10; i > 0; i--)
                     {
                         EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
@@ -189,18 +194,24 @@ namespace ScheduleMADI
             return true;
         }
 
-        private async Task<bool> LoadSecondData()
+        private async Task<bool> LoadSecondData()//загрузка по группе
         {
             Datepicker_is_enabled = false;
 
-            while (true)
+            for (int j = 0; j < 4; j++)
             {
                 withoutCarouselVM.TapNums = 0;
                 EmptyString = "Загрузка расписания...";
 
                 try
                 {
-                    Schedule = await ParseMADI.GetShedule(/*IdMADI.Id.Key*/);
+                    if (j == 3)
+                    {
+                        EmptyString = "Не удалось подключиться. Проверьте соединение с интернетом и перезапустите приложение.";
+                        return false;
+                    }
+
+                    Schedule = await ParseMADI.GetShedule(IdMADI.Id.Key);
                     break;
                 }
                 catch (ParseMADIException ex)
@@ -227,10 +238,10 @@ namespace ScheduleMADI
             GroupLabel = IdMADI.Id.Value;
             if (Schedule != null)
             {
-
                 Schedule.Clear();
                 OnPropertyChanged(nameof(Schedule));
             }
+
             LoadSecondData();
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)

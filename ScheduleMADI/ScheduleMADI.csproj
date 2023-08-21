@@ -52,46 +52,46 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
@@ -103,15 +103,15 @@
 		<AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass></AndroidSigningKeyPass>
 		<ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-		<ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-		<ApplicationVersion>6</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+		<ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>6</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+	  <ApplicationVersion>7</ApplicationVersion>
 	</PropertyGroup>
 
 	
