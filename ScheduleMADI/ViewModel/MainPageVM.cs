@@ -190,6 +190,8 @@ namespace ScheduleMADI
 
             if (IdMADI.Id.Value != null)
                 return await LoadSecondData();
+            else
+                EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";
 
             return true;
         }
