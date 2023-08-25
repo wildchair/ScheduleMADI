@@ -22,10 +22,6 @@ public partial class MainPage : ContentPage
                 "Конкретную дату можно выбрать в календаре.", "Ок");
             Preferences.Default.Set("tap_instr", 1);
         }
-
-        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        var toast = Toast.Make("Наблюдаются сбои в работе сайта.", ToastDuration.Long);
-        await toast.Show(cancellationTokenSource.Token);
     }
 
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)

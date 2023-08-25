@@ -16,6 +16,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
 
@@ -25,20 +26,27 @@
             <Button Grid.Column="2" HorizontalOptions="Center"
                     Command="{Binding SaveGroup}" 
                     Text="{Binding ButtonText}"/>
-
-            <Label Grid.Row="1" Text="Поддержать разработчика:" 
+            
+            <Label Grid.Row="1" Text="Сохраненное расписание:"
+                   VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+            <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding LastDateLoad}"
+                   VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            
+            <Label Grid.Row="2" Text="Поддержать разработчика:" 
                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-            <Editor Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="5536 9137 8567 4439" TextColor="CornflowerBlue" 
+            <Editor Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="5536 9137 8567 4439" TextColor="CornflowerBlue" 
                    VerticalTextAlignment="Center" HorizontalTextAlignment="Center" IsReadOnly="True">
                 <Editor.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                 </Editor.GestureRecognizers>
             </Editor>
 
-            <Label Grid.Row="2" Text="Версия приложения:" 
+            <Label Grid.Row="3" Text="Версия приложения:" 
                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-            <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding VersionApp}"
+            <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding VersionApp}"
                    VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+
+
         </Grid>
 
     </StackLayout>

@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -188,6 +190,17 @@ namespace ScheduleMADI
                         EmptyString = "Не удалось подключиться. Проверьте соединение с интернетом и перезапустите приложение.";
                         return false;
                     }
+
+                    //if (j == 1 && SaveMADI.ScheduleHTML.Value != null)
+                    //{
+                    //    Schedule = ParseMADI.ParseHTML(SaveMADI.ScheduleHTML.Value);
+
+                    //    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    //    var toast = Toast.Make("Загружено сохраненное расписание.", ToastDuration.Long);
+                    //    await toast.Show(cancellationTokenSource.Token);
+                    //    return false;//??
+                    //}
+
                     for (int i = 10; i > 0; i--)
                     {
                         EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
@@ -221,6 +234,16 @@ namespace ScheduleMADI
                         return false;
                     }
 
+                    //if(j == 1 && SaveMADI.ScheduleHTML.Value != null)
+                    //{
+                    //    Schedule = ParseMADI.ParseHTML(SaveMADI.ScheduleHTML.Value);
+
+                    //    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    //    var toast = Toast.Make("Загружено сохраненное расписание.", ToastDuration.Long);
+                    //    await toast.Show(cancellationTokenSource.Token);
+                    //    return false;//??
+                    //}
+
                     Schedule = await ParseMADI.GetShedule(IdMADI.Id.Key);
                     break;
                 }
@@ -229,14 +252,14 @@ namespace ScheduleMADI
                     EmptyString = ex.Message;
                     return false;
                 }
-                catch
-                {
-                    for (int i = 10; i > 0; i--)
-                    {
-                        EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
-                        await Task.Delay(1000);
-                    }
-                }
+                //catch
+                //{
+                //    for (int i = 10; i > 0; i--)
+                //    {
+                //        EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
+                //        await Task.Delay(1000);
+                //    }
+                //}
             }
 
             Datepicker_is_enabled = true;

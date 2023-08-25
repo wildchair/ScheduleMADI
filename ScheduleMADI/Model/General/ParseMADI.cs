@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace ScheduleMADI
 {
@@ -8,24 +6,10 @@ namespace ScheduleMADI
     {
         public static Dictionary<string, string> id_groups = new();//словарь групп
 
-        //public static bool Loading
-        //{
-        //    get => loading;
-        //    set
-        //    {
-        //        if (loading != value)
-        //        {
-        //            loading = value;
-        //            OnPropertyChanged(nameof(loading));
-        //        }
-        //    }
-        //}
-        //private static bool loading = false;
-
         public async static Task GetWeek()
         {
             //Loading = true;
-            
+
             HttpClient httpClient = new();
 
             var response = await httpClient.GetAsync("https://raspisanie.madi.ru/tplan/calendar.php");
@@ -83,8 +67,6 @@ namespace ScheduleMADI
         }
         public async static Task<List<Day>> GetShedule(string gp_id)
         {
-            //Loading = true;
-
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "tab", "7" },
@@ -95,14 +77,14 @@ namespace ScheduleMADI
             HttpClient httpClient = new();
             var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content);
 
-            //Loading = false;// в try catch надо обернуть
-
             var responseString = await response.Content.ReadAsStringAsync();
 
             if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
                 throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
-            else
-                return ParseHTML(responseString);
+
+                var days = ParseHTML(responseString);
+                SaveMADI.ScheduleHTML = new KeyValuePair<DateTime, string>(DateTime.Now, responseString);
+                return days;
         }
 
         //public async static Task<List<Day>> GetShedule()//имитация
@@ -132,7 +114,7 @@ namespace ScheduleMADI
         //    };
         //}
 
-        private static List<Day> ParseHTML(string html)//парсинг html-таблицы расписания
+        public static List<Day> ParseHTML(string html)//парсинг html-таблицы расписания
         {
             List<Day> days = new()
             {
@@ -296,12 +278,6 @@ namespace ScheduleMADI
                 data = data.Replace(str, string.Empty).Trim();
             return data;
         }
-
-        //public static event PropertyChangedEventHandler PropertyChanged;
-        //private static void OnPropertyChanged([CallerMemberName] string name = null)//уведомление об изменении loading
-        //{
-        //    PropertyChanged?.Invoke(null, new PropertyChangedEventArgs(name));
-        //}
     }
     class ParseMADIException : Exception
     {

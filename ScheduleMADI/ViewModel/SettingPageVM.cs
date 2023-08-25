@@ -6,8 +6,16 @@ namespace ScheduleMADI
 {
     public class SettingPageVM : INotifyPropertyChanged
     {
-        public string VersionApp { get => versionApp; set => versionApp = value; }
-        private string versionApp = AppInfo.Current.VersionString;
+        public string VersionApp { get => AppInfo.Current.VersionString; }
+        public string LastDateLoad 
+        {
+            get
+            {
+                if (SaveMADI.ScheduleHTML.Value != null)
+                    return SaveMADI.ScheduleHTML.Key.ToString("D");
+                else return "Сохраненного расписания не найдено";
+            }
+        }
 
         public string EntryText
         {
@@ -57,7 +65,6 @@ namespace ScheduleMADI
 
         public SettingPageVM()
         {
-            //ParseMADI.PropertyChanged += OnLoadingChanged;
             SaveGroup = new Command(() =>
             {
                 IdMADI.Id = ParseMADI.id_groups.Where(x => x.Value.ToLower().Equals(EntryText.ToLower())).Single();
@@ -81,14 +88,17 @@ namespace ScheduleMADI
                 return ParseMADI.id_groups.Any(x => x.Value.ToLower().Equals(EntryText.ToLower()))/* && !ParseMADI.Loading*/;// проверка существования введенной группы
             });
 
+            SaveMADI.PropertyChanged += SaveMADI_PropertyChanged;
+
             if (IdMADI.Id.Value != null)
                 EntryText = IdMADI.Id.Value;
         }
 
-        //private void OnLoadingChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    ((Command)SaveGroup).ChangeCanExecute();
-        //}
+        private void SaveMADI_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged();
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

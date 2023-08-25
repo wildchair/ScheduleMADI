@@ -11,9 +11,11 @@ namespace ScheduleMADI
             get => id;
             set
             {
+                
                 id = value;
                 Preferences.Default.Set("id_group", value.Key);
                 Preferences.Default.Set("name_group", value.Value);
+
                 OnPropertyChanged(nameof(id));
             }
         }
