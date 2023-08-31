@@ -231,9 +231,13 @@ namespace ScheduleMADI
                     reader.ReadLine();
                     reader.ReadLine();
 
+                    
                     do
                     {
                         buff = reader.ReadLine();
+
+                        if (buff.Contains("<form id=\"print_form\" action=\"/tplan/print_preview.php\" target=\"_blank\" method=\"post\">"))//быстрофикс
+                            break;
                         buff = CutHTML(buff);
                         DayOfWeek dayOfWeek = DayOfWeek.Monday;
                         switch (buff)
@@ -279,6 +283,7 @@ namespace ScheduleMADI
                     break;
                 }
             }
+
             return days;
         }
 

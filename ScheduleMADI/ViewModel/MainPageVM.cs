@@ -88,8 +88,16 @@ namespace ScheduleMADI
                             });
                         }
 
-                schedule = days1.Concat(days2).ToList();
+                /*schedule = days1.Concat(days2).ToList();*/
 
+                //быстрофикс
+                var days = days1.Concat(days2).ToList();
+                foreach (var day in days)//быстрофикс
+                    if (day.Lessons.Count == 0)
+                        day.Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } };
+                schedule = days;
+                //
                 OnPropertyChanged();
             }
         }
