@@ -34,12 +34,12 @@ namespace ScheduleMADI
                 }
             }
         }
-        public string TypeOfWeek 
-        { 
-            get => typeOfWeek; 
+        public string TypeOfWeek
+        {
+            get => typeOfWeek;
             set
             {
-                if(typeOfWeek != value)
+                if (typeOfWeek != value)
                 {
                     typeOfWeek = value;
                     OnPropertyChanged();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ScheduleMADI
+﻿namespace ScheduleMADI
 {
     public class Lesson//можно не реализовывать интерфейс, если не будет подкапотных изменений конкретно лессона
     {
