@@ -90,15 +90,6 @@ namespace ScheduleMADI
 
                 schedule = days1.Concat(days2).ToList();
 
-                //#region быстрофикс
-                //var days = days1.Concat(days2).ToList();
-                //foreach (var day in days)//быстрофикс
-                //    if (day.Lessons.Count == 0)
-                //        day.Lessons = new ObservableCollection<Lesson>()
-                //{ new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } };
-                //schedule = days;
-                //#endregion
-
                 OnPropertyChanged();
             }
         }
@@ -189,7 +180,7 @@ namespace ScheduleMADI
                         EmptyString = "Не удалось подключиться. Проверьте соединение с интернетом и перезапустите приложение.";
                         return false;
                     }
-                    for (int i = 10; i > 0; i--)
+                    for (int i = 5; i > 0; i--)
                     {
                         EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
                         await Task.Delay(1000);
@@ -216,13 +207,13 @@ namespace ScheduleMADI
 
                 try
                 {
-                    if (j == 3)
+                    if (j == 2)// две попытки. После задержки в 10 секунд перестает обновляться currentday по обновлению schedule
                     {
                         EmptyString = "Не удалось подключиться. Проверьте соединение с интернетом и перезапустите приложение.";
                         return false;
                     }
 
-                    Schedule = await ParseMADI.GetShedule(IdMADI.Id.Key);
+                    Schedule = await ParseMADI.GetSchedule(IdMADI.Id.Key);
                     break;
                 }
                 catch (ParseMADIException ex)
@@ -232,7 +223,7 @@ namespace ScheduleMADI
                 }
                 catch
                 {
-                    for (int i = 10; i > 0; i--)
+                    for (int i = 5; i > 0; i--)
                     {
                         EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
                         await Task.Delay(1000);

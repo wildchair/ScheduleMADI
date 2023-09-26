@@ -57,7 +57,7 @@ namespace ScheduleMADI
                 catch (ArgumentOutOfRangeException) { continue; }
             }
         }
-        public async static Task<List<Day>> GetShedule(string gp_id)
+        public async static Task<List<Day>> GetSchedule(string gp_id)
         {
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
@@ -84,8 +84,8 @@ namespace ScheduleMADI
                 new Day(DayOfWeek.Monday), new Day(DayOfWeek.Tuesday),
                 new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
                 new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
-                new Day(DayOfWeek.Sunday) /*{Lessons = new ObservableCollection<Lesson>()
-                { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } } }*/
+                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } } }
             };
 
             StringReader reader = new(html);
@@ -237,13 +237,13 @@ namespace ScheduleMADI
                     continue;
                 }
 
-                if (!days[i].Lessons.Any(x => x.CardDay.Contains("Числ")))
+                if (!days[i].Lessons.Any(x => x.CardDay.Contains("Числ")) && !days[i].Lessons.Any(x => x.CardDay.Contains("Еже")))
                 {
                     days[i].Lessons.Add(new Lesson() { CardName = "Выходной день", CardDay = "Числитель" });
                     continue;
                 }
 
-                if (!days[i].Lessons.Any(x => x.CardDay.Contains("Знам")))
+                if (!days[i].Lessons.Any(x => x.CardDay.Contains("Знам")) && !days[i].Lessons.Any(x => x.CardDay.Contains("Еже")))
                 {
                     days[i].Lessons.Add(new Lesson() { CardName = "Выходной день", CardDay = "Знаменатель" });
                     continue;

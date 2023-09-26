@@ -13,7 +13,7 @@ namespace ScheduleMADI
                 if (currentDay != value)
                 {
                     currentDay = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged();                
                 }
             }
         }
