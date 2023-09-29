@@ -20,6 +20,7 @@ namespace ScheduleMADI
                 "{\"aaData\":[\"\\u0447\"]}" => "Числитель",
                 _ => "Получить день не удалось",
             };
+            IdMADI.BufferedDay = new KeyValuePair<DateTime, string>(DateTime.Now.Date, WeekMADI.Week);
         }
         public async static Task GetGroups()
         {
@@ -74,7 +75,15 @@ namespace ScheduleMADI
             if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
                 throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
             else
+            {
+                IdMADI.BufferedSchedule = responseString;
                 return ParseHTML(responseString);
+            }
+        }
+
+        public async static Task<List<Day>> GetScheduleFromHTML(string html)
+        {
+            return ParseHTML(html);
         }
 
         private static List<Day> ParseHTML(string html)//парсинг html-таблицы расписания

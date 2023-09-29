@@ -31,5 +31,4 @@ public partial class MainPage : ContentPage
         else if (Window.Width / 2 < e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate < mainPageVM.MaxDate)
             mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(1);
     }
-
 }

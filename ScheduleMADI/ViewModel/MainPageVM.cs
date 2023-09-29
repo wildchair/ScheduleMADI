@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -175,6 +177,21 @@ namespace ScheduleMADI
                 }
                 catch
                 {
+                    if(IdMADI.BufferedDay.Value != null)
+                    {
+                        WeekMADI.Week = IdMADI.BufferedDay.Value;
+                        WeekMADI.Week = WeekMADI.WeekByDate(DateTime.Now.Date, IdMADI.BufferedDay.Key);
+                        Schedule = await ParseMADI.GetScheduleFromHTML(IdMADI.BufferedSchedule);
+
+                        Datepicker_is_enabled = true;
+
+                        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                        var toast = Toast.Make($"Загружено расписание от {IdMADI.BufferedDay.Key.Date.ToShortDateString()}", ToastDuration.Long);
+                        await toast.Show(cancellationTokenSource.Token);
+
+                        return true;
+                    }
+
                     if (j == 3)
                     {
                         EmptyString = "Не удалось подключиться. Проверьте соединение с интернетом и перезапустите приложение.";
@@ -223,6 +240,12 @@ namespace ScheduleMADI
                 }
                 catch
                 {
+                    if (IdMADI.BufferedSchedule != null)
+                    {
+                        Schedule = await ParseMADI.GetScheduleFromHTML(IdMADI.BufferedSchedule);
+                        break;
+                    }
+
                     for (int i = 5; i > 0; i--)
                     {
                         EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
@@ -237,14 +260,17 @@ namespace ScheduleMADI
 
         private void OnIdMADIPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            GroupLabel = IdMADI.Id.Value;
-            if (Schedule != null)
+            if(e.PropertyName == nameof(IdMADI.Id))
             {
-                Schedule.Clear();
-                OnPropertyChanged(nameof(Schedule));
-            }
+                GroupLabel = IdMADI.Id.Value;
+                if (Schedule != null)
+                {
+                    Schedule.Clear();
+                    OnPropertyChanged(nameof(Schedule));
+                }
 
-            LoadSecondData();
+                LoadSecondData();
+            }
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
