@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace ScheduleMADI
 {
-    internal static class IdMADI
+    internal static class BufferedMADI
     {
         private static KeyValuePair<string, string> id;
         public static KeyValuePair<string, string> Id
@@ -18,14 +18,15 @@ namespace ScheduleMADI
             }
         }
 
-        private static string bufferedSchedule;
-        public static string BufferedSchedule
+        private static KeyValuePair<string, string> bufferedSchedule;
+        public static KeyValuePair<string, string> BufferedSchedule
         {
             get => bufferedSchedule;
             set
             {
                 bufferedSchedule = value;
-                Preferences.Default.Set("buff_sche", value);
+                Preferences.Default.Set("buff_sche", value.Value);
+                Preferences.Default.Set("buff_id", value.Key);
             }
         }
 
@@ -47,9 +48,10 @@ namespace ScheduleMADI
                                                     Preferences.Default.Get("name_group", "1бАС1"));//возникнут, тк вызовы функции
         }                                                                                           //сопровождаются проверкой наличия
 
-        public static string LoadBufferedSchedule()
+        public static KeyValuePair<string, string> LoadBufferedSchedule()
         {
-            return Preferences.Default.Get("buff_sche", String.Empty);
+            return new KeyValuePair<string, string>(Preferences.Default.Get("buff_id", String.Empty),
+                                                    Preferences.Default.Get("buff_sche", String.Empty));
         }
 
         public static KeyValuePair<DateTime, string> LoadBufferedDay()

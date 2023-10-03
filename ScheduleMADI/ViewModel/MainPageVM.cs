@@ -148,23 +148,24 @@ namespace ScheduleMADI
 
         public MainPageVM()
         {
-            IdMADI.PropertyChanged += OnIdMADIPropertyChanged;
+            BufferedMADI.PropertyChanged += OnIdMADIPropertyChanged;
 
             withoutCarouselVM = new(this);
 
             LoadFirstData();
 
-            if (IdMADI.Id.Value == null)
+            if (BufferedMADI.Id.Value == null)
                 EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";
             else
-                GroupLabel = IdMADI.Id.Value;
+                GroupLabel = BufferedMADI.Id.Value;
         }
 
         private async Task<bool> LoadFirstData()//загрузка с нуля
         {
             Datepicker_is_enabled = false;
+            bool bufferedLoaded = false;
 
-            for (int j = 0; j < 4; j++)
+            while (true)
             {
                 EmptyString = "Загрузка групп и недели...";
 
@@ -177,26 +178,23 @@ namespace ScheduleMADI
                 }
                 catch
                 {
-                    if(IdMADI.BufferedDay.Value != null)
+                    if (BufferedMADI.BufferedDay.Value != null && !bufferedLoaded
+                        && BufferedMADI.Id.Key == BufferedMADI.BufferedSchedule.Key)
                     {
-                        WeekMADI.Week = IdMADI.BufferedDay.Value;
-                        WeekMADI.Week = WeekMADI.WeekByDate(DateTime.Now.Date, IdMADI.BufferedDay.Key);
-                        Schedule = await ParseMADI.GetScheduleFromHTML(IdMADI.BufferedSchedule);
+                        WeekMADI.Week = BufferedMADI.BufferedDay.Value;
+                        WeekMADI.Week = WeekMADI.WeekByDate(BufferedMADI.BufferedDay.Key, DateTime.Now.Date);
+                        Schedule = await ParseMADI.GetScheduleFromHTML(BufferedMADI.BufferedSchedule.Value);
 
                         Datepicker_is_enabled = true;
 
-                        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                        var toast = Toast.Make($"Загружено расписание от {IdMADI.BufferedDay.Key.Date.ToShortDateString()}", ToastDuration.Long);
-                        await toast.Show(cancellationTokenSource.Token);
+                        CancellationTokenSource cancellationToken = new CancellationTokenSource();
+                        var toast1 = Toast.Make($"Загружено расписание от {BufferedMADI.BufferedDay.Key.Date.ToShortDateString()}.", ToastDuration.Long);
+                        await toast1.Show(cancellationToken.Token);
 
-                        return true;
+                        bufferedLoaded = true;
+                        //return true;
                     }
 
-                    if (j == 3)
-                    {
-                        EmptyString = "Не удалось подключиться. Проверьте соединение с интернетом и перезапустите приложение.";
-                        return false;
-                    }
                     for (int i = 5; i > 0; i--)
                     {
                         EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
@@ -205,32 +203,26 @@ namespace ScheduleMADI
                 }
             }
 
-            if (IdMADI.Id.Value != null)
-                return await LoadSecondData();
+            if (BufferedMADI.Id.Value != null)
+                return await LoadSecondData(bufferedLoaded);
             else
                 EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";
 
             return true;
         }
 
-        private async Task<bool> LoadSecondData()//загрузка по группе
+        private async Task<bool> LoadSecondData(bool bufferedLoaded)//загрузка по группе
         {
             Datepicker_is_enabled = false;
 
-            for (int j = 0; j < 4; j++)
+            while (true)
             {
                 withoutCarouselVM.TapNums = 0;
                 EmptyString = "Загрузка расписания...";
 
                 try
                 {
-                    if (j == 2)// две попытки. После задержки в 10 секунд перестает обновляться currentday по обновлению schedule
-                    {
-                        EmptyString = "Не удалось подключиться. Проверьте соединение с интернетом и перезапустите приложение.";
-                        return false;
-                    }
-
-                    Schedule = await ParseMADI.GetSchedule(IdMADI.Id.Key);
+                    Schedule = await ParseMADI.GetSchedule(BufferedMADI.Id.Key);
                     break;
                 }
                 catch (ParseMADIException ex)
@@ -240,12 +232,16 @@ namespace ScheduleMADI
                 }
                 catch
                 {
-                    if (IdMADI.BufferedSchedule != null)
+                    if (BufferedMADI.BufferedSchedule.Value != null &&
+                        BufferedMADI.Id.Key == BufferedMADI.BufferedSchedule.Key && !bufferedLoaded)
                     {
-                        Schedule = await ParseMADI.GetScheduleFromHTML(IdMADI.BufferedSchedule);
-                        break;
-                    }
+                        Schedule = await ParseMADI.GetScheduleFromHTML(BufferedMADI.BufferedSchedule.Value);
 
+                        Datepicker_is_enabled = true;
+                        bufferedLoaded = true;
+                        //break;
+                    }
+                    
                     for (int i = 5; i > 0; i--)
                     {
                         EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
@@ -255,21 +251,29 @@ namespace ScheduleMADI
             }
 
             Datepicker_is_enabled = true;
+
+            if (bufferedLoaded)
+            {
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                var toast = Toast.Make("Подключение восстановлено", ToastDuration.Short);
+                await toast.Show(cancellationTokenSource.Token);
+            }
+
             return true;
         }
 
         private void OnIdMADIPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(IdMADI.Id))
+            if (e.PropertyName == nameof(BufferedMADI.Id))
             {
-                GroupLabel = IdMADI.Id.Value;
+                GroupLabel = BufferedMADI.Id.Value;
                 if (Schedule != null)
                 {
                     Schedule.Clear();
                     OnPropertyChanged(nameof(Schedule));
                 }
 
-                LoadSecondData();
+                LoadSecondData(false);
             }
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)

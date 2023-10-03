@@ -105,6 +105,9 @@
 		<ApplicationTitle>Расписание МАДИ</ApplicationTitle>
 		<ApplicationDisplayVersion>1.0.9</ApplicationDisplayVersion>
 		<ApplicationVersion>10</ApplicationVersion>
+		<AndroidKeyStore>False</AndroidKeyStore>
+		<AndroidUseAapt2>True</AndroidUseAapt2>
+		<AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
@@ -112,6 +115,10 @@
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.0.9</ApplicationDisplayVersion>
 	  <ApplicationVersion>10</ApplicationVersion>
+	  <AndroidKeyStore>False</AndroidKeyStore>
+	  <AndroidUseAapt2>True</AndroidUseAapt2>
+	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	</PropertyGroup>
 
 	

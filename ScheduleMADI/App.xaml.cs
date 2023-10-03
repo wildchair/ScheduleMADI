@@ -7,11 +7,13 @@ public partial class App : Application
 		InitializeComponent();
 
         if (Preferences.Default.ContainsKey("id_group"))
-            IdMADI.Id = IdMADI.LoadSavedID();
-		if (Preferences.Default.ContainsKey("buff_sche"))
-			IdMADI.BufferedSchedule = IdMADI.LoadBufferedSchedule();
-		if(Preferences.Default.ContainsKey("day"))
-			IdMADI.BufferedDay = IdMADI.LoadBufferedDay();
+            BufferedMADI.Id = BufferedMADI.LoadSavedID();
+		if (Preferences.Default.ContainsKey("buff_sche") && Preferences.Default.ContainsKey("day"))
+		{
+			BufferedMADI.BufferedSchedule = BufferedMADI.LoadBufferedSchedule();
+			BufferedMADI.BufferedDay = BufferedMADI.LoadBufferedDay();
+		}
+
         MainPage = new AppShell();
 	}
 

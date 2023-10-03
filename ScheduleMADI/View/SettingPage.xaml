@@ -22,7 +22,7 @@
             <Label Text="Группа:" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" />
             <Entry Grid.Column="1" HorizontalTextAlignment="Center" Text="{Binding EntryText}"
                    Placeholder="1бАС1" IsEnabled="{Binding Entry_is_enabled}"/>
-            <Button Grid.Column="2" HorizontalOptions="Center"
+            <Button Grid.Column="2" HorizontalOptions="Center" Padding="13,10"
                     Command="{Binding SaveGroup}" 
                     Text="{Binding ButtonText}"/>
 

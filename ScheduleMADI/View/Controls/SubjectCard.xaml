@@ -35,7 +35,7 @@
 
             <Grid RowSpacing="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -50,7 +50,7 @@
                     <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding CardName, FallbackValue='Card Name'}" 
                            LineBreakMode="TailTruncation" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
 
-                <Label Grid.Row="2" Text="{Binding CardProf, FallbackValue='Card Prof'}"/>
+                <Label Grid.Row="2" Text="{Binding CardProf, FallbackValue='Card Prof'}" LineBreakMode="TailTruncation"/>
 
                 <Label Grid.Row="2" Grid.Column="1"  HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room'}"/>
                 </Grid>

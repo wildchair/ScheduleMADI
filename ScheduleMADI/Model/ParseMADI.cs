@@ -20,7 +20,7 @@ namespace ScheduleMADI
                 "{\"aaData\":[\"\\u0447\"]}" => "Числитель",
                 _ => "Получить день не удалось",
             };
-            IdMADI.BufferedDay = new KeyValuePair<DateTime, string>(DateTime.Now.Date, WeekMADI.Week);
+            BufferedMADI.BufferedDay = new KeyValuePair<DateTime, string>(DateTime.Now.Date, WeekMADI.Week);
         }
         public async static Task GetGroups()
         {
@@ -76,7 +76,7 @@ namespace ScheduleMADI
                 throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
             else
             {
-                IdMADI.BufferedSchedule = responseString;
+                BufferedMADI.BufferedSchedule = new KeyValuePair<string, string>(gp_id, responseString);
                 return ParseHTML(responseString);
             }
         }
@@ -162,8 +162,13 @@ namespace ScheduleMADI
                                     lesson.CardRoom = buff;
                                     break;
                                 case 5:
-                                    var a = buff.Split();// нормализация пробелов в ФИО
-                                    lesson.CardProf = a[0] + " " + a[^1];
+                                    var a = buff.Split().ToList();// нормализация пробелов в ФИО
+                                    a.RemoveAll(x => x == "");
+
+                                    var full ="";
+                                    foreach (var x in a)
+                                        full += x + " ";
+                                    lesson.CardProf = full;
                                     break;
                             }
                         }

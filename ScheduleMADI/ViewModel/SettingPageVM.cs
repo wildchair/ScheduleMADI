@@ -60,7 +60,7 @@ namespace ScheduleMADI
             //ParseMADI.PropertyChanged += OnLoadingChanged;
             SaveGroup = new Command(() =>
             {
-                IdMADI.Id = ParseMADI.id_groups.Where(x => x.Value.ToLower().Equals(EntryText.ToLower())).Single();
+                BufferedMADI.Id = ParseMADI.id_groups.Where(x => x.Value.ToLower().Equals(EntryText.ToLower())).Single();
                 ((Command)SaveGroup).ChangeCanExecute();
 
                 Entry_is_enabled = false;//сброс экранной клавиатуры
@@ -71,7 +71,7 @@ namespace ScheduleMADI
                 if (EntryText == null)//первый старт без сохраненной группы
                     return false;
 
-                if (IdMADI.Id.Value != null && EntryText.ToLower() == IdMADI.Id.Value.ToLower())//если такая группа уже сохранена
+                if (BufferedMADI.Id.Value != null && EntryText.ToLower() == BufferedMADI.Id.Value.ToLower())//если такая группа уже сохранена
                 {
                     ButtonText = "Сохранено";
                     return false;
@@ -81,8 +81,8 @@ namespace ScheduleMADI
                 return ParseMADI.id_groups.Any(x => x.Value.ToLower().Equals(EntryText.ToLower()))/* && !ParseMADI.Loading*/;// проверка существования введенной группы
             });
 
-            if (IdMADI.Id.Value != null)
-                EntryText = IdMADI.Id.Value;
+            if (BufferedMADI.Id.Value != null)
+                EntryText = BufferedMADI.Id.Value;
         }
 
         //private void OnLoadingChanged(object sender, PropertyChangedEventArgs e)
