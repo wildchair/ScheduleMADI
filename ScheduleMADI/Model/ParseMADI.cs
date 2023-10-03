@@ -269,7 +269,7 @@ namespace ScheduleMADI
 
         private static string? CutHTML(string? data, List<string> strToDelete = null)
         {
-            strToDelete ??= new() { "table class=\"timetable\"", "colspan=6", "style=\"white-space:pre-wrap\"",
+            strToDelete ??= new() { "table class=\"timetable\"", "colspan=6", "colspan=\"6\"", "style=\"white-space:pre-wrap\"",
                                     "<", ">", "/", "br", "th", "tr", "td", "b", "colspan=\"2\"",
                                     "rowspan=\"1\"", "li", "class", "value=" };
             foreach (var str in strToDelete)
