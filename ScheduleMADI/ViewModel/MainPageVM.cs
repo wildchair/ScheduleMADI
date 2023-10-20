@@ -146,13 +146,17 @@ namespace ScheduleMADI
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public CancellationTokenSource token;
+
         public MainPageVM()
         {
             BufferedMADI.PropertyChanged += OnIdMADIPropertyChanged;
 
             withoutCarouselVM = new(this);
 
-            LoadFirstData();
+            token = new CancellationTokenSource();
+
+            LoadFirstData();//тут токен наверное не нужен, пусть грузит себе всё вместе и норм. Вопрос лишь в том,грузить все id или выборочно
 
             if (BufferedMADI.Id.Value == null)
                 EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";

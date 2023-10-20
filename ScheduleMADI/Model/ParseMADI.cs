@@ -6,13 +6,21 @@ namespace ScheduleMADI
     {
         public static Dictionary<string, string> id_groups = new();//словарь групп
 
-        public async static Task GetWeek()
+        public async static Task GetWeek(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
 
-            var response = await httpClient.GetAsync("https://raspisanie.madi.ru/tplan/calendar.php");
+            string responseString;
 
-            var responseString = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var response = await httpClient.GetAsync("https://raspisanie.madi.ru/tplan/calendar.php", cancellationToken);
+                responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+            }
+            catch (TaskCanceledException)
+            {
+                return;
+            }
 
             WeekMADI.Week = responseString switch
             {
@@ -22,7 +30,7 @@ namespace ScheduleMADI
             };
             BufferedMADI.BufferedDay = new KeyValuePair<DateTime, string>(DateTime.Now.Date, WeekMADI.Week);
         }
-        public async static Task GetGroups()
+        public async static Task GetGroups(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
 
@@ -33,8 +41,17 @@ namespace ScheduleMADI
                 { "task_id", "7" }
             });
 
-            var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php", content);
-            var responseString = await response.Content.ReadAsStringAsync();
+            string responseString;
+
+            try
+            {
+                var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php", content, cancellationToken);
+                responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+            }
+            catch(TaskCanceledException)
+            {
+                return;
+            }
 
             StringReader reader = new(responseString);
 
@@ -43,22 +60,26 @@ namespace ScheduleMADI
             var list_buff = reader.ReadLine().Split("</li>").ToList();
             list_buff.RemoveAll(x => x == string.Empty);
             reader.Close();
+            reader.Dispose();
 
             foreach (var buff in list_buff)
             {
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+
                 var group_buff = CutHTML(buff).Trim().Split("\"").ToList();
                 group_buff.RemoveAll(x => x == string.Empty);
                 try//в полученном html могут быть айди группы без имен
                 {
                     var id = group_buff[0].Trim();
                     var name = group_buff[1].Replace(" ", String.Empty);
-                    if (!id_groups.ContainsKey(id))
+                    if (!id_groups.ContainsKey(id)) // может быть плохо при повторном коннекте
                         id_groups.Add(id, name);
                 }
                 catch (ArgumentOutOfRangeException) { continue; }
             }
         }
-        public async static Task<List<Day>> GetSchedule(string gp_id)
+        public async static Task<List<Day>> GetSchedule(string gp_id, CancellationToken cancellationToken)
         {
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
@@ -68,22 +89,38 @@ namespace ScheduleMADI
             });
 
             HttpClient httpClient = new();
-            var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content);
-
-            var responseString = await response.Content.ReadAsStringAsync();
+            string responseString;
+            try
+            {
+                var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content, cancellationToken);
+                responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+            }
+            catch(TaskCanceledException)
+            {
+                return null;
+            }
 
             if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
                 throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
             else
             {
+                var a = ParseHTML(responseString);
+
+                if(cancellationToken.IsCancellationRequested)
+                    return null;
+
                 BufferedMADI.BufferedSchedule = new KeyValuePair<string, string>(gp_id, responseString);
-                return ParseHTML(responseString);
+                return a;
             }
         }
 
-        public async static Task<List<Day>> GetScheduleFromHTML(string html)
+        public async static Task<List<Day>> GetScheduleFromHTML(string html, CancellationToken cancellationToken)
         {
-            return ParseHTML(html);
+            var a = ParseHTML(html);
+            if (cancellationToken.IsCancellationRequested)
+                return null;
+            else
+                return a;
         }
 
         private static List<Day> ParseHTML(string html)//парсинг html-таблицы расписания
@@ -165,7 +202,7 @@ namespace ScheduleMADI
                                     var a = buff.Split().ToList();// нормализация пробелов в ФИО
                                     a.RemoveAll(x => x == "");
 
-                                    var full ="";
+                                    var full = "";
                                     foreach (var x in a)
                                         full += x + " ";
                                     lesson.CardProf = full;
