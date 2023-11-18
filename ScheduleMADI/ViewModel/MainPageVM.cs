@@ -146,15 +146,13 @@ namespace ScheduleMADI
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public CancellationTokenSource token;
+        private readonly TokenDistributor tokenDistributor = new();
 
         public MainPageVM()
         {
             BufferedMADI.PropertyChanged += OnIdMADIPropertyChanged;
 
             withoutCarouselVM = new(this);
-
-            token = new CancellationTokenSource();
 
             LoadFirstData();//тут токен наверное не нужен, пусть грузит себе всё вместе и норм. Вопрос лишь в том,грузить все id или выборочно
 
@@ -173,8 +171,9 @@ namespace ScheduleMADI
             {
                 EmptyString = "Загрузка групп и недели...";
 
-                var getGroups = ParseMADI.GetGroups();
-                var getWeek = ParseMADI.GetWeek();
+
+                var getGroups = ParseMADI.GetGroups(new CancellationToken());
+                var getWeek = ParseMADI.GetWeek(new CancellationToken());
                 try
                 {
                     await Task.WhenAll(getGroups, getWeek);
@@ -196,7 +195,6 @@ namespace ScheduleMADI
                         await toast1.Show(cancellationToken.Token);
 
                         bufferedLoaded = true;
-                        //return true;
                     }
 
                     for (int i = 5; i > 0; i--)
@@ -208,14 +206,13 @@ namespace ScheduleMADI
             }
 
             if (BufferedMADI.Id.Value != null)
-                return await LoadSecondData(bufferedLoaded);
-            else
-                EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";
+                return await LoadSecondData(bufferedLoaded, tokenDistributor.GetNewToken());
 
+            EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";
             return true;
         }
 
-        private async Task<bool> LoadSecondData(bool bufferedLoaded)//загрузка по группе
+        private async Task<bool> LoadSecondData(bool bufferedLoaded, CancellationToken cancellationToken)//загрузка по группе
         {
             Datepicker_is_enabled = false;
 
@@ -226,12 +223,19 @@ namespace ScheduleMADI
 
                 try
                 {
-                    Schedule = await ParseMADI.GetSchedule(BufferedMADI.Id.Key);
+                    Schedule = await ParseMADI.GetSchedule(BufferedMADI.Id.Key, cancellationToken);
                     break;
                 }
                 catch (ParseMADIException ex)
                 {
                     EmptyString = ex.Message;
+                    return false;
+                }
+                catch (OperationCanceledException)
+                {
+                    //CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                    //var toast = Toast.Make("Отменено", ToastDuration.Short);
+                    //await toast.Show(cancellationTokenSource.Token);
                     return false;
                 }
                 catch
@@ -243,9 +247,8 @@ namespace ScheduleMADI
 
                         Datepicker_is_enabled = true;
                         bufferedLoaded = true;
-                        //break;
                     }
-                    
+
                     for (int i = 5; i > 0; i--)
                     {
                         EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
@@ -277,12 +280,39 @@ namespace ScheduleMADI
                     OnPropertyChanged(nameof(Schedule));
                 }
 
-                LoadSecondData(false);
+                tokenDistributor.CancelActiveToken();
+
+                LoadSecondData(false, tokenDistributor.GetNewToken());
             }
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private class TokenDistributor
+        {
+            private List<CancellationTokenSource> token_storage = new();
+
+            public CancellationToken GetActiveToken()
+            {
+                return token_storage.Last().Token;
+            }
+            public CancellationToken GetNewToken()
+            {
+                token_storage.Add(new CancellationTokenSource());
+                return GetActiveToken();
+            }
+            public async void CancelActiveToken()
+            {
+                var current_token = token_storage.Last();
+                current_token.Cancel();
+
+                await Task.Delay(40000);
+
+                token_storage.Remove(current_token);
+                current_token.Dispose();
+            }
         }
     }
 }

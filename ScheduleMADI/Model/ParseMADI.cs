@@ -12,15 +12,15 @@ namespace ScheduleMADI
 
             string responseString;
 
-            try
-            {
-                var response = await httpClient.GetAsync("https://raspisanie.madi.ru/tplan/calendar.php", cancellationToken);
-                responseString = await response.Content.ReadAsStringAsync(cancellationToken);
-            }
-            catch (TaskCanceledException)
-            {
-                return;
-            }
+            //try
+            //{
+            var response = await httpClient.GetAsync("https://raspisanie.madi.ru/tplan/calendar.php", cancellationToken);
+            responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+            //}
+            //catch (TaskCanceledException)
+            //{
+            //    cancellationToken.ThrowIfCancellationRequested();
+            //}
 
             WeekMADI.Week = responseString switch
             {
@@ -43,15 +43,15 @@ namespace ScheduleMADI
 
             string responseString;
 
-            try
-            {
+            //try
+            //{
                 var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php", content, cancellationToken);
                 responseString = await response.Content.ReadAsStringAsync(cancellationToken);
-            }
-            catch(TaskCanceledException)
-            {
-                return;
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    return;
+            //}
 
             StringReader reader = new(responseString);
 
@@ -65,7 +65,7 @@ namespace ScheduleMADI
             foreach (var buff in list_buff)
             {
                 if (cancellationToken.IsCancellationRequested)
-                    return;
+                    cancellationToken.ThrowIfCancellationRequested(); ;
 
                 var group_buff = CutHTML(buff).Trim().Split("\"").ToList();
                 group_buff.RemoveAll(x => x == string.Empty);
@@ -90,15 +90,15 @@ namespace ScheduleMADI
 
             HttpClient httpClient = new();
             string responseString;
-            try
-            {
-                var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content, cancellationToken);
-                responseString = await response.Content.ReadAsStringAsync(cancellationToken);
-            }
-            catch(TaskCanceledException)
-            {
-                return null;
-            }
+            //try
+            //{
+            var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content, cancellationToken);
+            responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+            //}
+            //catch (TaskCanceledException)
+            //{
+            //    return null;
+            //}
 
             if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
                 throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
@@ -106,21 +106,17 @@ namespace ScheduleMADI
             {
                 var a = ParseHTML(responseString);
 
-                if(cancellationToken.IsCancellationRequested)
-                    return null;
+                if (cancellationToken.IsCancellationRequested)
+                    cancellationToken.ThrowIfCancellationRequested();
 
                 BufferedMADI.BufferedSchedule = new KeyValuePair<string, string>(gp_id, responseString);
                 return a;
             }
         }
 
-        public async static Task<List<Day>> GetScheduleFromHTML(string html, CancellationToken cancellationToken)
+        public async static Task<List<Day>> GetScheduleFromHTML(string html)
         {
-            var a = ParseHTML(html);
-            if (cancellationToken.IsCancellationRequested)
-                return null;
-            else
-                return a;
+            return ParseHTML(html);
         }
 
         private static List<Day> ParseHTML(string html)//парсинг html-таблицы расписания

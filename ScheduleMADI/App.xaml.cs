@@ -10,7 +10,7 @@ public partial class App : Application
             BufferedMADI.Id = BufferedMADI.LoadSavedID();
 		if (Preferences.Default.ContainsKey("buff_sche") && Preferences.Default.ContainsKey("day"))
 		{
-			BufferedMADI.BufferedSchedule = BufferedMADI.LoadBufferedSchedule();
+			BufferedMADI.BufferedSchedule = BufferedMADI.LoadBufferedSchedule();//перезаписывается в память, надо починить
 			BufferedMADI.BufferedDay = BufferedMADI.LoadBufferedDay();
 		}
 
