@@ -174,9 +174,10 @@ namespace ScheduleMADI
 
                 var getGroups = ParseMADI.GetGroups(new CancellationToken());
                 var getWeek = ParseMADI.GetWeek(new CancellationToken());
+                var GetProfessors = ParseMADI.GetProfessors(new CancellationToken());
                 try
                 {
-                    await Task.WhenAll(getGroups, getWeek);
+                    await Task.WhenAll(getGroups, getWeek, GetProfessors);
                     break;
                 }
                 catch
@@ -223,7 +224,7 @@ namespace ScheduleMADI
 
                 try
                 {
-                    Schedule = await ParseMADI.GetSchedule(BufferedMADI.Id.Key, cancellationToken);
+                    Schedule = await ParseMADI.GetSchedule(BufferedMADI.Id, cancellationToken);
                     break;
                 }
                 catch (ParseMADIException ex)
@@ -305,6 +306,9 @@ namespace ScheduleMADI
             }
             public async void CancelActiveToken()
             {
+                if (token_storage.Count == 0)
+                    return;
+
                 var current_token = token_storage.Last();
                 current_token.Cancel();
 

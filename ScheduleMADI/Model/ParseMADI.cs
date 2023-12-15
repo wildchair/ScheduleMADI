@@ -5,7 +5,7 @@ namespace ScheduleMADI
     public static class ParseMADI
     {
         public static Dictionary<string, string> id_groups = new();//словарь групп
-
+        public static Dictionary<string, string> id_professors = new();
         public async static Task GetWeek(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
@@ -43,15 +43,8 @@ namespace ScheduleMADI
 
             string responseString;
 
-            //try
-            //{
-                var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php", content, cancellationToken);
-                responseString = await response.Content.ReadAsStringAsync(cancellationToken);
-            //}
-            //catch (Exception e)
-            //{
-            //    return;
-            //}
+            var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php", content, cancellationToken);
+            responseString = await response.Content.ReadAsStringAsync(cancellationToken);
 
             StringReader reader = new(responseString);
 
@@ -79,26 +72,83 @@ namespace ScheduleMADI
                 catch (ArgumentOutOfRangeException) { continue; }
             }
         }
-        public async static Task<List<Day>> GetSchedule(string gp_id, CancellationToken cancellationToken)
+        public async static Task GetProfessors(CancellationToken cancellationToken)
         {
+            HttpClient httpClient = new();
+
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                { "tab", "7" },
+                { "step_no", "1" },
 
-                { "gp_id", $"{gp_id}" }
+                { "task_id", "8" }
             });
+
+            string responseString;
+
+            var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task8_prepview.php", content);
+            responseString = await response.Content.ReadAsStringAsync();
+
+            StringReader reader = new(responseString);
+
+            for (int i = 0; i < 13; i++)
+                reader.ReadLine();
+            var list_buff = reader.ReadLine().Split("<option").ToList();
+            list_buff.RemoveAll(x => x == string.Empty);
+            reader.Close();
+            reader.Dispose();
+
+            foreach (var buff in list_buff)
+            {
+
+                var proff_buff = CutHTML(buff).Trim().Split("\"").ToList();
+                proff_buff.RemoveAll(x => x == string.Empty);
+                try//в полученном html могут быть айди группы без имен
+                {
+                    var id = proff_buff[0].Trim();
+                    var name_buff = proff_buff[1].Split().ToList();
+                    name_buff.RemoveAll(x => x == string.Empty);
+                    var name = name_buff[0] + " " + name_buff[1];
+                    if (!id_professors.ContainsKey(id) && id != "-1") // может быть плохо при повторном коннекте
+                        id_professors.Add(id, name);
+                }
+                catch (ArgumentOutOfRangeException) { continue; }
+
+            }
+        }
+        public async static Task<List<Day>> GetSchedule(KeyValuePair<string, string> id, CancellationToken cancellationToken)
+        {
+            FormUrlEncodedContent content;
+
+            if (id_groups.ContainsKey(id.Key))
+            {
+                content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    { "tab", "7" },
+
+                    { "gp_id", $"{id.Key}" }
+                });
+            }
+            else
+            {
+                var date = SemesterCalculator(DateTime.Now);
+
+                content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    { "tab", "8" },
+
+                    { "pr_id", $"{id.Key}" },
+
+                    {"tp_year", $"{date.year}" },
+
+                    {"sem_no", $"{date.semester}" }
+                });
+            }
 
             HttpClient httpClient = new();
             string responseString;
-            //try
-            //{
+
             var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content, cancellationToken);
             responseString = await response.Content.ReadAsStringAsync(cancellationToken);
-            //}
-            //catch (TaskCanceledException)
-            //{
-            //    return null;
-            //}
 
             if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
                 throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
@@ -109,7 +159,7 @@ namespace ScheduleMADI
                 if (cancellationToken.IsCancellationRequested)
                     cancellationToken.ThrowIfCancellationRequested();
 
-                BufferedMADI.BufferedSchedule = new KeyValuePair<string, string>(gp_id, responseString);
+                BufferedMADI.BufferedSchedule = new KeyValuePair<string, string>(id.Key, responseString);
                 return a;
             }
         }
@@ -130,6 +180,8 @@ namespace ScheduleMADI
                 { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } } }
             };
 
+            bool isProfessors = false;
+
             StringReader reader = new(html);
 
             foreach (var day in days)//это че такое вообще?
@@ -137,9 +189,12 @@ namespace ScheduleMADI
                     day.Lessons.Clear();//как это родилось?
 
             string buff;
-            while ((buff = reader.ReadLine()) != null)
+            for (int row = 0; (buff = reader.ReadLine()) != null; row++)
             {
-                if (buff.Contains("colspan=6"))//отслеживание начала дня
+                if (row == 10 && buff.Contains("Преподаватель"))
+                    isProfessors = true;
+
+                if (buff.Contains("colspan=6") || buff.Contains("colspan=\"6\"") && !buff.Contains("Полнодневные занятия"))//отслеживание начала дня
                 {
                     //проход по дню
                     buff = CutHTML(buff);
@@ -177,33 +232,62 @@ namespace ScheduleMADI
                         {
                             buff = reader.ReadLine();
                             buff = CutHTML(buff);
-                            switch (i)
-                            {
-                                case 0:
-                                    lesson.CardTime = buff;
-                                    break;
-                                case 1:
-                                    lesson.CardName = buff;
-                                    break;
-                                case 2:
-                                    lesson.CardType = buff;
-                                    break;
-                                case 3:
-                                    lesson.CardDay = buff;
-                                    break;
-                                case 4:
-                                    lesson.CardRoom = buff;
-                                    break;
-                                case 5:
-                                    var a = buff.Split().ToList();// нормализация пробелов в ФИО
-                                    a.RemoveAll(x => x == "");
+                            if (!isProfessors)
+                                switch (i)
+                                {
+                                    case 0:
+                                        lesson.CardTime = buff;
+                                        break;
+                                    case 1:
+                                        lesson.CardName = buff;
+                                        break;
+                                    case 2:
+                                        lesson.CardType = buff;
+                                        break;
+                                    case 3:
+                                        lesson.CardDay = buff;
+                                        break;
+                                    case 4:
+                                        lesson.CardRoom = buff;
+                                        break;
+                                    case 5:
+                                        var a = buff.Split().ToList();// нормализация пробелов в ФИО
+                                        a.RemoveAll(x => x == "");
 
-                                    var full = "";
-                                    foreach (var x in a)
-                                        full += x + " ";
-                                    lesson.CardProf = full;
-                                    break;
-                            }
+                                        var full = "";
+                                        foreach (var x in a)
+                                            full += x + " ";
+                                        lesson.CardProf = full;
+                                        break;
+                                }
+                            else
+                                switch(i)
+                                {
+                                    case 0:
+                                        lesson.CardTime = buff;
+                                        break;
+                                    case 2:
+                                        lesson.CardName = buff;
+                                        break;
+                                    case 3:
+                                        lesson.CardType = buff;
+                                        break;
+                                    case 4:
+                                        lesson.CardDay = buff;
+                                        break;
+                                    case 5:
+                                        lesson.CardRoom = buff;
+                                        break;
+                                    case 1:
+                                        //var a = buff.Split().ToList();// нормализация пробелов в ФИО
+                                        //a.RemoveAll(x => x == "");
+
+                                        //var full = "";
+                                        //foreach (var x in a)
+                                        //    full += x + " ";
+                                        lesson.CardProf = buff.Replace(" ", string.Empty);
+                                        break;
+                                }
                         }
 
                         day.Lessons.Add(lesson);
@@ -304,10 +388,28 @@ namespace ScheduleMADI
         {
             strToDelete ??= new() { "table class=\"timetable\"", "colspan=6", "colspan=\"6\"", "style=\"white-space:pre-wrap\"",
                                     "<", ">", "/", "br", "th", "tr", "td", "b", "colspan=\"2\"",
-                                    "rowspan=\"1\"", "li", "class", "value=" };
+                                    "rowspan=\"1\"", "li", "class", "value=", "select", "option"};
             foreach (var str in strToDelete)
                 data = data.Replace(str, string.Empty).Trim();
             return data;
+        }
+
+        private static (int semester, int year) SemesterCalculator(DateTime date)
+        {
+            int sem, ye;
+
+            if (date.Date.Month >= 8 || (date.Date.Month == 1 && date.Date.Day < 10))
+            {
+                ye = date.Year;
+                sem = 1;
+            }
+            else
+            {
+                ye = date.Year - 1;
+                sem = 2;
+            }
+
+            return (sem, ye - 2000);
         }
     }
     class ParseMADIException : Exception

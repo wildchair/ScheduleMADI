@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ScheduleMADI.SettingPage"
              x:Name="settingpage">
-    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" >
 
         <Grid Margin="15" ColumnSpacing="15" RowSpacing="15"
           HorizontalOptions="Center" VerticalOptions="Center">
@@ -16,28 +17,48 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <Entry Grid.ColumnSpan="3" HorizontalTextAlignment="Center" Text="{Binding EntryText}"
+                   Placeholder="Группа или ФИО" IsEnabled="{Binding Entry_is_enabled}" HorizontalOptions="FillAndExpand" 
+                   ClearButtonVisibility="WhileEditing" IsSpellCheckEnabled="False">
+                <Entry.Keyboard>
+                    <Keyboard x:FactoryMethod="Create">
+                        <x:Arguments>
+                            <KeyboardFlags>None</KeyboardFlags>
+                        </x:Arguments>
+                    </Keyboard>
+                </Entry.Keyboard>
+            </Entry>
 
-            <Label Text="Группа:" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" />
-            <Entry Grid.Column="1" HorizontalTextAlignment="Center" Text="{Binding EntryText}"
-                   Placeholder="1бАС1" IsEnabled="{Binding Entry_is_enabled}"/>
-            <Button Grid.Column="2" HorizontalOptions="Center" Padding="13,10"
-                    Command="{Binding SaveGroup}" 
-                    Text="{Binding ButtonText}"/>
+            <CollectionView Grid.Row="1" ItemsSource="{Binding SearchResults}" HeightRequest="200"
+                            Grid.ColumnSpan="3" SelectionMode="Single" VerticalScrollBarVisibility="Always" 
+                            SelectionChangedCommand="{Binding ItemSelected}" EmptyView="Ничего не нашлось 😢"
+                            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}" 
+                            Header="Выбери группу или ФИО" WidthRequest="200" IsVisible="{Binding Coll_is_visible}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" SnapPointsType="None"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Value}" HorizontalTextAlignment="Center"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-            <Label Grid.Row="1" Text="Поддержать разработчика:" 
+            <Label Grid.Row="2" Text="Поддержать разработчика:" 
                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-            <Editor Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="5536 9137 8567 4439" TextColor="CornflowerBlue" 
+            <Editor Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="5536 9137 8567 4439" TextColor="CornflowerBlue" 
                    VerticalTextAlignment="Center" HorizontalTextAlignment="Center" IsReadOnly="True">
                 <Editor.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                 </Editor.GestureRecognizers>
             </Editor>
 
-            <Label Grid.Row="2" Text="Версия приложения:" 
+            <Label Grid.Row="3" Text="Версия приложения:" 
                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-            <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding VersionApp}"
+            <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding VersionApp}"
                    VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
         </Grid>
 
