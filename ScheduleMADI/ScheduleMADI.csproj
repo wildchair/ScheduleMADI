@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-ios;net7.0-maccatalyst;net7.0-android33.0</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-ios;net8.0-maccatalyst;net8.0-android34.0</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
@@ -38,25 +38,14 @@
 		<DefaultLanguage>ru</DefaultLanguage>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
-	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
-	  <AndroidKeyStore>False</AndroidKeyStore>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
-	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
-	  <AndroidKeyStore>False</AndroidKeyStore>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
 	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
@@ -64,29 +53,14 @@
 	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
 	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
-	  <Optimize>True</Optimize>
-	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
-	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
@@ -94,7 +68,22 @@
 	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
+	  <Optimize>True</Optimize>
+	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
 	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <Optimize>True</Optimize>
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
@@ -110,7 +99,7 @@
 		<AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
@@ -143,10 +132,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Core" Version="6.0.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="7.0.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>
