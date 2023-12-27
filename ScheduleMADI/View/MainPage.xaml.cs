@@ -4,6 +4,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace ScheduleMADI;
+
+/// <summary>
+/// ПУБЛИКОВАТЬ НУЖНО ВСЁ ИЗ "ОПУБЛИКОВАТЬ", НЕ ИЗ КОНСОЛИ!!!!!! КОНСОЛЬ КРИВО ПОДПИСЫВАЕТ!!!
+/// </summary>
 public partial class MainPage : ContentPage
 {
     MainPageVM mainPageVM = new();

@@ -118,6 +118,7 @@ namespace ScheduleMADI
         public async static Task<List<Day>> GetSchedule(KeyValuePair<string, string> id, CancellationToken cancellationToken)
         {
             FormUrlEncodedContent content;
+            var date = SemesterCalculator(DateTime.Now);
 
             if (id_groups.ContainsKey(id.Key))
             {
@@ -125,12 +126,16 @@ namespace ScheduleMADI
                 {
                     { "tab", "7" },
 
-                    { "gp_id", $"{id.Key}" }
+                    { "gp_id", $"{id.Key}" },
+
+                    {"tp_year", $"{date.year}" },
+
+                    {"sem_no", $"{date.semester}" }
                 });
             }
             else
             {
-                var date = SemesterCalculator(DateTime.Now);
+                //var date = SemesterCalculator(DateTime.Now);
 
                 content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {

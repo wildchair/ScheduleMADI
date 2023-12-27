@@ -52,50 +52,50 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>11</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>11</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>11</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>11</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>11</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>11</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <Optimize>True</Optimize>
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 		<AndroidSigningKeyStore>..\shedule.keystore</AndroidSigningKeyStore>
@@ -103,8 +103,8 @@
 		<AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass></AndroidSigningKeyPass>
 		<ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-		<ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>11</ApplicationVersion>
+		<ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+		<ApplicationVersion>14</ApplicationVersion>
 		<AndroidKeyStore>False</AndroidKeyStore>
 		<AndroidUseAapt2>True</AndroidUseAapt2>
 		<AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
@@ -113,12 +113,12 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>11</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
+	  <ApplicationVersion>14</ApplicationVersion>
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	</PropertyGroup>
 
 	
