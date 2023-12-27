@@ -105,9 +105,8 @@
 	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
 	  <ApplicationVersion>14</ApplicationVersion>
 	  <AndroidKeyStore>False</AndroidKeyStore>
-	  <AndroidUseAapt2>True</AndroidUseAapt2>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	</PropertyGroup>
 
 	
