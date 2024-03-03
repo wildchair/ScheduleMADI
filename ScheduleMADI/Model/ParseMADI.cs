@@ -12,15 +12,8 @@ namespace ScheduleMADI
 
             string responseString;
 
-            //try
-            //{
             var response = await httpClient.GetAsync("https://raspisanie.madi.ru/tplan/calendar.php", cancellationToken);
             responseString = await response.Content.ReadAsStringAsync(cancellationToken);
-            //}
-            //catch (TaskCanceledException)
-            //{
-            //    cancellationToken.ThrowIfCancellationRequested();
-            //}
 
             WeekMADI.Week = responseString switch
             {
@@ -135,8 +128,6 @@ namespace ScheduleMADI
             }
             else
             {
-                //var date = SemesterCalculator(DateTime.Now);
-
                 content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     { "tab", "8" },
@@ -284,12 +275,6 @@ namespace ScheduleMADI
                                         lesson.CardRoom = buff;
                                         break;
                                     case 1:
-                                        //var a = buff.Split().ToList();// нормализация пробелов в ФИО
-                                        //a.RemoveAll(x => x == "");
-
-                                        //var full = "";
-                                        //foreach (var x in a)
-                                        //    full += x + " ";
                                         lesson.CardProf = buff.Replace(" ", string.Empty);
                                         break;
                                 }
@@ -393,7 +378,7 @@ namespace ScheduleMADI
         {
             strToDelete ??= new() { "table class=\"timetable\"", "colspan=6", "colspan=\"6\"", "style=\"white-space:pre-wrap\"",
                                     "<", ">", "/", "br", "th", "tr", "td", "b", "colspan=\"2\"",
-                                    "rowspan=\"1\"", "li", "class", "value=", "select", "option"};
+                                    "rowspan=\"1\"", "li", "class", "value=", "select", "option", "rowspan=\"8\"", "colspan=\"1\""};
             foreach (var str in strToDelete)
                 data = data.Replace(str, string.Empty).Trim();
             return data;
