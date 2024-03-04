@@ -41,46 +41,46 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>16</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>16</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>16</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>16</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>16</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <Optimize>True</Optimize>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>16</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
@@ -92,8 +92,8 @@
 		<AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass></AndroidSigningKeyPass>
 		<ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-		<ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-		<ApplicationVersion>14</ApplicationVersion>
+		<ApplicationDisplayVersion>1.1.3</ApplicationDisplayVersion>
+		<ApplicationVersion>16</ApplicationVersion>
 		<AndroidKeyStore>False</AndroidKeyStore>
 		<AndroidUseAapt2>True</AndroidUseAapt2>
 		<AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
@@ -102,8 +102,8 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
 	  <ApplicationId>com.wildchair.schedulemadi</ApplicationId>
 	  <ApplicationTitle>Расписание МАДИ</ApplicationTitle>
-	  <ApplicationDisplayVersion>1.1.1</ApplicationDisplayVersion>
-	  <ApplicationVersion>14</ApplicationVersion>
+	  <ApplicationDisplayVersion>1.1.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>16</ApplicationVersion>
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
@@ -135,8 +135,8 @@
 		<PackageReference Include="CommunityToolkit.Maui.Core" Version="7.0.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.6" />
 	</ItemGroup>
 
 	<ItemGroup>
