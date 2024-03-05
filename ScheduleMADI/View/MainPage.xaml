@@ -20,10 +20,10 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <DatePicker     Format="d MMMM, dddd" HorizontalOptions="Start"
-                            MinimumDate="{Binding MinDate}" 
-                            Date="{Binding withoutCarouselVM.DatepickerDate }"
-                            MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
+            <DatePicker x:Name="DP" Format="d MMMM, dddd" HorizontalOptions="Start"
+                        MinimumDate="{Binding MinDate}" 
+                        Date="{Binding withoutCarouselVM.DatepickerDate }"
+                        MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
 
             
             <Label Grid.Column="1" HorizontalTextAlignment="End" VerticalTextAlignment="Center" 
@@ -34,13 +34,13 @@
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CollectionView ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
-                            EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand">
+            <CollectionView x:Name="cv" ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
+                            EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand" ChildAdded="cv_ChildAdded">
                 <CollectionView.GestureRecognizers>
                     <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums}"
                                           Tapped="TapGestureRecognizer_Tapped"/>
                 </CollectionView.GestureRecognizers>
-        
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="controls:Lesson">
                         <controls:SubjectCard

@@ -1,9 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-
-namespace ScheduleMADI;
+﻿namespace ScheduleMADI;
 
 /// <summary>
 /// ПУБЛИКОВАТЬ НУЖНО ВСЁ ИЗ "ОПУБЛИКОВАТЬ", НЕ ИЗ КОНСОЛИ!!!!!! КОНСОЛЬ КРИВО ПОДПИСЫВАЕТ!!!
@@ -34,5 +29,13 @@ public partial class MainPage : ContentPage
             mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(-1);
         else if (Window.Width / 2 < e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate < mainPageVM.MaxDate)
             mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(1);
+    }
+
+    private void cv_ChildAdded(object sender, ElementEventArgs e)
+    {
+        if (DP.Date.Date == DateTime.Today.Date)
+            Task.Run(() => (e.Element as SubjectCard).ProgressLoop());
+        else if (DP.Date.Date < DateTime.Today.Date)
+            Task.Run(() => (e.Element as SubjectCard).ProgressTo(1, 500, Easing.Linear));
     }
 }
