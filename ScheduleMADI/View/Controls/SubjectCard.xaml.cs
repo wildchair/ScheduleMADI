@@ -1,6 +1,3 @@
-using System.Collections.Specialized;
-using System.ComponentModel;
-
 namespace ScheduleMADI;
 
 public partial class SubjectCard : ContentView
@@ -11,7 +8,7 @@ public partial class SubjectCard : ContentView
         get => (string)GetValue(SubjectCard.CardTimeProperty);
         set => SetValue(SubjectCard.CardTimeProperty, value);
     }
-    
+
     public static readonly BindableProperty CardDayProperty = BindableProperty.Create(nameof(CardDay), typeof(string), typeof(SubjectCard), string.Empty);
     public string CardDay
     {
@@ -48,7 +45,7 @@ public partial class SubjectCard : ContentView
     }
 
     public SubjectCard()
-	{
-		InitializeComponent();
-	}
+    {
+        InitializeComponent();
+    }
 }

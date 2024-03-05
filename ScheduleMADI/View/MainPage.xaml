@@ -9,7 +9,7 @@
         <behaviors:StatusBarBehavior StatusBarStyle="DarkContent"/>
     </ContentPage.Behaviors>
 
-    <StackLayout>
+    <StackLayout VerticalOptions="FillAndExpand">
         <Grid Margin="15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -35,7 +35,7 @@
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
             <CollectionView ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
-                            EmptyView="{Binding EmptyString}">
+                            EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand">
                 <CollectionView.GestureRecognizers>
                     <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums}"
                                           Tapped="TapGestureRecognizer_Tapped"/>
