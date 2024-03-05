@@ -48,4 +48,39 @@ public partial class SubjectCard : ContentView
     {
         InitializeComponent();
     }
+
+    public async Task ProgressLoop()
+    {
+        string[] times;
+        TimeSpan start;
+        TimeSpan end;
+
+        if (CardTime == null)
+        {
+            start = TimeSpan.FromMinutes(0);
+            end = TimeSpan.FromMinutes(1440);
+        }
+        else
+        {
+            times = CardTime.Split("-");
+            start = TimeSpan.Parse(times[0]);
+            end = TimeSpan.Parse(times[1]);
+        }
+
+        var duration = (double)(end - start).TotalMinutes;
+
+        while (DateTime.Now.TimeOfDay < end)
+        {
+            if (DateTime.Now.TimeOfDay > start)
+                await bar.ProgressTo((DateTime.Now.TimeOfDay - start).TotalMinutes / duration, 500, Easing.Linear);
+            await Task.Delay(60000);
+        }
+
+        if (DateTime.Now.TimeOfDay >= end)
+            await bar.ProgressTo(1, 500, Easing.Linear);
+    }
+    public async Task ProgressTo(double value, uint length, Easing easing)
+    {
+        await bar.ProgressTo(value, length, easing);
+    }
 }

@@ -80,36 +80,5 @@ namespace ScheduleMADI
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
-        //private async Task AnimatingLoop()
-        //{
-        //    string[] times;
-        //    TimeSpan start;
-        //    TimeSpan end;
-
-        //    if (CardTime == null)
-        //    {
-        //        start = TimeSpan.FromMinutes(0);
-        //        end = TimeSpan.FromMinutes(1440);
-        //    }
-        //    else
-        //    {
-        //        times = CardTime.Split("-");
-        //        start = TimeSpan.Parse(times[0]);
-        //        end = TimeSpan.Parse(times[1]);
-        //    }
-
-        //    var duration = (double)(end - start).TotalMinutes;
-
-        //    while (DateTime.Now.TimeOfDay > start && DateTime.Now.TimeOfDay < end /*&& DateTime.Today.Date == MyDay.Date*/)
-        //    {
-        //        await bar.ProgressTo((DateTime.Now.TimeOfDay - start).TotalMinutes / duration, 500, Easing.Linear);
-        //        await Task.Delay(60000);
-        //    }
-
-        //    //if (DateTime.Today.Date > MyDay.Date)
-        //    if (DateTime.Now.TimeOfDay > end)
-        //        await bar.ProgressTo(1, 500, Easing.Linear);
-        //}
     }
 }

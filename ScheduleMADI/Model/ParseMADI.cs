@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Net.NetworkInformation;
 
 namespace ScheduleMADI
 {
@@ -6,10 +7,12 @@ namespace ScheduleMADI
     {
         public static Dictionary<string, string> id_groups = new();//словарь групп
         public static Dictionary<string, string> id_professors = new();
+
+        private static TimeSpan TIMEOUT = new(0, 0, 10);
         public async static Task GetWeek(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
-
+            httpClient.Timeout = TIMEOUT;
             string responseString;
 
             var response = await httpClient.GetAsync("https://raspisanie.madi.ru/tplan/calendar.php", cancellationToken);
@@ -26,6 +29,8 @@ namespace ScheduleMADI
         public async static Task GetGroups(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
+
+            httpClient.Timeout = TIMEOUT;
 
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
@@ -68,6 +73,8 @@ namespace ScheduleMADI
         public async static Task GetProfessors(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
+
+            httpClient.Timeout = TIMEOUT;
 
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
@@ -141,6 +148,9 @@ namespace ScheduleMADI
             }
 
             HttpClient httpClient = new();
+
+            httpClient.Timeout = TIMEOUT;
+
             string responseString;
 
             var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content, cancellationToken);
