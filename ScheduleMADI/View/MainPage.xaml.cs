@@ -25,6 +25,7 @@ public partial class MainPage : ContentPage
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
         Vibration.Vibrate(30);
+
         if (Window.Width / 2 > e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate > mainPageVM.MinDate)
             mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(-1);
         else if (Window.Width / 2 < e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate < mainPageVM.MaxDate)
