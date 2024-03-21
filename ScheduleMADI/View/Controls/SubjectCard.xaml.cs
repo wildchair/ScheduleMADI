@@ -67,17 +67,24 @@ public partial class SubjectCard : ContentView
             end = TimeSpan.Parse(times[1]);
         }
 
-        var duration = (double)(end - start).TotalMinutes;
+        if (DateTime.Now.TimeOfDay >= end)
+        {
+            await bar.ProgressTo(1, 500, Easing.Linear);
+            return;
+        }
+
+        var duration = (end - start);
 
         while (DateTime.Now.TimeOfDay < end)
         {
-            if (DateTime.Now.TimeOfDay > start)
-                await bar.ProgressTo((DateTime.Now.TimeOfDay - start).TotalMinutes / duration, 500, Easing.Linear);
+            if (DateTime.Now.TimeOfDay >= start)
+            {
+                await bar.ProgressTo((DateTime.Now.TimeOfDay - start).TotalMinutes / duration.TotalMinutes, 500, Easing.Linear);
+                await bar.ProgressTo(1, (uint)(end - DateTime.Now.TimeOfDay).TotalMilliseconds, Easing.Linear);
+                return;
+            }
             await Task.Delay(60000);
         }
-
-        if (DateTime.Now.TimeOfDay >= end)
-            await bar.ProgressTo(1, 500, Easing.Linear);
     }
     public async Task ProgressTo(double value, uint length, Easing easing)
     {
