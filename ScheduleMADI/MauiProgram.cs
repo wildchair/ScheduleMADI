@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+
+[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+
 namespace ScheduleMADI;
 
 public static class MauiProgram
