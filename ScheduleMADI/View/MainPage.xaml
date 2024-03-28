@@ -17,13 +17,13 @@
             </Grid.RowDefinitions>
 
             <DatePicker x:Name="DP" Format="d MMMM, dddd" HorizontalOptions="Start"
-                        MinimumDate="{Binding MinDate}" 
-                        Date="{Binding withoutCarouselVM.DatepickerDate }"
-                        MaximumDate="{Binding MaxDate}" IsEnabled="{Binding Datepicker_is_enabled}"/>
+                        MinimumDate="{Binding MinDate, Mode=TwoWay}" 
+                        Date="{Binding withoutCarouselVM.DatepickerDate, Mode=TwoWay}"
+                        MaximumDate="{Binding MaxDate, Mode=TwoWay}" IsEnabled="{Binding Datepicker_is_enabled, Mode=TwoWay}"/>
 
             
             <Label Grid.Column="1" HorizontalTextAlignment="End" VerticalTextAlignment="Center" 
-                   Text="{Binding GroupLabel}"/>
+                   Text="{Binding GroupLabel, Mode=TwoWay}"/>
 
         </Grid>
 
@@ -33,16 +33,16 @@
             <CollectionView x:Name="cv" ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
                             EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand" ChildAdded="cv_ChildAdded">
                 <CollectionView.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums}"
+                    <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums, Mode=TwoWay}"
                                           Tapped="TapGestureRecognizer_Tapped"/>
                 </CollectionView.GestureRecognizers>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="controls:Lesson">
                         <controls:SubjectCard
-                                  CardDay="{Binding CardDay}" CardName="{Binding CardName}"
-                                  CardProf="{Binding CardProf}" CardRoom="{Binding CardRoom}"
-                                  CardTime="{Binding CardTime}" CardType="{Binding CardType}"/>
+                                  CardDay="{Binding CardDay, Mode=OneWay}" CardName="{Binding CardName, Mode=OneWay}"
+                                  CardProf="{Binding CardProf, Mode=OneWay}" CardRoom="{Binding CardRoom, Mode=OneWay}"
+                                  CardTime="{Binding CardTime, Mode=OneWay}" CardType="{Binding CardType, Mode=OneWay}"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
