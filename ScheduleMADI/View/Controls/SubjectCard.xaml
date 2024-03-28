@@ -45,8 +45,8 @@
                     <Label Grid.Row="2" Text="{Binding CardProf, FallbackValue='Card Prof'}" LineBreakMode="TailTruncation"/>
 
                     <Label Grid.Row="2" Grid.Column="1"  HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room'}"/>
-                
-                    <ProgressBar x:Name="bar" Grid.ColumnSpan="2" Grid.Row="3" ProgressColor="PaleGreen"/>
+
+                <ProgressBar x:Name="bar" Grid.ColumnSpan="2" Grid.Row="3" ProgressColor="{AppThemeBinding Dark = DarkGreen, Light=MediumSeaGreen}"/>
             </Grid>
         </Frame>
     </Grid>
