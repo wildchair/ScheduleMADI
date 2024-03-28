@@ -6,13 +6,12 @@
     xmlns:local="clr-namespace:ScheduleMADI">
 
     <TabBar>
-        <Tab Title="Расписание">
+        <Tab Title="Расписание" Icon="schedule.svg">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
         </Tab>
 
-        <Tab Title="Настройки">
+        <Tab Title="Настройки" Icon="setting.svg">
             <ShellContent ContentTemplate="{DataTemplate local:SettingPage}"/>
         </Tab>
     </TabBar>
-
 </Shell>
