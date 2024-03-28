@@ -2,12 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:ScheduleMADI"
-             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ScheduleMADI.MainPage" x:Name="this"
              Loaded="Mainpage_Appearing" x:DataType="controls:MainPageVM">
-    <ContentPage.Behaviors>
-        <behaviors:StatusBarBehavior StatusBarStyle="DarkContent"/>
-    </ContentPage.Behaviors>
 
     <StackLayout VerticalOptions="FillAndExpand">
         <Grid Margin="15">
