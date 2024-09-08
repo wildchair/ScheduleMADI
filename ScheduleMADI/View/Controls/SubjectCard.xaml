@@ -40,9 +40,11 @@
                            HorizontalTextAlignment="Start"/>
 
                 <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding CardName, FallbackValue='Card Name', Mode=OneWay}" 
-                           LineBreakMode="TailTruncation" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                           LineBreakMode="TailTruncation" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"
+                       ToolTipProperties.Text="{Binding CardName, FallbackValue='Card Name', Mode=OneWay}"/>
 
-                <Label Grid.Row="2" Text="{Binding CardProf, FallbackValue='Card Prof', Mode=OneWay}" LineBreakMode="TailTruncation"/>
+                <Label Grid.Row="2" ToolTipProperties.Text="{Binding CardProf, FallbackValue='Card Prof', Mode=OneWay}" 
+                       Text="{Binding CardProf, FallbackValue='Card Prof', Mode=OneWay}" LineBreakMode="TailTruncation"/>
 
                 <Label Grid.Row="2" Grid.Column="1"  HorizontalOptions="End" Text="{Binding CardRoom, FallbackValue='Card Room', Mode=OneWay}"/>
 
