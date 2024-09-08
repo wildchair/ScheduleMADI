@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Net.NetworkInformation;
 
 namespace ScheduleMADI
 {
@@ -267,7 +266,7 @@ namespace ScheduleMADI
                                         break;
                                 }
                             else
-                                switch(i)
+                                switch (i)
                                 {
                                     case 0:
                                         lesson.CardTime = buff;
@@ -290,7 +289,15 @@ namespace ScheduleMADI
                                 }
                         }
 
-                        day.Lessons.Add(lesson);
+                        var existingLesson = day.Lessons.SingleOrDefault(x =>
+                        x.CardTime == lesson.CardTime && x.CardType == lesson.CardType &&
+                        x.CardName == lesson.CardName && x.CardDay == lesson.CardDay && x.CardRoom == lesson.CardRoom,
+                        null);
+
+                        if (existingLesson != null)
+                            existingLesson.CardProf += $", {lesson.CardProf}";
+                        else
+                            day.Lessons.Add(lesson);
 
                         string scout = string.Empty;//отслеживание границы между днями
                         do
