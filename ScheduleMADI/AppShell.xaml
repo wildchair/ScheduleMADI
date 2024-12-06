@@ -15,6 +15,10 @@
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
         </Tab>
 
+        <Tab Title="Экзамены" Icon="exam2.svg">
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
+        </Tab>
+
         <Tab Title="Настройки" Icon="setting.svg">
             <ShellContent ContentTemplate="{DataTemplate local:SettingPage}"/>
         </Tab>
