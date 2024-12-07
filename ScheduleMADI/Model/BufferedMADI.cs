@@ -42,6 +42,18 @@ namespace ScheduleMADI
             }
         }
 
+        private static KeyValuePair<string, string> bufferedExamSchedule;
+        public static KeyValuePair<string, string> BufferedExamSchedule
+        {
+            get => bufferedExamSchedule;
+            set
+            {
+                bufferedExamSchedule = value;
+                Preferences.Default.Set("buff_exam_sche", value.Value);
+                Preferences.Default.Set("buff_id", value.Key);
+            }
+        }
+
         public static KeyValuePair<string, string> LoadSavedID()//загрузка сохраненного idшника
         {
             return new KeyValuePair<string, string>(Preferences.Default.Get("id_group", "8810"),//данные по-умолчанию никогда не
@@ -52,6 +64,12 @@ namespace ScheduleMADI
         {
             return new KeyValuePair<string, string>(Preferences.Default.Get("buff_id", String.Empty),
                                                     Preferences.Default.Get("buff_sche", String.Empty));
+        }
+
+        public static KeyValuePair<string, string> LoadBufferedExamSchedule()
+        {
+            return new KeyValuePair<string, string>(Preferences.Default.Get("buff_id", String.Empty),
+                                                    Preferences.Default.Get("buff_exam_sche", String.Empty));
         }
 
         public static KeyValuePair<DateTime, string> LoadBufferedDay()

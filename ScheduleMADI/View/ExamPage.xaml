@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:ScheduleMADI" 
+             x:Class="ScheduleMADI.ExamPage" x:Name="this"
+             x:DataType="controls:ExamPageVM">
+    <StackLayout VerticalOptions="FillAndExpand">
+        <Grid Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+
+            <Label Grid.Column="1" HorizontalTextAlignment="End" VerticalTextAlignment="Center" 
+               Text="{Binding GroupLabel, Mode=TwoWay}"/>
+
+        </Grid>
+
+        <Border></Border>
+
+        <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
+            <CollectionView x:Name="cv" ItemsSource="{Binding ExamShedule}" 
+                        EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="controls:Exam">
+                        <controls:ExamCard
+                              CardName="{Binding CardName, Mode=OneWay}"
+                              CardProf="{Binding CardProf, Mode=OneWay}" 
+                              CardRoom="{Binding CardRoom, Mode=OneWay}"
+                              CardTime="{Binding CardDateTime, Mode=OneWay}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </StackLayout>
+</ContentPage>

@@ -391,11 +391,162 @@ namespace ScheduleMADI
             return days;
         }
 
+        public async static Task<List<Exam>> GetExamSchedule(KeyValuePair<string, string> id, CancellationToken cancellationToken)
+        {
+            FormUrlEncodedContent content;
+            var date = SemesterCalculator(DateTime.Now);
+
+            if (id_groups.ContainsKey(id.Key))
+            {
+                content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    { "tab", "3" },
+
+                    { "gp_id", $"{id.Key}" },
+
+                    {"tp_year", $"{date.year}" },
+
+                    {"sem_no", $"{date.semester}" }
+                });
+            }
+            else
+            {
+                content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    { "tab", "4" },
+
+                    { "pr_id", $"{id.Key}" },
+
+                    {"tp_year", $"{date.year}" },
+
+                    {"sem_no", $"{date.semester}" }
+                });
+            }
+
+            HttpClient httpClient = new();
+
+            httpClient.Timeout = TIMEOUT;
+
+            string responseString;
+
+            var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/tableFiller.php", content, cancellationToken);
+            responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
+                throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
+            else
+            {
+                var a = ParseExamHTML(responseString);
+
+                if (cancellationToken.IsCancellationRequested)
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                BufferedMADI.BufferedExamSchedule = new KeyValuePair<string, string>(id.Key, responseString);
+                return a;
+            }
+        }
+
+        public async static Task<List<Exam>> GetExamScheduleFromHTML(string html)
+        {
+            return ParseExamHTML(html);
+        }
+
+        private static List<Exam> ParseExamHTML(string html)//парсинг html-таблицы экзаменов
+        {
+            var exams = new List<Exam>();
+            bool forProfessors = html.Contains("Преподаватель:");
+            StringReader reader = new(html);
+
+            if (html == CutHTML(html))
+            {
+                exams.Add(new() { CardName = html });
+            }
+            else if (html.Contains("timetable") && (html.Contains("Информация по") || html.Contains("Данная информация")))
+            {
+                while (true)
+                    if (reader.ReadLine().Contains("timetable"))
+                        break;
+                for (int i = 0; i < 6; i++)
+                    reader.ReadLine();
+
+                for (string buff; (buff = reader.ReadLine()) != "</tr>";)
+                {
+                    if (forProfessors)
+                    {
+                        var group = CutHTML(reader.ReadLine());
+                        var datetime = CutHTML(reader.ReadLine());
+                        var room = CutHTML(reader.ReadLine());
+                        var name = CutHTML(reader.ReadLine());
+
+                        exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
+                    }
+                    else
+                    {
+                        var name = CutHTML(reader.ReadLine());
+                        var datetime = CutHTML(reader.ReadLine());
+                        var room = CutHTML(reader.ReadLine());
+                        var group = CutHTML(reader.ReadLine());
+
+                        exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
+                    }                    
+                }
+
+                var resp = reader.ReadLine();
+
+                var infoStrings = resp.Split("</p>");
+
+                for (int i = 0; i < infoStrings.Length - 1; i++)
+                    exams.Add(new() { CardName = CutHTML(infoStrings[i]) });
+            }
+            else if (html.Contains("timetable") && !(html.Contains("Информация по") || html.Contains("Данная информация")))
+            {
+                while (true)
+                    if (reader.ReadLine().Contains("timetable"))
+                        break;
+                for (int i = 0; i < 6; i++)
+                    reader.ReadLine();
+
+                for (string buff; (buff = reader.ReadLine()) != "</tr>";)
+                {
+                    if (forProfessors)
+                    {
+                        var group = CutHTML(reader.ReadLine());
+                        var datetime = CutHTML(reader.ReadLine());
+                        var room = CutHTML(reader.ReadLine());
+                        var name = CutHTML(reader.ReadLine());
+
+                        exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
+                    }
+                    else
+                    {
+                        var name = CutHTML(reader.ReadLine());
+                        var datetime = CutHTML(reader.ReadLine());
+                        var room = CutHTML(reader.ReadLine());
+                        var group = CutHTML(reader.ReadLine());
+
+                        exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
+                    }
+                }
+            }
+            else if (!html.Contains("timetable") && html.Contains("Информация"))
+            {
+                var resp = reader.ReadLine();
+
+                var infoStrings = resp.Split("</p>");
+
+                for (int i = 0; i < infoStrings.Length - 1; i++)
+                    exams.Add(new() { CardName = CutHTML(infoStrings[i]) });
+            }
+
+            return exams;
+        }
+
         private static string? CutHTML(string? data, List<string> strToDelete = null)
         {
             strToDelete ??= new() { "table class=\"timetable\"", "colspan=6", "colspan=\"6\"", "style=\"white-space:pre-wrap\"",
                                     "<", ">", "/", "br", "th", "tr", "td", "b", "colspan=\"2\"",
-                                    "rowspan=\"1\"", "li", "class", "value=", "select", "option", "rowspan=\"8\"", "colspan=\"1\""};
+                                    "rowspan=\"1\"", "li", "class", "value=", "select", "option", "rowspan=\"8\"", "colspan=\"1\"",
+                                    "talep","p"};
             foreach (var str in strToDelete)
                 data = data.Replace(str, string.Empty).Trim();
             return data;

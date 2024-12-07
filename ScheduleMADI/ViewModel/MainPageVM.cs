@@ -291,7 +291,7 @@ namespace ScheduleMADI
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        private class TokenDistributor
+        public class TokenDistributor
         {
             private List<CancellationTokenSource> token_storage = new();
 

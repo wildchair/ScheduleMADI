@@ -13,6 +13,10 @@ public partial class App : Application
 			BufferedMADI.BufferedSchedule = BufferedMADI.LoadBufferedSchedule();//перезаписывается в память, надо починить
 			BufferedMADI.BufferedDay = BufferedMADI.LoadBufferedDay();
 		}
+        if (Preferences.Default.ContainsKey("buff_exam_sche"))
+        {
+            BufferedMADI.BufferedExamSchedule = BufferedMADI.LoadBufferedExamSchedule();//перезаписывается в память, надо починить
+        }
 
         MainPage = new AppShell();
 	}
