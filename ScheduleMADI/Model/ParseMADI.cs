@@ -394,7 +394,7 @@ namespace ScheduleMADI
         public async static Task<List<Exam>> GetExamSchedule(KeyValuePair<string, string> id, CancellationToken cancellationToken)
         {
             FormUrlEncodedContent content;
-            var date = SemesterCalculator(DateTime.Now);
+            var date = SemesterCalculatorForExam(DateTime.Now);
 
             if (id_groups.ContainsKey(id.Key))
             {
@@ -557,6 +557,23 @@ namespace ScheduleMADI
             int sem, ye;
 
             if (date.Date.Month >= 8 || (date.Date.Month == 1 && date.Date.Day < 10))
+            {
+                ye = date.Year;
+                sem = 1;
+            }
+            else
+            {
+                ye = date.Year - 1;
+                sem = 2;
+            }
+
+            return (sem, ye - 2000);
+        }
+        private static (int semester, int year) SemesterCalculatorForExam(DateTime date)
+        {
+            int sem, ye;
+
+            if (date.Date.Month >= 8 || (date.Date.Month == 1 && date.Date.Day < 30))
             {
                 ye = date.Year;
                 sem = 1;
