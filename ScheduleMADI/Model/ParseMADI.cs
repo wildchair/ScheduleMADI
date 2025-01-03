@@ -488,7 +488,7 @@ namespace ScheduleMADI
                         var group = CutHTML(reader.ReadLine());
 
                         exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
-                    }                    
+                    }
                 }
 
                 var resp = reader.ReadLine();
@@ -554,37 +554,45 @@ namespace ScheduleMADI
 
         private static (int semester, int year) SemesterCalculator(DateTime date)
         {
-            int sem, ye;
+            int semester, year;
 
-            if (date.Date.Month >= 8 || (date.Date.Month == 1 && date.Date.Day < 10))
+            if (date.Date.Month >= 8 || (date.Date.Month == 1 && date.Date.Day < 2))
             {
-                ye = date.Year;
-                sem = 1;
+
+                year = date.Year;
+                semester = 1;
+
             }
             else
             {
-                ye = date.Year - 1;
-                sem = 2;
+                year = date.Year - 1;
+                semester = 2;
             }
 
-            return (sem, ye - 2000);
+            if (date.Date.Month == 1 && date.Date.Day < 2)
+                year -= 1;
+
+            return (semester, year - 2000);
         }
         private static (int semester, int year) SemesterCalculatorForExam(DateTime date)
         {
-            int sem, ye;
+            int semester, year;
 
             if (date.Date.Month >= 8 || (date.Date.Month == 1 && date.Date.Day < 30))
             {
-                ye = date.Year;
-                sem = 1;
+                year = date.Year;
+                semester = 1;
             }
             else
             {
-                ye = date.Year - 1;
-                sem = 2;
+                year = date.Year - 1;
+                semester = 2;
             }
 
-            return (sem, ye - 2000);
+            if (date.Date.Month == 1 && date.Date.Day < 30)
+                year -= 1;
+
+            return (semester, year - 2000);
         }
     }
     class ParseMADIException : Exception
