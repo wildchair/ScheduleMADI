@@ -180,7 +180,7 @@ namespace ScheduleMADI
                     await Task.WhenAll(getGroups, getWeek, GetProfessors);
                     break;
                 }
-                catch
+                catch(Exception ex)
                 {
                     if (BufferedMADI.BufferedDay.Value != null && !bufferedLoaded
                         && BufferedMADI.Id.Key == BufferedMADI.BufferedSchedule.Key)
