@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ScheduleApi.Services.Interfaces;
 using ScheduleCore.Models;
-using ScheduleCore.Parser;
 
 namespace ScheduleApi.Controllers
 {
@@ -9,16 +9,18 @@ namespace ScheduleApi.Controllers
     public class ScheduleController : ControllerBase
     {
         private readonly ILogger<ScheduleController> _logger;
+        private readonly IScheduleService _scheduleService;
 
-        public ScheduleController(ILogger<ScheduleController> logger)
+        public ScheduleController(ILogger<ScheduleController> logger, IScheduleService scheduleService)
         {
             _logger = logger;
+            _scheduleService = scheduleService;
         }
 
         [HttpPost(Name = "PostSchedule")]
         public async Task<IEnumerable<Day>> Post(int id)
         {
-            return await ParseMADI.GetSchedule(id, CancellationToken.None);
+            return await _scheduleService.GetScheduleAsync(id);
         }
     }
 }

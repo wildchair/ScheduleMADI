@@ -1,6 +1,6 @@
 @ScheduleApi_HostAddress = http://localhost:5235
 
-GET {{ScheduleApi_HostAddress}}/api/typeofweek/
+GET {{ScheduleApi_HostAddress}}/api/week/
 Accept: application/json
 
 ###
@@ -15,7 +15,17 @@ Accept: application/json
 
 ###
 
-POST {{ScheduleApi_HostAddress}}/api/schedule?id=9832
+GET {{ScheduleApi_HostAddress}}/api/groupsandprofessors/
+Accept: application/json
+
+###
+
+POST {{ScheduleApi_HostAddress}}/api/schedule?id=9791
+Accept: application/json
+
+###
+
+POST https://raspisanie.madi.ru/tplan/calendar.php
 Accept: application/json
 
 ###

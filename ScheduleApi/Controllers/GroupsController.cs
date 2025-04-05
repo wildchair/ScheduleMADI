@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ScheduleCore.Parser;
+using ScheduleApi.Services.Interfaces;
+using ScheduleCore.Models;
 
 namespace ScheduleApi.Controllers
 {
@@ -8,16 +9,18 @@ namespace ScheduleApi.Controllers
     public class GroupsController : ControllerBase
     {
         private readonly ILogger<GroupsController> _logger;
+        private readonly IGroupsService _groupsService;
 
-        public GroupsController(ILogger<GroupsController> logger)
+        public GroupsController(ILogger<GroupsController> logger, IGroupsService service)
         {
             _logger = logger;
+            _groupsService = service;
         }
 
         [HttpGet(Name = "GetGroups")]
-        public async Task<Dictionary<string, string>> Get()
+        public async Task<MadiEntityRegistry> Get()
         {
-            return await ParseMADI.GetGroups(CancellationToken.None);
+            return await _groupsService.GetGroupsAsync();
         }
     }
 }

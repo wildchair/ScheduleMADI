@@ -2,12 +2,13 @@
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 
-namespace ScheduleCore.Parser
+namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 {
+    [Obsolete]
     public static class ParseMADI
     {
-        public static Dictionary<string, string> id_groups = new();//словарь групп
-        public static Dictionary<string, string> id_professors = new();
+        public static Dictionary<int, string> id_groups = new();//словарь групп
+        public static Dictionary<int, string> id_professors = new();
 
         private static TimeSpan TIMEOUT = new(0, 0, 10);
         public async static Task<TypeOfWeek> GetWeek(CancellationToken cancellationToken)
@@ -32,7 +33,7 @@ namespace ScheduleCore.Parser
             else
                 return TypeOfWeek.Denominator;
         }
-        public async static Task<Dictionary<string, string>> GetGroups(CancellationToken cancellationToken)
+        public async static Task<Dictionary<int, string>> GetGroups(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
 
@@ -68,7 +69,7 @@ namespace ScheduleCore.Parser
                 group_buff.RemoveAll(x => x == string.Empty);
                 try//в полученном html могут быть айди группы без имен
                 {
-                    var id = group_buff[0].Trim();
+                    var id = int.Parse( group_buff[0].Trim());
                     var name = group_buff[1].Replace(" ", string.Empty);
                     if (!id_groups.ContainsKey(id)) // может быть плохо при повторном коннекте
                         id_groups.Add(id, name);
@@ -78,7 +79,7 @@ namespace ScheduleCore.Parser
 
             return id_groups;
         }
-        public async static Task<Dictionary<string, string>> GetProfessors(CancellationToken cancellationToken)
+        public async static Task<Dictionary<int, string>> GetProfessors(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
 
@@ -112,14 +113,15 @@ namespace ScheduleCore.Parser
                 proff_buff.RemoveAll(x => x == string.Empty);
                 try//в полученном html могут быть айди группы без имен
                 {
-                    var id = proff_buff[0].Trim();
+                    var id =int.Parse( proff_buff[0].Trim());
                     var name_buff = proff_buff[1].Split().ToList();
                     name_buff.RemoveAll(x => x == string.Empty);
                     var name = name_buff[0] + " " + name_buff[1];
-                    if (!id_professors.ContainsKey(id) && id != "-1") // может быть плохо при повторном коннекте
+                    if (!id_professors.ContainsKey(id) && id != -1) // может быть плохо при повторном коннекте
                         id_professors.Add(id, name);
                 }
                 catch (ArgumentOutOfRangeException) { continue; }
+                catch (FormatException) { continue; }
             }
 
             return id_professors;
@@ -129,7 +131,7 @@ namespace ScheduleCore.Parser
             FormUrlEncodedContent content;
             var date = SemesterCalculator(DateTime.Now);
 
-            if (id_groups.ContainsKey(id.ToString()))
+            if (id_groups.ContainsKey(id))
             {
                 content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
@@ -401,7 +403,7 @@ namespace ScheduleCore.Parser
             return days;
         }
 
-        public async static Task<List<Exam>> GetExamSchedule(KeyValuePair<string, string> id, CancellationToken cancellationToken)
+        public async static Task<List<Exam>> GetExamSchedule(KeyValuePair<int, string> id, CancellationToken cancellationToken)
         {
             FormUrlEncodedContent content;
             var date = SemesterCalculatorForExam(DateTime.Now);
@@ -615,10 +617,11 @@ namespace ScheduleCore.Parser
             return (semester, year - 2000);
         }
     }
+
+    [Obsolete]
     class ParseMADIException : Exception
     {
         public ParseMADIException(string message)
             : base(message) { }
     }
 }
-

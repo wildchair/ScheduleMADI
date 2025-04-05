@@ -1,5 +1,6 @@
-﻿namespace ScheduleCore.Parser
+﻿namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 {
+    [Obsolete]
     internal static class WeekMADI
     {
         public static string Week

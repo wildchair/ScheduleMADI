@@ -1,3 +1,8 @@
+using ScheduleApi.Middlewares;
+using ScheduleApi.ServiceRegistrator;
+using ScheduleCore.MadiSiteApiHelpers;
+using ScheduleCore.MadiSiteApiHelpers.Parsers;
+using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
 
 namespace ScheduleApi
 {
@@ -8,12 +13,17 @@ namespace ScheduleApi
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+            builder.Services.AddInjectables();
             builder.Services.AddOpenApi();
+            builder.Services.AddSingleton<IParser, HtmlHardcoreParser>();
+            builder.Services.AddSingleton<ApiClient>(p => new("https://raspisanie.madi.ru/tplan/"));
 
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
                 app.MapOpenApi();
+
+            app.UseMiddleware<RequestLoggingMiddleware>();
 
             //app.UseAuthorization();
             app.MapControllers();
