@@ -169,7 +169,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\ScheduleModel\ScheduleCore.csproj" />
+	  <ProjectReference Include="..\ScheduleCore\ScheduleCore.csproj" />
 	</ItemGroup>
 
 </Project>

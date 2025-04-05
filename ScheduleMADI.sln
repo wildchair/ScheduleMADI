@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleMADI", "ScheduleMAD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleApi", "ScheduleApi\ScheduleApi.csproj", "{330EE0B4-0A9A-4B87-AC2F-AA90F5462032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleCore", "ScheduleModel\ScheduleCore.csproj", "{1E7773F4-ABA5-4E2D-84B7-A26FDC55A144}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleCore", "ScheduleCore\ScheduleCore.csproj", "{1E7773F4-ABA5-4E2D-84B7-A26FDC55A144}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
