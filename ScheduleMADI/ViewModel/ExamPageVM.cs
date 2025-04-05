@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Core.Extensions;
+using ScheduleCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

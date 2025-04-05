@@ -1,4 +1,4 @@
-﻿namespace ScheduleMADI
+﻿namespace ScheduleCore.Models
 {
     public class Lesson//можно не реализовывать интерфейс, если не будет подкапотных изменений конкретно лессона
     {

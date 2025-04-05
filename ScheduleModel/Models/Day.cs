@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ScheduleMADI
+namespace ScheduleCore.Models
 {
     public class Day : INotifyPropertyChanged
     {
@@ -50,15 +50,15 @@ namespace ScheduleMADI
         public Day(DayOfWeek name)
         {
             Lessons = new ObservableCollection<Lesson>();
-            this.Name = name;
+            Name = name;
         }
         public Day(DayOfWeek name, ObservableCollection<Lesson> lessons) : this(name)
         {
-            this.Lessons = lessons;
+            Lessons = lessons;
         }
         public Day(DayOfWeek name, ObservableCollection<Lesson> lessons, string typeOfWeek) : this(name, lessons)
         {
-            this.TypeOfWeek = typeOfWeek;
+            TypeOfWeek = typeOfWeek;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

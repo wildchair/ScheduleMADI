@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:ScheduleMADI"
+             xmlns:externals="clr-namespace:ScheduleCore.Models;assembly=ScheduleCore" 
              x:Class="ScheduleMADI.MainPage" x:Name="this"
              Loaded="Mainpage_Appearing" x:DataType="controls:MainPageVM">
 
@@ -38,7 +39,7 @@
                 </CollectionView.GestureRecognizers>
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="controls:Lesson">
+                    <DataTemplate x:DataType="externals:Lesson">
                         <controls:SubjectCard
                                   CardDay="{Binding CardDay, Mode=OneWay}" CardName="{Binding CardName, Mode=OneWay}"
                                   CardProf="{Binding CardProf, Mode=OneWay}" CardRoom="{Binding CardRoom, Mode=OneWay}"

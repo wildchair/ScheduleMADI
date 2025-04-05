@@ -1,4 +1,4 @@
-﻿namespace ScheduleMADI
+﻿namespace ScheduleCore.Models
 {
     public class Exam
     {

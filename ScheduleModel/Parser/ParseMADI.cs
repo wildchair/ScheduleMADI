@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 
-namespace ScheduleMADI
+namespace ScheduleCore.Parser
 {
     public static class ParseMADI
     {
@@ -10,19 +10,9 @@ namespace ScheduleMADI
         public static Dictionary<string, string> id_professors = new();
 
         private static TimeSpan TIMEOUT = new(0, 0, 10);
-        public async static Task GetWeek(CancellationToken cancellationToken)
+        public async static Task<TypeOfWeek> GetWeek(CancellationToken cancellationToken)
         {
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback =
-            (message, cert, chain, errors) =>
-            {
-                if (cert.Issuer.Equals("CN=R10, O=Let's Encrypt, C=US") && cert.Subject.Equals("CN=*.madi.ru"))
-                    return cert.GetCertHashString(HashAlgorithmName.SHA256)
-                               .Equals("c94c0e2a3e30fe9105b79d84c2f709f7b0e22e52791d9b9cd10d1767f8975dd9".ToUpper());
-                return errors == System.Net.Security.SslPolicyErrors.None;
-            };
-
-            HttpClient httpClient = new(handler);
+            HttpClient httpClient = new();
             httpClient.Timeout = TIMEOUT;
             string responseString;
 
@@ -35,21 +25,16 @@ namespace ScheduleMADI
                 "{\"aaData\":[\"\\u0447\"]}" => "Числитель",
                 _ => "Получить день не удалось",
             };
-            BufferedMADI.BufferedDay = new KeyValuePair<DateTime, string>(DateTime.Now.Date, WeekMADI.Week);
-        }
-        public async static Task GetGroups(CancellationToken cancellationToken)
-        {
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback =
-            (message, cert, chain, errors) =>
-            {
-                if (cert.Issuer.Equals("CN=R10, O=Let's Encrypt, C=US") && cert.Subject.Equals("CN=*.madi.ru"))
-                    return cert.GetCertHashString(HashAlgorithmName.SHA256)
-                               .Equals("c94c0e2a3e30fe9105b79d84c2f709f7b0e22e52791d9b9cd10d1767f8975dd9".ToUpper());
-                return errors == System.Net.Security.SslPolicyErrors.None;
-            };
+            //BufferedMADI.BufferedDay = new KeyValuePair<DateTime, string>(DateTime.Now.Date, WeekMADI.Week);
 
-            HttpClient httpClient = new(handler);
+            if (WeekMADI.Week == "Числитель")
+                return TypeOfWeek.Numerator;
+            else
+                return TypeOfWeek.Denominator;
+        }
+        public async static Task<Dictionary<string, string>> GetGroups(CancellationToken cancellationToken)
+        {
+            HttpClient httpClient = new();
 
             httpClient.Timeout = TIMEOUT;
 
@@ -84,26 +69,18 @@ namespace ScheduleMADI
                 try//в полученном html могут быть айди группы без имен
                 {
                     var id = group_buff[0].Trim();
-                    var name = group_buff[1].Replace(" ", String.Empty);
+                    var name = group_buff[1].Replace(" ", string.Empty);
                     if (!id_groups.ContainsKey(id)) // может быть плохо при повторном коннекте
                         id_groups.Add(id, name);
                 }
                 catch (ArgumentOutOfRangeException) { continue; }
             }
-        }
-        public async static Task GetProfessors(CancellationToken cancellationToken)
-        {
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback =
-            (message, cert, chain, errors) =>
-            {
-                if (cert.Issuer.Equals("CN=R10, O=Let's Encrypt, C=US") && cert.Subject.Equals("CN=*.madi.ru"))
-                    return cert.GetCertHashString(HashAlgorithmName.SHA256)
-                               .Equals("c94c0e2a3e30fe9105b79d84c2f709f7b0e22e52791d9b9cd10d1767f8975dd9".ToUpper());
-                return errors == System.Net.Security.SslPolicyErrors.None;
-            };
 
-            HttpClient httpClient = new(handler);
+            return id_groups;
+        }
+        public async static Task<Dictionary<string, string>> GetProfessors(CancellationToken cancellationToken)
+        {
+            HttpClient httpClient = new();
 
             httpClient.Timeout = TIMEOUT;
 
@@ -143,21 +120,22 @@ namespace ScheduleMADI
                         id_professors.Add(id, name);
                 }
                 catch (ArgumentOutOfRangeException) { continue; }
-
             }
+
+            return id_professors;
         }
-        public async static Task<List<Day>> GetSchedule(KeyValuePair<string, string> id, CancellationToken cancellationToken)
+        public async static Task<List<Day>> GetSchedule(int id, CancellationToken cancellationToken)
         {
             FormUrlEncodedContent content;
             var date = SemesterCalculator(DateTime.Now);
 
-            if (id_groups.ContainsKey(id.Key))
+            if (id_groups.ContainsKey(id.ToString()))
             {
                 content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     { "tab", "7" },
 
-                    { "gp_id", $"{id.Key}" },
+                    { "gp_id", $"{id}" },
 
                     {"tp_year", $"{date.year}" },
 
@@ -170,7 +148,7 @@ namespace ScheduleMADI
                 {
                     { "tab", "8" },
 
-                    { "pr_id", $"{id.Key}" },
+                    { "pr_id", $"{id}" },
 
                     {"tp_year", $"{date.year}" },
 
@@ -178,17 +156,7 @@ namespace ScheduleMADI
                 });
             }
 
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback =
-            (message, cert, chain, errors) =>
-            {
-                if (cert.Issuer.Equals("CN=R10, O=Let's Encrypt, C=US") && cert.Subject.Equals("CN=*.madi.ru"))
-                    return cert.GetCertHashString(HashAlgorithmName.SHA256)
-                               .Equals("c94c0e2a3e30fe9105b79d84c2f709f7b0e22e52791d9b9cd10d1767f8975dd9".ToUpper());
-                return errors == System.Net.Security.SslPolicyErrors.None;
-            };
-
-            HttpClient httpClient = new(handler);
+            HttpClient httpClient = new();
 
             httpClient.Timeout = TIMEOUT;
 
@@ -206,7 +174,7 @@ namespace ScheduleMADI
                 if (cancellationToken.IsCancellationRequested)
                     cancellationToken.ThrowIfCancellationRequested();
 
-                BufferedMADI.BufferedSchedule = new KeyValuePair<string, string>(id.Key, responseString);
+                //BufferedMADI.BufferedSchedule = new KeyValuePair<string, string>(id.Key, responseString);
                 return a;
             }
         }
@@ -493,7 +461,7 @@ namespace ScheduleMADI
                 if (cancellationToken.IsCancellationRequested)
                     cancellationToken.ThrowIfCancellationRequested();
 
-                BufferedMADI.BufferedExamSchedule = new KeyValuePair<string, string>(id.Key, responseString);
+                //BufferedMADI.BufferedExamSchedule = new KeyValuePair<string, string>(id.Key, responseString);
                 return a;
             }
         }
@@ -608,7 +576,7 @@ namespace ScheduleMADI
         {
             int semester, year;
 
-            if (date.Date.Month >= 8 || (date.Date.Month == 1 && date.Date.Day < 2))
+            if (date.Date.Month >= 8 || date.Date.Month == 1 && date.Date.Day < 2)
             {
 
                 year = date.Year;
@@ -630,7 +598,7 @@ namespace ScheduleMADI
         {
             int semester, year;
 
-            if (date.Date.Month >= 8 || (date.Date.Month == 1 && date.Date.Day < 30))
+            if (date.Date.Month >= 8 || date.Date.Month == 1 && date.Date.Day < 30)
             {
                 year = date.Year;
                 semester = 1;
