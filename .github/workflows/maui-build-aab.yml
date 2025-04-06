@@ -50,10 +50,12 @@ jobs:
           -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
           -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
           -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} 
-          find . -name "*.aab"
+
+    - name: Fing file
+      run: find . -name "*.aab"
 
     - name: Upload AAB artifact
       uses: actions/upload-artifact@v4
       with:
         name: artifacts
-        path: ScheduleMADI/bin/Release/net8.0-android/
+        path: ScheduleMADI/
