@@ -16,46 +16,48 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Cache .NET tools
+    - name: Cache NuGet and .NET workloads
       uses: actions/cache@v4
       with:
         path: |
           ~/.nuget/packages
-          ~/.dotnet
+          ~/.dotnet/packs
+          ~/.dotnet/workloadmanifests
+          ~/.dotnet/sdk-manifests
         key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}
-
+        restore-keys: |
+          ${{ runner.os }}-dotnet-
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.x'
 
-    - name: Install MAUI Android workload
-      run: dotnet workload install maui-android
+    - name: Limit to Android target only
+      run: sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFramework>net8.0-android<\/TargetFramework>/' ScheduleMADI/ScheduleMADI.csproj
+
+    - name: Restore MAUI Android workload
+      run: dotnet workload restore
+
+    - name: Restore NuGet packages
+      run: dotnet restore ScheduleMADI/ScheduleMADI.csproj
 
     - name: Decode keystore
       run: |
         echo "${{ secrets.AAB_KEYSTORE_FILE }}" | base64 -d > keystore.jks
 
-    - name: Limit to Android target only
-      run: sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFramework>net8.0-android<\/TargetFramework>/' ScheduleMADI/ScheduleMADI.csproj
-
-
     - name: Build signed AAB
       run: |
         dotnet publish ScheduleMADI/ScheduleMADI.csproj \
           -c Release -f net8.0-android \
-          -p:AndroidPackageFormat=bundle \
+          -p:AndroidPackageFormat=aab \
           -p:AndroidSigningKeyStore=keystore.jks \
           -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
           -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
           -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} 
 
-    - name: Fing file
-      run: find . -name "*.aab"
-
     - name: Upload AAB artifact
       uses: actions/upload-artifact@v4
       with:
         name: artifacts
-        path: ScheduleMADI/
+        path: ScheduleMADI/bin/Release/
