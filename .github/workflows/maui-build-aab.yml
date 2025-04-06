@@ -14,7 +14,16 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Cache .NET tools
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.nuget/packages
+          ~/.dotnet
+        key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}
+
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
