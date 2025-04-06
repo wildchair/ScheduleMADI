@@ -17,8 +17,8 @@ namespace ScheduleApi.Controllers
             _scheduleService = scheduleService;
         }
 
-        [HttpGet("{groupId}")]
-        public async Task<IEnumerable<Day>> Get(int groupId)
+        [HttpGet("{id}")]
+        public async Task<IEnumerable<Day>> Get(int id)
         {
             return await _scheduleService.GetScheduleAsync(groupId);
         }
