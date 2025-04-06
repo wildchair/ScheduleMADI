@@ -1,13 +1,12 @@
-name: Deploy to Server
+name: Deploy Dev API
 
 on:
   push:
     branches:
-      - main
       - dev
 
 jobs:
-  deploy:
+  BuildAndDeploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,11 +18,11 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -f ScheduleApi/Dockerfile -t schedule-api .
+        docker build -f ScheduleApi/Dockerfile -t schedule-dev-api .
 
     - name: Save Docker image to tarball
       run: |
-        docker save schedule-api > schedule-api.tar
+        docker save schedule-dev-api > schedule-dev-api.tar
 
     - name: Set up SSH key
       run: |
@@ -34,13 +33,14 @@ jobs:
 
     - name: Upload Docker image to server
       run: |
-        scp -i ~/.ssh/github_deploy schedule-api.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+        scp -i ~/.ssh/github_deploy schedule-dev-api.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
 
     - name: Deploy on server
       run: |
         ssh -i ~/.ssh/github_deploy ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
-          docker load < ${{ secrets.DEPLOY_PATH }}/schedule-api.tar
-          docker stop schedule-api || true
-          docker rm schedule-api || true
-          docker run -d --name schedule-api --restart always -p 8080:8080 schedule-api 
+          docker load < ${{ secrets.DEPLOY_PATH }}/schedule-dev-api.tar
+          docker stop schedule-dev-api || true
+          docker rm schedule-dev-api || true
+          docker rmi schedule-dev-api || true
+          docker run -d --name schedule-dev-api --restart always -p 8085:8080 schedule-dev-api 
         EOF
