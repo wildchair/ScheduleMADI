@@ -1,0 +1,44 @@
+name: Build Signed AAB for ScheduleMADI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install MAUI workload
+      run: dotnet workload install maui-android
+
+    - name: Restore dependencies
+      run: dotnet restore ScheduleMADI/ScheduleMADI.csproj
+
+    - name: Decode keystore
+      run: |
+        echo "${{ secrets.AAB_KEYSTORE_FILE }}" | base64 -d > keystore.jks
+
+    - name: Build signed AAB
+      run: |
+        dotnet publish ScheduleMADI/ScheduleMADI.csproj \
+          -c Release -f net8.0-android \
+          -p:AndroidPackageFormat=bundle \
+          -p:AndroidSigningKeyStore=keystore.jks \
+          -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
+          -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
+          -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} \
+          -o publish/aab
+
+    - name: Upload AAB artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ScheduleMADI-AAB
+        path: publish/aab/*.aab
