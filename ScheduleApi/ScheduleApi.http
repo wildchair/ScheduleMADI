@@ -25,7 +25,7 @@ Accept: application/json
 
 ###
 
-POST https://raspisanie.madi.ru/tplan/calendar.php
+GET http://95.164.92.97:8080/api/groupsandprofessors
 Accept: application/json
 
 ###
