@@ -1,7 +1,11 @@
 name: Build Signed AAB for ScheduleMADI
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+      - api
 
 jobs:
   build:
