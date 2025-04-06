@@ -1,4 +1,4 @@
-@ScheduleApi_HostAddress = http://localhost:5235
+@ScheduleApi_HostAddress = http://localhost:32770
 
 GET {{ScheduleApi_HostAddress}}/api/week/
 Accept: application/json
@@ -20,7 +20,7 @@ Accept: application/json
 
 ###
 
-POST {{ScheduleApi_HostAddress}}/api/schedule?id=9791
+GET {{ScheduleApi_HostAddress}}/api/schedule?id=9791
 Accept: application/json
 
 ###
