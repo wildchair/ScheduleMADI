@@ -27,6 +27,7 @@ jobs:
       run: |
         dotnet publish ScheduleMADI/ScheduleMADI.csproj \
           -c Release -f net8.0-android \
+          -r android-arm64 \
           -p:AndroidPackageFormat=bundle \
           -p:AndroidSigningKeyStore=keystore.jks \
           -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
