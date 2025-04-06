@@ -14,14 +14,20 @@ namespace ScheduleApi
 
             builder.Services.AddControllers();
             builder.Services.AddInjectables();
-            builder.Services.AddOpenApi();
+
             builder.Services.AddSingleton<IParser, HtmlHardcoreParser>();
             builder.Services.AddSingleton<ApiClient>(p => new("https://raspisanie.madi.ru/tplan/"));
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
-                app.MapOpenApi();
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             app.UseMiddleware<RequestLoggingMiddleware>();
 
