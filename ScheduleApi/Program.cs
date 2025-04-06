@@ -1,6 +1,6 @@
 using ScheduleApi.Middlewares;
 using ScheduleApi.ServiceRegistrator;
-using ScheduleCore.MadiSiteApiHelpers;
+using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
 
@@ -16,7 +16,12 @@ namespace ScheduleApi
             builder.Services.AddInjectables();
 
             builder.Services.AddSingleton<IParser, HtmlHardcoreParser>();
-            builder.Services.AddSingleton<ApiClient>(p => new("https://raspisanie.madi.ru/tplan/"));
+
+            //builder.Services.AddHttpContextAccessor();
+            //builder.Services.AddTransient<AuthHeaderHandler>();
+
+            builder.Services.Configure<UniversityApiSettings>(builder.Configuration.GetSection(nameof(UniversityApiSettings)));
+            builder.Services.AddHttpClient<UniversityApiClient>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -25,8 +30,8 @@ namespace ScheduleApi
 
             //if (app.Environment.IsDevelopment())
             //{
-                app.UseSwagger();
-                app.UseSwaggerUI();
+            app.UseSwagger();
+            app.UseSwaggerUI();
             //}
 
             app.UseMiddleware<RequestLoggingMiddleware>();

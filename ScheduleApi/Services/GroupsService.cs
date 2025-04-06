@@ -1,6 +1,6 @@
 ﻿using ScheduleApi.ServiceRegistrator;
 using ScheduleApi.Services.Interfaces;
-using ScheduleCore.MadiSiteApiHelpers;
+using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
 using ScheduleCore.Models;
 
@@ -10,10 +10,10 @@ namespace ScheduleApi.Services
     public class GroupsService : IGroupsService
     {
         private readonly ILogger<GroupsService> _logger;
-        private readonly ApiClient _apiClient;
+        private readonly UniversityApiClient _apiClient;
         private readonly IParser _parser;
 
-        public GroupsService(ILogger<GroupsService> logger, ApiClient apiClient, IParser parser)
+        public GroupsService(ILogger<GroupsService> logger, UniversityApiClient apiClient, IParser parser)
         {
             _logger = logger;
             _apiClient = apiClient;
@@ -28,7 +28,7 @@ namespace ScheduleApi.Services
                 { "task_id", "7" }
             });
 
-            var html = await _apiClient.FetchGroupsAsync(content, CancellationToken.None);
+            var html = await _apiClient.PostAsync("tplan/tasks/task3,7_fastview.php", content);
 
             return _parser.ParseGroups(html);
         }

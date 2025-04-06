@@ -1,7 +1,6 @@
 ﻿using ScheduleApi.ServiceRegistrator;
 using ScheduleApi.Services.Interfaces;
-using ScheduleCore.MadiSiteApiHelpers;
-using ScheduleCore.MadiSiteApiHelpers.Parsers;
+using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
 using ScheduleCore.Models;
 
@@ -11,10 +10,10 @@ namespace ScheduleApi.Services
     public class ProfessorsService : IProfessorsService
     {
         private readonly ILogger<ProfessorsService> _logger;
-        private readonly ApiClient _apiClient;
+        private readonly UniversityApiClient _apiClient;
         private readonly IParser _parser;
 
-        public ProfessorsService(ILogger<ProfessorsService> logger, ApiClient apiClient, IParser parser)
+        public ProfessorsService(ILogger<ProfessorsService> logger, UniversityApiClient apiClient, IParser parser)
         {
             _logger = logger;
             _apiClient = apiClient;
@@ -28,7 +27,9 @@ namespace ScheduleApi.Services
                 { "task_id", "8" }
             });
 
-            var html = await _apiClient.FetchProfessorsAsync(content, CancellationToken.None);
+            ScheduleCore.MadiSiteApiHelpers.ApiClient client = new("http://raspisanie.madi.ru/tplan/");
+            var html1 = await client.FetchProfessorsAsync(content, CancellationToken.None);
+            var html = await _apiClient.PostAsync("tplan/tasks/task8_prepview.php", content);
 
             return _parser.ParseProfessors(html);
         }
