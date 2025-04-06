@@ -42,9 +42,10 @@ jobs:
           -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
           -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} \
           -p:PublishDir=./aab-out
+          -v diag
 
     - name: Upload AAB artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ScheduleMADI-AAB.aab
+        name: artifacts
         path: .
