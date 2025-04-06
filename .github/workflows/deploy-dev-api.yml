@@ -42,5 +42,4 @@ jobs:
           docker stop schedule-dev-api || true
           docker rm schedule-dev-api || true
           docker run -d --name schedule-dev-api --restart always -p 8085:8080 schedule-dev-api 
-          docker rmi schedule-dev-api || true
         EOF
