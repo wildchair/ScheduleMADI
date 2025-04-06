@@ -41,11 +41,10 @@ jobs:
           -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
           -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
           -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} \
-          -p:PublishDir=./aab-out \
           -v diag
 
     - name: Upload AAB artifact
       uses: actions/upload-artifact@v4
       with:
         name: artifacts
-        path: .
+        path: bin/Release/net8.0-android/
