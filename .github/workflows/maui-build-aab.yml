@@ -43,3 +43,6 @@ jobs:
       with:
         name: ScheduleMADI-AAB
         path: publish/aab/*.aab
+
+    - name: Find .aab file
+      run: find . -name "*.aab"
