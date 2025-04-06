@@ -43,5 +43,5 @@ jobs:
           docker load < ${{ secrets.DEPLOY_PATH }}/schedule-api.tar
           docker stop schedule-api || true
           docker rm schedule-api || true
-          docker run -d --name schedule-api -p 8080:8080 schedule-api
+          docker run -d --name schedule-api --restart always -p 8080:8080 schedule-api 
         EOF
