@@ -41,7 +41,7 @@ jobs:
           -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
           -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
           -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} \
-          -p:PublishDir=./aab-out
+          -p:PublishDir=./aab-out \
           -v diag
 
     - name: Upload AAB artifact
