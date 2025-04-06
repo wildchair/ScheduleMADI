@@ -23,12 +23,14 @@ jobs:
       run: |
         echo "${{ secrets.AAB_KEYSTORE_FILE }}" | base64 -d > keystore.jks
 
+    - name: Limit to Android target only
+      run: sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFramework>net8.0-android<\/TargetFramework>/' ScheduleMADI/ScheduleMADI.csproj
+
+
     - name: Build signed AAB
       run: |
         dotnet publish ScheduleMADI/ScheduleMADI.csproj \
           -c Release -f net8.0-android \
-          -r android-arm64 \
-          -p:TargetFramework=net8.0-android \
           -p:AndroidPackageFormat=bundle \
           -p:AndroidSigningKeyStore=keystore.jks \
           -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
