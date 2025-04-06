@@ -1,7 +1,6 @@
 ﻿using ScheduleApi.ServiceRegistrator;
 using ScheduleApi.Services.Interfaces;
-using ScheduleCore.MadiSiteApiHelpers;
-using ScheduleCore.MadiSiteApiHelpers.Parsers;
+using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
 using ScheduleCore.Models;
 
@@ -11,10 +10,10 @@ namespace ScheduleApi.Services
     public class WeekService : IWeekService
     {
         private readonly ILogger<WeekService> _logger;
-        private readonly ApiClient _apiClient;
+        private readonly UniversityApiClient _apiClient;
         private readonly IParser _parser;
 
-        public WeekService(ILogger<WeekService> logger, ApiClient apiClient, IParser parser)
+        public WeekService(ILogger<WeekService> logger, UniversityApiClient apiClient, IParser parser)
         {
             _logger = logger;
             _apiClient = apiClient;
@@ -27,7 +26,7 @@ namespace ScheduleApi.Services
             {
             });
 
-            var json = await _apiClient.FetchWeekAsync(content, CancellationToken.None);
+            var json = await _apiClient.GetAsync("tplan/calendar.php");
 
             return _parser.ParseWeek(json);
         }

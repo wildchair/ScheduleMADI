@@ -1,5 +1,6 @@
 ﻿namespace ScheduleCore.MadiSiteApiHelpers
 {
+    [Obsolete]
     public class ApiClient
     {
         private readonly string _baseUrl;
@@ -36,7 +37,7 @@
 
         public async Task<string> FetchExamScheduleAsync(FormUrlEncodedContent httpContent, CancellationToken cancellationToken)
         {
-            return await _scheduleFetcher.FetchAsync(httpContent, cancellationToken);
+            return await _examScheduleFetcher.FetchAsync(httpContent, cancellationToken);
         }
 
         public async Task<string> FetchWeekAsync(FormUrlEncodedContent httpContent, CancellationToken cancellationToken)

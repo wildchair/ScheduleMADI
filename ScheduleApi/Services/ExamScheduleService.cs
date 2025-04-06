@@ -1,6 +1,6 @@
 ﻿using ScheduleApi.ServiceRegistrator;
 using ScheduleApi.Services.Interfaces;
-using ScheduleCore.MadiSiteApiHelpers;
+using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
 using ScheduleCore.MadiSiteApiHelpers.Utils;
 using ScheduleCore.Models;
@@ -11,12 +11,12 @@ namespace ScheduleApi.Services
     public class ExamScheduleService : IExamScheduleService
     {
         private readonly ILogger<ExamScheduleService> _logger;
-        private readonly ApiClient _apiClient;
+        private readonly UniversityApiClient _apiClient;
         private readonly IParser _parser;
         private readonly IGroupsService _groupsService;
         private readonly IProfessorsService _professorsService;
 
-        public ExamScheduleService(ILogger<ExamScheduleService> logger, ApiClient apiClient, IParser parser, IGroupsService groupsService, IProfessorsService professorsService)
+        public ExamScheduleService(ILogger<ExamScheduleService> logger, UniversityApiClient apiClient, IParser parser, IGroupsService groupsService, IProfessorsService professorsService)
         {
             _logger = logger;
             _apiClient = apiClient;
@@ -59,7 +59,7 @@ namespace ScheduleApi.Services
                 });
             }
 
-            var html = await _apiClient.FetchExamScheduleAsync(content, CancellationToken.None);
+            var html = await _apiClient.PostAsync("tplan/tasks/tableFiller.php", content);
 
             return _parser.ParseExamSchedule(html);
         }

@@ -1,5 +1,6 @@
 ﻿namespace ScheduleCore.MadiSiteApiHelpers
 {
+    [Obsolete]
     public class Fetcher
     {
         public readonly string Endpoint;
