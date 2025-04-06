@@ -16,8 +16,11 @@ jobs:
       with:
         dotnet-version: '8.x'
 
-    - name: Install MAUI workload
+    - name: Install MAUI Android workload
       run: dotnet workload install maui-android
+
+    - name: Install MAUI IOS workload
+      run: dotnet workload install maui-ios
 
     - name: Restore dependencies
       run: dotnet restore ScheduleMADI/ScheduleMADI.csproj
