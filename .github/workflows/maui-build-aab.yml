@@ -59,5 +59,11 @@ jobs:
     - name: Upload AAB artifact
       uses: actions/upload-artifact@v4
       with:
-        name: artifacts
-        path: ScheduleMADI/bin/Release/
+        name: aab
+        path: ScheduleMADI/bin/Release/net8.0-android/publish/com.wildchair.schedulemadi-Signed.aab
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: aab
+        path: ScheduleMADI/bin/Release/net8.0-android/publish/com.wildchair.schedulemadi-Signed.apk
