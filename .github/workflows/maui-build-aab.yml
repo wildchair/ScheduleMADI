@@ -19,9 +19,6 @@ jobs:
     - name: Install MAUI Android workload
       run: dotnet workload install maui-android
 
-    - name: Restore dependencies
-      run: dotnet restore ScheduleMADI/ScheduleMADI.csproj -f net8.0-android
-
     - name: Decode keystore
       run: |
         echo "${{ secrets.AAB_KEYSTORE_FILE }}" | base64 -d > keystore.jks
