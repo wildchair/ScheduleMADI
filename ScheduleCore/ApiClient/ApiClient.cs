@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Net.Mime;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Threading;
 
 namespace ScheduleCore.ApiClient
 {
@@ -44,9 +47,26 @@ namespace ScheduleCore.ApiClient
             return await HandleResponse<T>(response);
         }
 
-        public async Task<string> PostAsync(string endpoint, object body)
+#warning Че-то всрато страшно
+        public async Task<string> PostAsync(string endpoint, object body, ContentType contentType = ContentType.Json)
         {
-            var response = await _httpClient.PostAsJsonAsync(endpoint, body);
+            HttpContent content;
+
+            switch (contentType)
+            {
+                case ContentType.FormUrlEncoded:
+                    var dict = body as Dictionary<string, string>
+                        ?? throw new ArgumentException("FormUrlEncoded content requires Dictionary<string, string>");
+                    content = new FormUrlEncodedContent(dict);
+                    break;
+
+                case ContentType.Json:
+                default:
+                    content = JsonContent.Create(body);
+                    break;
+            }
+
+            var response = await _httpClient.PostAsync(endpoint, content);
             return await HandleResponseRaw(response);
         }
 
@@ -86,6 +106,12 @@ namespace ScheduleCore.ApiClient
                 throw new HttpRequestException($"Error: {response.StatusCode}, Content: {content}");
 
             return content;
+        }
+
+        public enum ContentType
+        {
+            Json,
+            FormUrlEncoded
         }
     }
 
