@@ -7,6 +7,7 @@
         private readonly Fetcher _groupsFetcher;
         private readonly Fetcher _professorsFetcher;
         private readonly Fetcher _scheduleFetcher;
+        private readonly Fetcher _examScheduleFetcher;
         private readonly Fetcher _weekFetcher;
 
         public ApiClient(string baseUrl)
@@ -14,7 +15,8 @@
             _groupsFetcher = new(baseUrl + "tasks/task3,7_fastview.php");
             _professorsFetcher = new(baseUrl + "tasks/task8_prepview.php");
             _scheduleFetcher = new(baseUrl + "tasks/tableFiller.php");
-            _weekFetcher = new (baseUrl + "calendar.php");
+            _weekFetcher = new(baseUrl + "calendar.php");
+            _examScheduleFetcher = new(baseUrl + "tasks/tableFiller.php");
         }
 
         public async Task<string> FetchGroupsAsync(FormUrlEncodedContent httpContent, CancellationToken cancellationToken)
@@ -28,6 +30,11 @@
         }
 
         public async Task<string> FetchScheduleAsync(FormUrlEncodedContent httpContent, CancellationToken cancellationToken)
+        {
+            return await _scheduleFetcher.FetchAsync(httpContent, cancellationToken);
+        }
+
+        public async Task<string> FetchExamScheduleAsync(FormUrlEncodedContent httpContent, CancellationToken cancellationToken)
         {
             return await _scheduleFetcher.FetchAsync(httpContent, cancellationToken);
         }
