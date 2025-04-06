@@ -27,7 +27,7 @@ jobs:
     - name: Set up SSH key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github_deploy
+        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/github_deploy
         chmod 600 ~/.ssh/github_deploy
         ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
 
