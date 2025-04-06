@@ -65,5 +65,5 @@ jobs:
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
-        name: aab
+        name: apk
         path: ScheduleMADI/bin/Release/net8.0-android/publish/com.wildchair.schedulemadi-Signed.apk
