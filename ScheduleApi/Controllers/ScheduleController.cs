@@ -17,10 +17,10 @@ namespace ScheduleApi.Controllers
             _scheduleService = scheduleService;
         }
 
-        [HttpGet(Name = "GetSchedule")]
-        public async Task<IEnumerable<Day>> Get(int id)
+        [HttpGet("{groupId}")]
+        public async Task<IEnumerable<Day>> Get(int groupId)
         {
-            return await _scheduleService.GetScheduleAsync(id);
+            return await _scheduleService.GetScheduleAsync(groupId);
         }
     }
 }

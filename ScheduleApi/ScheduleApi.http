@@ -20,7 +20,7 @@ Accept: application/json
 
 ###
 
-GET {{ScheduleApi_HostAddress}}/api/schedule?id=9791
+GET {{ScheduleApi_HostAddress}}/api/schedule/9791
 Accept: application/json
 
 ###
