@@ -47,7 +47,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ScheduleMADI-AAB.aab
-        path: publish/aab/*.aab
-
-    - name: Find .aab file
-      run: find . -name "*.aab"
+        path: ScheduleMADI/publish/aab/*.aab
