@@ -34,11 +34,13 @@ jobs:
         ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
     - name: Upload Docker image
-      run: scp $IMAGE_NAME.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+      run: -i ~/.ssh/github_deploy |
+          scp $IMAGE_NAME.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+
 
     - name: Deploy on server
       run: |
-        ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
+        ssh -i ~/.ssh/github_deploy ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
           docker load < ${{ secrets.DEPLOY_PATH }}/$IMAGE_NAME.tar
           docker stop $IMAGE_NAME || true
           docker rm $IMAGE_NAME || true
