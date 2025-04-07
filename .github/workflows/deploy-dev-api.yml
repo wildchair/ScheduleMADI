@@ -28,6 +28,13 @@ jobs:
     - name: Save Docker image to tarball
       run: docker save $IMAGE_NAME > $IMAGE_NAME.tar
 
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/github_deploy
+        chmod 600 ~/.ssh/github_deploy
+        ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
     - name: Upload Docker image
       run: scp -i ~/.ssh/github_deploy |
           $IMAGE_NAME.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
