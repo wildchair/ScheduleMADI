@@ -5,8 +5,6 @@ on:
     branches:
       - dev
 
-run-name: Test
-
 env:
   IMAGE_NAME: schedule-dev-api
   DOCKERFILE_PATH: ScheduleApi/Dockerfile
@@ -24,19 +22,8 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Cache Docker layers
-      uses: actions/cache@v3
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
-
     - name: Build Docker image
-      run: |
-        docker build --cache-from=type=local,src=/tmp/.buildx-cache \
-                     --cache-to=type=local,dest=/tmp/.buildx-cache \
-                     -f $DOCKERFILE_PATH -t $IMAGE_NAME .
+      run: docker build -f $DOCKERFILE_PATH -t $IMAGE_NAME .
 
     - name: Save Docker image to tarball
       run: docker save $IMAGE_NAME > $IMAGE_NAME.tar
