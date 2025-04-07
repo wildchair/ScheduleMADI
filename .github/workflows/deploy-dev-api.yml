@@ -5,6 +5,14 @@ on:
     branches:
       - dev
 
+run-name: Test
+
+env:
+  IMAGE_NAME: schedule-dev-api
+  DOCKERFILE_PATH: ScheduleApi/Dockerfile
+  DEPLOY_PORT: 8085
+
+
 jobs:
   BuildAndDeployDev:
     runs-on: ubuntu-latest
@@ -16,30 +24,36 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
     - name: Build Docker image
       run: |
-        docker build -f ScheduleApi/Dockerfile -t schedule-dev-api .
+        docker build --cache-from=type=local,src=/tmp/.buildx-cache \
+                     --cache-to=type=local,dest=/tmp/.buildx-cache \
+                     -f $DOCKERFILE_PATH -t $IMAGE_NAME .
 
     - name: Save Docker image to tarball
-      run: |
-        docker save schedule-dev-api > schedule-dev-api.tar
+      run: docker save $IMAGE_NAME > $IMAGE_NAME.tar
 
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/github_deploy
-        chmod 600 ~/.ssh/github_deploy
-        ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+    - name: Set up SSH agent
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-    - name: Upload Docker image to server
-      run: |
-        scp -i ~/.ssh/github_deploy schedule-dev-api.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+    - name: Upload Docker image
+      run: scp $IMAGE_NAME.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
 
     - name: Deploy on server
       run: |
-        ssh -i ~/.ssh/github_deploy ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
-          docker load < ${{ secrets.DEPLOY_PATH }}/schedule-dev-api.tar
-          docker stop schedule-dev-api || true
-          docker rm schedule-dev-api || true
-          docker run -d --name schedule-dev-api --restart always -p 8085:8080 schedule-dev-api 
+        ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
+          docker load < ${{ secrets.DEPLOY_PATH }}/$IMAGE_NAME.tar
+          docker stop $IMAGE_NAME || true
+          docker rm $IMAGE_NAME || true
+          docker run -d --name $IMAGE_NAME --restart always -p $DEPLOY_PORT:8080 $IMAGE_NAME
         EOF
