@@ -26,7 +26,7 @@ jobs:
 
     - name: Save Docker image to tarball
       run: |
-        docker save $IMAGE_NAME > $IMAGE_NAME
+        docker save $IMAGE_NAME > $IMAGE_NAME.tar
 
     - name: Set up SSH key
       run: |
