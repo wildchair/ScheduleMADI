@@ -5,6 +5,10 @@ on:
     branches:
       - dev
 
+env:
+    PORT: 8085
+    IMAGE_NAME: schedule-dev-api
+
 jobs:
   BuildAndDeployDev:
     runs-on: ubuntu-latest
@@ -18,11 +22,11 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -f ScheduleApi/Dockerfile -t schedule-dev-api .
+        docker build -f ScheduleApi/Dockerfile -t $IMAGE_NAME .
 
     - name: Save Docker image to tarball
       run: |
-        docker save schedule-dev-api > schedule-dev-api.tar
+        docker save $IMAGE_NAME > schedule-dev-api.tar
 
     - name: Set up SSH key
       run: |
@@ -39,7 +43,7 @@ jobs:
       run: |
         ssh -i ~/.ssh/github_deploy ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           docker load < ${{ secrets.DEPLOY_PATH }}/schedule-dev-api.tar
-          docker stop schedule-dev-api || true
-          docker rm schedule-dev-api || true
-          docker run -d --name schedule-dev-api --restart always -p 8085:8080 schedule-dev-api 
+          docker stop $IMAGE_NAME || true
+          docker rm $IMAGE_NAME || true
+          docker run -d --name $IMAGE_NAME --restart always -p $PORT:8080 $IMAGE_NAME
         EOF
