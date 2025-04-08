@@ -23,22 +23,4 @@ namespace ScheduleApi.Controllers
             return await _examScheduleService.GetExamScheduleAsync(id);
         }
     }
-
-    [ApiController]
-    [Route("api/[controller]")]
-    public class Test : ControllerBase
-    {
-        private readonly ILogger<Test> _logger;
-
-        public Test(ILogger<Test> logger, IExamScheduleService examScheduleService)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet()]
-        public async Task<string> Get()
-        {
-            return "Ortem was here";
-        }
-    }
 }
