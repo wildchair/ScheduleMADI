@@ -37,12 +37,12 @@ jobs:
 
     - name: Upload Docker image to server
       run: |
-        scp -i ~/.ssh/github_deploy ${{ IMAGE_NAME }}.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+        scp -i ~/.ssh/github_deploy $IMAGE_NAME.tar ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
 
     - name: Deploy on server
       run: |
         ssh -i ~/.ssh/github_deploy ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
-          docker load < ${{ secrets.DEPLOY_PATH }}/${{ IMAGE_NAME }}.tar
+          docker load < ${{ secrets.DEPLOY_PATH }}/$IMAGE_NAME.tar
           docker stop $IMAGE_NAME || true
           docker rm $IMAGE_NAME || true
           docker run -d --name $IMAGE_NAME --restart always -p $PORT:8080 $IMAGE_NAME
