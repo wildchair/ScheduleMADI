@@ -6,7 +6,7 @@ on:
       - dev
 
 env:
-    PORT: 8085
+    PORT: "8085"
     IMAGE_NAME: schedule-dev-api
 
 jobs:
