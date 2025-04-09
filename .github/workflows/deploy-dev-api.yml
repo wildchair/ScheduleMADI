@@ -44,7 +44,7 @@ jobs:
         ssh -i ~/.ssh/github_deploy ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
           docker stop $IMAGE_NAME || true
           docker rm $IMAGE_NAME || true
-          docker rmi $(docker images -q $IMAGE_NAME) || true
+          docker rmi $IMAGE_NAME || true
           docker load < ${{ secrets.DEPLOY_PATH }}/$IMAGE_NAME.tar
           docker run -d --name $IMAGE_NAME --restart always -p $PORT:8080 $IMAGE_NAME
         EOF
