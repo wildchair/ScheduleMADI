@@ -5,6 +5,7 @@ using ScheduleApi.ServiceRegistrator;
 using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace ScheduleApi
 {
@@ -14,7 +15,10 @@ namespace ScheduleApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             builder.Services.AddInjectables();
 
             builder.Services.AddSingleton<IParser, HtmlHardcoreParser>();
