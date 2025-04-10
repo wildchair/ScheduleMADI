@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ScheduleApi.Repository;
+﻿using ScheduleApi.Repository;
 using ScheduleApi.ServiceRegistrator;
 using ScheduleApi.Services.Interfaces;
 using ScheduleCore.ApiClient;
@@ -44,8 +43,16 @@ namespace ScheduleApi.Services
 
             foreach (var group in groups.Registry)
             {
-                var days = (await _scheduleService.GetScheduleAsync(group.Key)).ToArray();
-
+                Day[] days;
+                try
+                {
+                    days = (await _scheduleService.GetScheduleAsync(group.Key)).ToArray();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Ошибка в группах че-то крч");
+                    continue;
+                }
                 var lessonDict = new Dictionary<DayOfWeek, IEnumerable<ScheduleCore.Models.LessonNew>>();
 
                 foreach (var day in days)
