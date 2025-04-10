@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using ScheduleApi.Middlewares;
+using ScheduleApi.Repository;
 using ScheduleApi.ServiceRegistrator;
 using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers;
@@ -22,6 +24,8 @@ namespace ScheduleApi
 
             builder.Services.Configure<UniversityApiSettings>(builder.Configuration.GetSection(nameof(UniversityApiSettings)));
             builder.Services.AddHttpClient<UniversityApiClient>();
+
+            builder.Services.AddDbContext<InMemoryDbContext>(options => options.UseInMemoryDatabase("Schedule"));
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

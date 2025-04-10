@@ -1,4 +1,4 @@
-﻿using ScheduleCore.Models;
+﻿using ScheduleCore.Models.Old;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 

@@ -1,4 +1,4 @@
-﻿namespace ScheduleCore.Models
+﻿namespace ScheduleCore.Models.Old
 {
     public class MadiEntityRegistry
     {

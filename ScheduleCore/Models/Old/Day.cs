@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ScheduleCore.Models
+namespace ScheduleCore.Models.Old
 {
     public class Day : INotifyPropertyChanged
     {
