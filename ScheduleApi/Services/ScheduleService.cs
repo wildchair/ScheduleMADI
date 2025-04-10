@@ -59,7 +59,7 @@ namespace ScheduleApi.Services
                 });
             }
 
-            var html = await _apiClient.PostAsync("tplan/tasks/tableFiller.php", content);
+            var html = await _apiClient.PostAsync("tplan/tasks/tableFiller.php", content, ApiClient.ContentType.FormUrlEncoded);
 
             return _parser.ParseSchedule(html);
         }
