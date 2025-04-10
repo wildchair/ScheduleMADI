@@ -6,7 +6,7 @@ namespace ScheduleCore.Models
     {
         public int Id { get; set; }
         public string? Classroom { get; set; }
-        public required string Type { get; set; }
+        public string? Type { get; set; }
         public string? Time { get; set; }
         public required string Name { get; set; }
         public required TypeOfWeek Week { get; set; }
