@@ -53,7 +53,7 @@ namespace ScheduleApi.Services
                     _logger.LogError(ex, "Ошибка в группах че-то крч");
                     continue;
                 }
-                var lessonDict = new Dictionary<DayOfWeek, IEnumerable<ScheduleCore.Models.LessonNew>>();
+                var dayList = new List<DayNew>();  
 
                 foreach (var day in days)
                 {
@@ -76,10 +76,9 @@ namespace ScheduleApi.Services
 
                         lessons.Add(rightLesson);
                     }
-
-                    lessonDict.Add(day.Name, lessons);
+                    dayList.Add(new() { DayOfWeek = day.Name, Lessons = lessons });
                 }
-                var schedule = new Schedule() { Id = group.Key, Owner = group.Value, Days = lessonDict };
+                var schedule = new Schedule() { Id = group.Key, Owner = group.Value, Days = dayList };
 
                 _dbContext.Schedules.Add(schedule);
             }
