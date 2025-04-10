@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Net.Mime;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Threading;
 
 namespace ScheduleCore.ApiClient
 {
