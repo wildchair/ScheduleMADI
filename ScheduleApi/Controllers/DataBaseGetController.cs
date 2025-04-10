@@ -19,7 +19,7 @@ namespace ScheduleApi.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpGet()]
+        [HttpGet(Name = "GetDb")]
         public async Task<IEnumerable<Schedule>> Get()
         {
             return await _dbContext.Schedules.ToListAsync();
