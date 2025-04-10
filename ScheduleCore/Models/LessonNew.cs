@@ -11,6 +11,7 @@ namespace ScheduleCore.Models
         public required string Name { get; set; }
         public required TypeOfWeek Week { get; set; }
 
+        public DayNew Day { get; set; }
 
         //public string? CardDay { get; set; }
         //public string? CardProf { get; set; }
