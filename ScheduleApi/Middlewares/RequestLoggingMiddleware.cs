@@ -21,7 +21,7 @@ namespace ScheduleApi.Middlewares
             var ip = context.Connection.RemoteIpAddress?.ToString();
             var method = context.Request.Method;
             var path = context.Request.Path;
-            var userAgent = context.Request.Headers["User-Agent"].ToString();
+            var userAgent = context.Request.Headers.UserAgent.ToString();
 
             _logger.LogInformation("Запрос получен: {Method} {Path} от {IP}, UA: {UserAgent}", method, path, ip, userAgent);
 
@@ -42,7 +42,7 @@ namespace ScheduleApi.Middlewares
                 _logger.LogError(ex, "Ошибка при выполнении запроса: {Method} {Path} от {IP}, за {Elapsed} мс",
                     method, path, ip, stopwatch.ElapsedMilliseconds);
 
-                throw; // обязательно пробрасываем исключение дальше
+                throw;
             }
         }
     }
