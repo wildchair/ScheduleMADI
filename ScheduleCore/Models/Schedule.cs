@@ -5,6 +5,6 @@
         public required int Id { get; set; }
 
         public required string Owner { get; set; }
-        public required Dictionary<DayOfWeek, IEnumerable<Lesson>> Days { get; set; }
+        public required Dictionary<DayOfWeek, IEnumerable<LessonNew>> Days { get; set; }
     }
 }

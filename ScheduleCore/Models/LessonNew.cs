@@ -2,7 +2,7 @@
 
 namespace ScheduleCore.Models
 {
-    public class Lesson
+    public class LessonNew
     {
         public string Classroom { get; set; }
         public required string Type { get; set; }

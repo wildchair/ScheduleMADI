@@ -46,14 +46,14 @@ namespace ScheduleApi.Services
             {
                 var days = (await _scheduleService.GetScheduleAsync(group.Key)).ToArray();
 
-                var lessonDict = new Dictionary<DayOfWeek, IEnumerable<ScheduleCore.Models.Lesson>>();
+                var lessonDict = new Dictionary<DayOfWeek, IEnumerable<ScheduleCore.Models.LessonNew>>();
 
                 foreach (var day in days)
                 {
-                    var lessons = new List<ScheduleCore.Models.Lesson>();
+                    var lessons = new List<ScheduleCore.Models.LessonNew>();
                     foreach (var lesson in day.Lessons)
                     {
-                        var rightLesson = new ScheduleCore.Models.Lesson()
+                        var rightLesson = new ScheduleCore.Models.LessonNew()
                         {
                             Name = lesson.CardName,
                             Classroom = lesson.CardRoom,
