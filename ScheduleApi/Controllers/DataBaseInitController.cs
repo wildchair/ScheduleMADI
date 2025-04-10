@@ -12,13 +12,13 @@ namespace ScheduleApi.Controllers
         private readonly ILogger<DataBaseInitController> _logger;
         private readonly IDataBaseService _dataBaseService;
 
-        public DataBaseInitController(ILogger<DataBaseInitController> logger, IDataBaseService dataBaseService )
+        public DataBaseInitController(ILogger<DataBaseInitController> logger, IDataBaseService dataBaseService)
         {
             _logger = logger;
             _dataBaseService = dataBaseService;
         }
 
-        [HttpGet()]
+        [HttpGet(Name = "LoadDb")]
         public async Task<int> Get()
         {
             return await _dataBaseService.InitDbAsync();
