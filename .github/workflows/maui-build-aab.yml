@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'ScheduleMADI/**'
+      - mobile-app-rework
   workflow_dispatch:
 
 jobs:
