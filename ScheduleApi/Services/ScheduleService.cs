@@ -29,12 +29,12 @@ namespace ScheduleApi.Services
         {
             var groups = await _groupsService.GetGroupsAsync();
 
-            FormUrlEncodedContent content;
+            Dictionary<string, string> content;
             var date = SemesterCalculator.Calculate(DateTime.Now);
 
             if (groups.Registry.ContainsKey(id))
             {
-                content = new FormUrlEncodedContent(new Dictionary<string, string>
+                content = new Dictionary<string, string>()
                 {
                     { "tab", "7" },
 
@@ -43,11 +43,11 @@ namespace ScheduleApi.Services
                     {"tp_year", $"{date.year}" },
 
                     {"sem_no", $"{date.semester}" }
-                });
+                };
             }
             else
             {
-                content = new FormUrlEncodedContent(new Dictionary<string, string>
+                content = new Dictionary<string, string>()
                 {
                     { "tab", "8" },
 
@@ -56,7 +56,7 @@ namespace ScheduleApi.Services
                     {"tp_year", $"{date.year}" },
 
                     {"sem_no", $"{date.semester}" }
-                });
+                };
             }
 
             var html = await _apiClient.PostAsync("tplan/tasks/tableFiller.php", content, ApiClient.ContentType.FormUrlEncoded);
