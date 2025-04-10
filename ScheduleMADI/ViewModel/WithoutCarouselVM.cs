@@ -1,4 +1,4 @@
-﻿using ScheduleCore.Models;
+﻿using ScheduleCore.Models.Old;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 

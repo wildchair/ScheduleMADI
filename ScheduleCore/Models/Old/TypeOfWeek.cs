@@ -1,7 +1,8 @@
-﻿namespace ScheduleCore.Models
+﻿namespace ScheduleCore.Models.Old
 {
     public enum TypeOfWeek
     {
+        None,
         /// <summary>
         /// Числитель
         /// </summary>

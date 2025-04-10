@@ -1,5 +1,5 @@
 ﻿using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
-using ScheduleCore.Models;
+using ScheduleCore.Models.Old;
 using System.Collections.ObjectModel;
 
 namespace ScheduleCore.MadiSiteApiHelpers.Parsers
