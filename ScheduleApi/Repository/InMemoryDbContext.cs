@@ -8,6 +8,8 @@ namespace ScheduleApi.Repository
     {
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<DayNew> Days { get; set; }
+
+        public DbSet<LessonNew> Lessons { get; set; }
         public InMemoryDbContext(DbContextOptions<InMemoryDbContext> options) : base(options) { }
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
