@@ -7,6 +7,6 @@ namespace ScheduleCore.Models
         public required int Id { get; set; }
 
         public required string Owner { get; set; }
-        public required IEnumerable<DayNew> Days { get; set; }
+        public required IEnumerable<LessonNew> Lessons { get; set; }
     }
 }

@@ -78,7 +78,7 @@ namespace ScheduleApi.Services
                     }
                     dayList.Add(new() { DayOfWeek = day.Name, Lessons = lessons });
                 }
-                var schedule = new Schedule() { Id = group.Key, Owner = group.Value, Days = dayList };
+                var schedule = new Schedule() { Id = group.Key, Owner = group.Value, Lessons = dayList };
 
                 _dbContext.Schedules.Add(schedule);
             }

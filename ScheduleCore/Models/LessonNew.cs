@@ -10,6 +10,9 @@ namespace ScheduleCore.Models
         public string? Time { get; set; }
         public required string Name { get; set; }
         public required TypeOfWeek Week { get; set; }
+        public required DayOfWeek DayOfWeek { get; set; }
+
+        public required Schedule Schedule { get; set; }
 
 
         //public string? CardDay { get; set; }

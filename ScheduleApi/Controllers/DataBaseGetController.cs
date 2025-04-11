@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScheduleApi.Repository;
-using ScheduleApi.Services.Interfaces;
 using ScheduleCore.Models;
-using ScheduleCore.Models.Old;
 
 namespace ScheduleApi.Controllers
 {
@@ -23,7 +21,7 @@ namespace ScheduleApi.Controllers
         [HttpGet(Name = "GetDb")]
         public async Task<IEnumerable<Schedule>> Get()
         {
-            return await _dbContext.Schedules.Include(x=>x.Days).ThenInclude(x=>x.Lessons).ToListAsync();
+            return await _dbContext.Schedules.Include(x => x.Lessons).ToListAsync();
         }
     }
 }
