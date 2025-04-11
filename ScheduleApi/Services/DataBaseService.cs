@@ -39,10 +39,12 @@ namespace ScheduleApi.Services
         {
             var groups = await _groupsService.GetGroupsAsync();
 
-            var schedules = new List<Schedule>();
-
             foreach (var group in groups.Registry)
             {
+                var groupId = group.Key;
+                var groupName = group.Value;
+                var lessons = new List<Lesson>();
+
                 Day[] days;
                 try
                 {
@@ -53,34 +55,31 @@ namespace ScheduleApi.Services
                     _logger.LogError(ex, "Ошибка в группах че-то крч");
                     continue;
                 }
-                var dayList = new List<DayNew>();  
 
                 foreach (var day in days)
                 {
-                    var lessons = new List<ScheduleCore.Models.LessonNew>();
+
                     foreach (var lesson in day.Lessons)
                     {
-                        var rightLesson = new ScheduleCore.Models.LessonNew()
+                        var rightLesson = new Lesson()
                         {
                             Name = lesson.CardName,
                             Classroom = lesson.CardRoom,
-                            Time = lesson.CardTime,
+                            Day = day.Name,
                             Type = lesson.CardType,
                             Week = lesson.CardDay switch
                             {
                                 "Числитель" => TypeOfWeek.Numerator,
                                 "Знаменатель" => TypeOfWeek.Denominator,
                                 _ => TypeOfWeek.None
-                            }
+                            },
+                            Visitor = lesson.CardProf,
                         };
 
                         lessons.Add(rightLesson);
                     }
-                    dayList.Add(new() { DayOfWeek = day.Name, Lessons = lessons });
                 }
-                var schedule = new Schedule() { Id = group.Key, Owner = group.Value, Lessons = dayList };
-
-                _dbContext.Schedules.Add(schedule);
+                _dbContext.Owners.Add(new() { Id = groupId, Lessons = lessons, Name = groupName });
             }
             return await _dbContext.SaveChangesAsync();
         }

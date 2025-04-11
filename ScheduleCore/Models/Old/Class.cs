@@ -1,6 +1,6 @@
 ﻿namespace ScheduleCore.Models.Old
 {
-    public class Lesson
+    public class Class
     {
         public string? CardTime { get; set; }
         public string? CardDay { get; set; }

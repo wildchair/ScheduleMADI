@@ -193,8 +193,8 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 new Day(DayOfWeek.Monday), new Day(DayOfWeek.Tuesday),
                 new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
                 new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
-                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
-                { new Lesson { CardName = "Выходной день", CardDay = "Еженедельно" } } }
+                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Class>()
+                { new Class { CardName = "Выходной день", CardDay = "Еженедельно" } } }
             };
 
             bool isProfessors = false;
@@ -244,7 +244,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
                     while (true)
                     {
-                        var lesson = new Lesson();
+                        var lesson = new Class();
                         for (int i = 0; i < 6; i++)//парсинг данных Lesson-а
                         {
                             buff = reader.ReadLine();
@@ -358,7 +358,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                         }
                         var day = days.Find(x => x.Name == dayOfWeek);
 
-                        var lesson = new Lesson();
+                        var lesson = new Class();
                         reader.ReadLine();
 
                         buff = reader.ReadLine();
@@ -383,19 +383,19 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
             {
                 if (days[i].Lessons.Count == 0)
                 {
-                    days[i].Lessons.Add(new Lesson() { CardName = "Выходной день", CardDay = "Еженедельно" });
+                    days[i].Lessons.Add(new Class() { CardName = "Выходной день", CardDay = "Еженедельно" });
                     continue;
                 }
 
                 if (!days[i].Lessons.Any(x => x.CardDay.Contains("Числ")) && !days[i].Lessons.Any(x => x.CardDay.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Lesson() { CardName = "Выходной день", CardDay = "Числитель" });
+                    days[i].Lessons.Add(new Class() { CardName = "Выходной день", CardDay = "Числитель" });
                     continue;
                 }
 
                 if (!days[i].Lessons.Any(x => x.CardDay.Contains("Знам")) && !days[i].Lessons.Any(x => x.CardDay.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Lesson() { CardName = "Выходной день", CardDay = "Знаменатель" });
+                    days[i].Lessons.Add(new Class() { CardName = "Выходной день", CardDay = "Знаменатель" });
                     continue;
                 }
             }

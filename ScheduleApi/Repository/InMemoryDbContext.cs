@@ -5,8 +5,8 @@ namespace ScheduleApi.Repository
 {
     public class InMemoryDbContext : DbContext
     {
-        public DbSet<Schedule> Schedules { get; set; }
-        public DbSet<LessonNew> Lessons { get; set; }
+        public DbSet<Owner> Owners { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
         public InMemoryDbContext(DbContextOptions<InMemoryDbContext> options) : base(options) { }
     }
 }

@@ -19,9 +19,9 @@ namespace ScheduleApi.Controllers
         }
 
         [HttpGet(Name = "GetDb")]
-        public async Task<IEnumerable<Schedule>> Get()
+        public async Task<IEnumerable<Owner>> Get()
         {
-            return await _dbContext.Schedules.Include(x => x.Lessons).ToListAsync();
+            return await _dbContext.Owners.Include(x => x.Lessons).ToListAsync();
         }
     }
 }

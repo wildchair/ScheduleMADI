@@ -24,30 +24,30 @@ namespace ScheduleMADI
 
                 List<Day> days1 = new List<Day>()
                 {
-                new Day(DayOfWeek.Monday, new ObservableCollection<Lesson>(), "Числитель"),
-                new Day(DayOfWeek.Tuesday, new ObservableCollection<Lesson>(), "Числитель"),
-                new Day(DayOfWeek.Wednesday, new ObservableCollection<Lesson>(), "Числитель"),
-                new Day(DayOfWeek.Thursday, new ObservableCollection<Lesson>(), "Числитель"),
-                new Day(DayOfWeek.Friday, new ObservableCollection<Lesson>(), "Числитель"),
-                new Day(DayOfWeek.Saturday, new ObservableCollection<Lesson>(), "Числитель"),
-                new Day(DayOfWeek.Sunday, new ObservableCollection < Lesson >(), "Числитель")
+                new Day(DayOfWeek.Monday, new ObservableCollection<Class>(), "Числитель"),
+                new Day(DayOfWeek.Tuesday, new ObservableCollection<Class>(), "Числитель"),
+                new Day(DayOfWeek.Wednesday, new ObservableCollection<Class>(), "Числитель"),
+                new Day(DayOfWeek.Thursday, new ObservableCollection<Class>(), "Числитель"),
+                new Day(DayOfWeek.Friday, new ObservableCollection<Class>(), "Числитель"),
+                new Day(DayOfWeek.Saturday, new ObservableCollection<Class>(), "Числитель"),
+                new Day(DayOfWeek.Sunday, new ObservableCollection < Class >(), "Числитель")
                 };
                 List<Day> days2 = new List<Day>()
                 {
-                new Day(DayOfWeek.Monday, new ObservableCollection<Lesson>(), "Знаменатель"),
-                new Day(DayOfWeek.Tuesday, new ObservableCollection<Lesson>(), "Знаменатель"),
-                new Day(DayOfWeek.Wednesday, new ObservableCollection<Lesson>(),"Знаменатель"),
-                new Day(DayOfWeek.Thursday, new ObservableCollection<Lesson>(), "Знаменатель"),
-                new Day(DayOfWeek.Friday, new ObservableCollection<Lesson>(), "Знаменатель"),
-                new Day(DayOfWeek.Saturday, new ObservableCollection<Lesson>(), "Знаменатель"),
-                new Day(DayOfWeek.Sunday, new ObservableCollection < Lesson >(), "Знаменатель")
+                new Day(DayOfWeek.Monday, new ObservableCollection<Class>(), "Знаменатель"),
+                new Day(DayOfWeek.Tuesday, new ObservableCollection<Class>(), "Знаменатель"),
+                new Day(DayOfWeek.Wednesday, new ObservableCollection<Class>(),"Знаменатель"),
+                new Day(DayOfWeek.Thursday, new ObservableCollection<Class>(), "Знаменатель"),
+                new Day(DayOfWeek.Friday, new ObservableCollection<Class>(), "Знаменатель"),
+                new Day(DayOfWeek.Saturday, new ObservableCollection<Class>(), "Знаменатель"),
+                new Day(DayOfWeek.Sunday, new ObservableCollection < Class >(), "Знаменатель")
                 };
 
                 for (int i = 0; i < 7; i++)//Сборка итогового двухнедельного расписания
                     foreach (var lesson in value[i].Lessons)
                         if (lesson.CardDay == "Еженедельно")
                         {
-                            days1[i].Lessons.Add(new Lesson
+                            days1[i].Lessons.Add(new Class
                             {
                                 CardDay = lesson.CardDay,
                                 CardName = lesson.CardName,
@@ -56,7 +56,7 @@ namespace ScheduleMADI
                                 CardTime = lesson.CardTime,
                                 CardType = lesson.CardType
                             });
-                            days2[i].Lessons.Add(new Lesson
+                            days2[i].Lessons.Add(new Class
                             {
                                 CardDay = lesson.CardDay,
                                 CardName = lesson.CardName,
@@ -68,7 +68,7 @@ namespace ScheduleMADI
                         }
                         else if (lesson.CardDay == "Числитель" || lesson.CardDay == "Числ. 1 раз в месяц")
                         {
-                            days1[i].Lessons.Add(new Lesson
+                            days1[i].Lessons.Add(new Class
                             {
                                 CardDay = lesson.CardDay,
                                 CardName = lesson.CardName,
@@ -80,7 +80,7 @@ namespace ScheduleMADI
                         }
                         else
                         {
-                            days2[i].Lessons.Add(new Lesson
+                            days2[i].Lessons.Add(new Class
                             {
                                 CardDay = lesson.CardDay,
                                 CardName = lesson.CardName,

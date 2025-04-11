@@ -6,11 +6,11 @@ namespace ScheduleCore.Models.Old
 {
     public class Day : INotifyPropertyChanged
     {
-        private ObservableCollection<Lesson> lessons;
+        private ObservableCollection<Class> lessons;
         private DayOfWeek name;
         private string typeOfWeek;
 
-        public ObservableCollection<Lesson> Lessons
+        public ObservableCollection<Class> Lessons
         {
             get => lessons;
             set
@@ -49,14 +49,14 @@ namespace ScheduleCore.Models.Old
         public Day() { }
         public Day(DayOfWeek name)
         {
-            Lessons = new ObservableCollection<Lesson>();
+            Lessons = new ObservableCollection<Class>();
             Name = name;
         }
-        public Day(DayOfWeek name, ObservableCollection<Lesson> lessons) : this(name)
+        public Day(DayOfWeek name, ObservableCollection<Class> lessons) : this(name)
         {
             Lessons = lessons;
         }
-        public Day(DayOfWeek name, ObservableCollection<Lesson> lessons, string typeOfWeek) : this(name, lessons)
+        public Day(DayOfWeek name, ObservableCollection<Class> lessons, string typeOfWeek) : this(name, lessons)
         {
             TypeOfWeek = typeOfWeek;
         }
