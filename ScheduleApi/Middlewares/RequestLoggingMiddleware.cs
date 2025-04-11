@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace ScheduleApi.Middlewares
 {

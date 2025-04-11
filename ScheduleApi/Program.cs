@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using ScheduleApi.Middlewares;
 using ScheduleApi.Repository;
 using ScheduleApi.ServiceRegistrator;
 using ScheduleCore.ApiClient;
@@ -42,7 +41,7 @@ namespace ScheduleApi
             app.UseSwaggerUI();
             //}
 
-            app.UseMiddleware<RequestLoggingMiddleware>();
+            //app.UseMiddleware<RequestLoggingMiddleware>();
 
             //app.UseAuthorization();
             app.MapControllers();
