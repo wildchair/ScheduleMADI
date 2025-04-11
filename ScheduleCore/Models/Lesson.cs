@@ -10,7 +10,8 @@ namespace ScheduleCore.Models
         public TimeSpan Start { get; set; }
         public TimeSpan End { get; set; }
         public string? Type { get; set; }
-        public string? Visitor { get; set; }
+        public List<int> Groups { get; set; }
+        public List<int> Professors { get; set; }
         public DayOfWeek Day { get; set; }
         public string? Classroom { get; set; }
     }
