@@ -73,7 +73,7 @@ namespace ScheduleApi.Services
             schedule = new() { Days = days, Id = id, Owner = groups.Registry[id] };
             await _inMemoryDbMadi.Schedules.AddAsync(schedule);
 
-            var count = _inMemoryDbMadi.SaveChangesAsync();
+            var count = await _inMemoryDbMadi.SaveChangesAsync();
 
             _logger.LogInformation($"{count} entities has been addedto DB.");
 
