@@ -10,7 +10,7 @@ namespace ScheduleCore.Models.Madi
 
         private ObservableCollection<Class> lessons;
         private DayOfWeek name;
-        private string typeOfWeek;
+        private string? typeOfWeek;
 
         public ObservableCollection<Class> Lessons
         {
@@ -36,7 +36,7 @@ namespace ScheduleCore.Models.Madi
                 }
             }
         }
-        public string TypeOfWeek
+        public string? TypeOfWeek
         {
             get => typeOfWeek;
             set

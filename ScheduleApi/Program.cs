@@ -29,18 +29,18 @@ namespace ScheduleApi
             builder.Services.AddHttpClient<UniversityApiClient>();
 
             builder.Services.AddDbContext<InMemoryDbContext>(options => options.UseInMemoryDatabase("Schedule"));
-            builder.Services.AddDbContext<InMemoryDbMadiContext>(options => { options.UseInMemoryDatabase("ScheduleMadi"); options.EnableSensitiveDataLogging(); });
+            builder.Services.AddDbContext<InMemoryDbMadiContext>(options => options.UseInMemoryDatabase("ScheduleMadi"));
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            //if (app.Environment.IsDevelopment())
-            //{
-            app.UseSwagger();
-            app.UseSwaggerUI();
-            //}
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             //app.UseMiddleware<RequestLoggingMiddleware>();
 

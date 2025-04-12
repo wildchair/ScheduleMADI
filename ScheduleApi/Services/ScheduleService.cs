@@ -74,9 +74,7 @@ namespace ScheduleApi.Services
 
             await _inMemoryDbMadi.Schedules.AddAsync(schedule);
 
-            var count = await _inMemoryDbMadi.SaveChangesAsync();
-
-            _logger.LogInformation($"{count} entities has been added to DB.");
+            await _inMemoryDbMadi.SaveChangesAsync();
 
             return schedule;
         }
