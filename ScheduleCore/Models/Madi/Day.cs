@@ -2,10 +2,12 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ScheduleCore.Models.Old
+namespace ScheduleCore.Models.Madi
 {
     public class Day : INotifyPropertyChanged
     {
+        public int Id { get; set; }
+
         private ObservableCollection<Class> lessons;
         private DayOfWeek name;
         private string typeOfWeek;

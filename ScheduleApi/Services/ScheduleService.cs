@@ -3,7 +3,7 @@ using ScheduleApi.Services.Interfaces;
 using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
 using ScheduleCore.MadiSiteApiHelpers.Utils;
-using ScheduleCore.Models.Old;
+using ScheduleCore.Models.Madi;
 
 namespace ScheduleApi.Services
 {
@@ -25,7 +25,7 @@ namespace ScheduleApi.Services
             _professorsService = professorsService;
         }
 
-        public async Task<IEnumerable<Day>> GetScheduleAsync(int id)
+        public async Task<Schedule> GetScheduleAsync(int id)
         {
             var groups = await _groupsService.GetGroupsAsync();
 
@@ -61,7 +61,9 @@ namespace ScheduleApi.Services
 
             var html = await _apiClient.PostAsync("tplan/tasks/tableFiller.php", content, ApiClient.ContentType.FormUrlEncoded);
 
-            return _parser.ParseSchedule(html);
+            var days = _parser.ParseSchedule(html);
+
+            return new() { Days = days, Id = id, Owner = groups.Registry[id] };
         }
     }
 }

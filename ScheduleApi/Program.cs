@@ -29,6 +29,7 @@ namespace ScheduleApi
             builder.Services.AddHttpClient<UniversityApiClient>();
 
             builder.Services.AddDbContext<InMemoryDbContext>(options => options.UseInMemoryDatabase("Schedule"));
+            builder.Services.AddDbContext<InMemoryDbMadiContext>(options => options.UseInMemoryDatabase("ScheduleMadi"));
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

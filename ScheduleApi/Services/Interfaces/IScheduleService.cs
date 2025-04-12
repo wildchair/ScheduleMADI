@@ -1,9 +1,9 @@
-﻿using ScheduleCore.Models.Old;
+﻿using ScheduleCore.Models.Madi;
 
 namespace ScheduleApi.Services.Interfaces
 {
     public interface IScheduleService
     {
-        public Task<IEnumerable<Day>> GetScheduleAsync(int id);
+        public Task<Schedule> GetScheduleAsync(int id);
     }
 }

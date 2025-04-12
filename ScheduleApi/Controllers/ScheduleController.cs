@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScheduleApi.Services.Interfaces;
-using ScheduleCore.Models.Old;
+using ScheduleCore.Models.Madi;
 
 namespace ScheduleApi.Controllers
 {
@@ -18,7 +18,7 @@ namespace ScheduleApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IEnumerable<Day>> Get(int id)
+        public async Task<Schedule> Get(int id)
         {
             return await _scheduleService.GetScheduleAsync(id);
         }

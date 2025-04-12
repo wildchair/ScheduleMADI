@@ -1,4 +1,4 @@
-﻿using ScheduleCore.Models.Old;
+﻿using ScheduleCore.Models.Madi;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 
@@ -194,7 +194,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
                 new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
                 new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Class>()
-                { new Class { CardName = "Выходной день", CardDay = "Еженедельно" } } }
+                { new Class { Name = "Выходной день", Day = "Еженедельно" } } }
             };
 
             bool isProfessors = false;
@@ -253,19 +253,19 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                                 switch (i)
                                 {
                                     case 0:
-                                        lesson.CardTime = buff;
+                                        lesson.Time = buff;
                                         break;
                                     case 1:
-                                        lesson.CardName = buff;
+                                        lesson.Name = buff;
                                         break;
                                     case 2:
-                                        lesson.CardType = buff;
+                                        lesson.Type = buff;
                                         break;
                                     case 3:
-                                        lesson.CardDay = buff;
+                                        lesson.Day = buff;
                                         break;
                                     case 4:
-                                        lesson.CardRoom = buff;
+                                        lesson.Classroom = buff;
                                         break;
                                     case 5:
                                         var a = buff.Split().ToList();// нормализация пробелов в ФИО
@@ -274,40 +274,40 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                                         var full = "";
                                         foreach (var x in a)
                                             full += x + " ";
-                                        lesson.CardProf = full;
+                                        lesson.Visitors = full;
                                         break;
                                 }
                             else
                                 switch (i)
                                 {
                                     case 0:
-                                        lesson.CardTime = buff;
+                                        lesson.Time = buff;
                                         break;
                                     case 2:
-                                        lesson.CardName = buff;
+                                        lesson.Name = buff;
                                         break;
                                     case 3:
-                                        lesson.CardType = buff;
+                                        lesson.Type = buff;
                                         break;
                                     case 4:
-                                        lesson.CardDay = buff;
+                                        lesson.Day = buff;
                                         break;
                                     case 5:
-                                        lesson.CardRoom = buff;
+                                        lesson.Classroom = buff;
                                         break;
                                     case 1:
-                                        lesson.CardProf = buff.Replace(" ", string.Empty);
+                                        lesson.Visitors = buff.Replace(" ", string.Empty);
                                         break;
                                 }
                         }
 
                         var existingLesson = day.Lessons.SingleOrDefault(x =>
-                        x.CardTime == lesson.CardTime && x.CardType == lesson.CardType &&
-                        x.CardName == lesson.CardName && x.CardDay == lesson.CardDay && x.CardRoom == lesson.CardRoom,
+                        x.Time == lesson.Time && x.Type == lesson.Type &&
+                        x.Name == lesson.Name && x.Day == lesson.Day && x.Classroom == lesson.Classroom,
                         null);
 
                         if (existingLesson != null)
-                            existingLesson.CardProf += $", {lesson.CardProf}";
+                            existingLesson.Visitors += $", {lesson.Visitors}";
                         else
                             day.Lessons.Add(lesson);
 
@@ -363,11 +363,11 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
                         buff = reader.ReadLine();
                         buff = CutHTML(buff);
-                        lesson.CardName = buff;
+                        lesson.Name = buff;
 
                         buff = reader.ReadLine();
                         buff = CutHTML(buff);
-                        lesson.CardDay = buff;
+                        lesson.Day = buff;
 
 
                         day.Lessons.Add(lesson);
@@ -383,19 +383,19 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
             {
                 if (days[i].Lessons.Count == 0)
                 {
-                    days[i].Lessons.Add(new Class() { CardName = "Выходной день", CardDay = "Еженедельно" });
+                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Еженедельно" });
                     continue;
                 }
 
-                if (!days[i].Lessons.Any(x => x.CardDay.Contains("Числ")) && !days[i].Lessons.Any(x => x.CardDay.Contains("Еже")))
+                if (!days[i].Lessons.Any(x => x.Day.Contains("Числ")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Class() { CardName = "Выходной день", CardDay = "Числитель" });
+                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Числитель" });
                     continue;
                 }
 
-                if (!days[i].Lessons.Any(x => x.CardDay.Contains("Знам")) && !days[i].Lessons.Any(x => x.CardDay.Contains("Еже")))
+                if (!days[i].Lessons.Any(x => x.Day.Contains("Знам")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Class() { CardName = "Выходной день", CardDay = "Знаменатель" });
+                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Знаменатель" });
                     continue;
                 }
             }

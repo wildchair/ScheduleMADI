@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using ScheduleCore.Models.Old;
+using ScheduleCore.Models.Madi;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -45,49 +45,49 @@ namespace ScheduleMADI
 
                 for (int i = 0; i < 7; i++)//Сборка итогового двухнедельного расписания
                     foreach (var lesson in value[i].Lessons)
-                        if (lesson.CardDay == "Еженедельно")
+                        if (lesson.Day == "Еженедельно")
                         {
                             days1[i].Lessons.Add(new Class
                             {
-                                CardDay = lesson.CardDay,
-                                CardName = lesson.CardName,
-                                CardProf = lesson.CardProf,
-                                CardRoom = lesson.CardRoom,
-                                CardTime = lesson.CardTime,
-                                CardType = lesson.CardType
+                                Day = lesson.Day,
+                                Name = lesson.Name,
+                                Visitors = lesson.Visitors,
+                                Classroom = lesson.Classroom,
+                                Time = lesson.Time,
+                                Type = lesson.Type
                             });
                             days2[i].Lessons.Add(new Class
                             {
-                                CardDay = lesson.CardDay,
-                                CardName = lesson.CardName,
-                                CardProf = lesson.CardProf,
-                                CardRoom = lesson.CardRoom,
-                                CardTime = lesson.CardTime,
-                                CardType = lesson.CardType
+                                Day = lesson.Day,
+                                Name = lesson.Name,
+                                Visitors = lesson.Visitors,
+                                Classroom = lesson.Classroom,
+                                Time = lesson.Time,
+                                Type = lesson.Type
                             });
                         }
-                        else if (lesson.CardDay == "Числитель" || lesson.CardDay == "Числ. 1 раз в месяц")
+                        else if (lesson.Day == "Числитель" || lesson.Day == "Числ. 1 раз в месяц")
                         {
                             days1[i].Lessons.Add(new Class
                             {
-                                CardDay = lesson.CardDay,
-                                CardName = lesson.CardName,
-                                CardProf = lesson.CardProf,
-                                CardRoom = lesson.CardRoom,
-                                CardTime = lesson.CardTime,
-                                CardType = lesson.CardType
+                                Day = lesson.Day,
+                                Name = lesson.Name,
+                                Visitors = lesson.Visitors,
+                                Classroom = lesson.Classroom,
+                                Time = lesson.Time,
+                                Type = lesson.Type
                             });
                         }
                         else
                         {
                             days2[i].Lessons.Add(new Class
                             {
-                                CardDay = lesson.CardDay,
-                                CardName = lesson.CardName,
-                                CardProf = lesson.CardProf,
-                                CardRoom = lesson.CardRoom,
-                                CardTime = lesson.CardTime,
-                                CardType = lesson.CardType
+                                Day = lesson.Day,
+                                Name = lesson.Name,
+                                Visitors = lesson.Visitors,
+                                Classroom = lesson.Classroom,
+                                Time = lesson.Time,
+                                Type = lesson.Type
                             });
                         }
 

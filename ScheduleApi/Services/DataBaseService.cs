@@ -4,7 +4,7 @@ using ScheduleApi.Services.Interfaces;
 using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
 using ScheduleCore.Models;
-using ScheduleCore.Models.Old;
+using ScheduleCore.Models.Madi;
 
 namespace ScheduleApi.Services
 {
@@ -45,10 +45,10 @@ namespace ScheduleApi.Services
                 var groupName = group.Value;
                 var lessons = new List<Lesson>();
 
-                Day[] days;
+                Schedule schedule;
                 try
                 {
-                    days = (await _scheduleService.GetScheduleAsync(group.Key)).ToArray();
+                    schedule = await _scheduleService.GetScheduleAsync(group.Key);
                 }
                 catch (Exception ex)
                 {
@@ -56,30 +56,29 @@ namespace ScheduleApi.Services
                     continue;
                 }
 
-                foreach (var day in days)
+                foreach (var day in schedule.Days)
                 {
 
                     foreach (var lesson in day.Lessons)
                     {
                         var rightLesson = new Lesson()
                         {
-                            Name = lesson.CardName,
-                            Classroom = lesson.CardRoom,
+                            Name = lesson.Name,
+                            Classroom = lesson.Classroom,
                             Day = day.Name,
-                            Type = lesson.CardType,
-                            Week = lesson.CardDay switch
+                            Type = lesson.Type,
+                            Week = lesson.Day switch
                             {
                                 "Числитель" => TypeOfWeek.Numerator,
                                 "Знаменатель" => TypeOfWeek.Denominator,
                                 _ => TypeOfWeek.None
-                            },
-                            Visitor = lesson.CardProf,
+                            }
                         };
 
                         lessons.Add(rightLesson);
                     }
                 }
-                _dbContext.Owners.Add(new() { Id = groupId, Lessons = lessons, Name = groupName });
+                _dbContext.Owners.Add(new() { Id = schedule.Id, Lessons = lessons, Name = schedule.Owner });
             }
             return await _dbContext.SaveChangesAsync();
         }
