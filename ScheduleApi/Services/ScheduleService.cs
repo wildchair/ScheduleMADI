@@ -1,4 +1,5 @@
-﻿using ScheduleApi.ServiceRegistrator;
+﻿using ScheduleApi.Repository;
+using ScheduleApi.ServiceRegistrator;
 using ScheduleApi.Services.Interfaces;
 using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
@@ -15,18 +16,24 @@ namespace ScheduleApi.Services
         private readonly IParser _parser;
         private readonly IGroupsService _groupsService;
         private readonly IProfessorsService _professorsService;
+        private readonly InMemoryDbMadiContext _inMemoryDbMadi;
 
-        public ScheduleService(ILogger<ScheduleService> logger, UniversityApiClient apiClient, IParser parser, IGroupsService groupsService, IProfessorsService professorsService)
+        public ScheduleService(ILogger<ScheduleService> logger, UniversityApiClient apiClient, IParser parser, IGroupsService groupsService, IProfessorsService professorsService, InMemoryDbMadiContext madiContext)
         {
             _logger = logger;
             _apiClient = apiClient;
             _parser = parser;
             _groupsService = groupsService;
             _professorsService = professorsService;
+            _inMemoryDbMadi = madiContext;
         }
 
         public async Task<Schedule> GetScheduleAsync(int id)
         {
+            var schedule = await _inMemoryDbMadi.Schedules.FindAsync(id);
+            if (schedule != null)
+                return schedule;
+
             var groups = await _groupsService.GetGroupsAsync();
 
             Dictionary<string, string> content;
@@ -63,7 +70,12 @@ namespace ScheduleApi.Services
 
             var days = _parser.ParseSchedule(html);
 
-            return new() { Days = days, Id = id, Owner = groups.Registry[id] };
+            schedule = new() { Days = days, Id = id, Owner = groups.Registry[id] };
+            var count = await _inMemoryDbMadi.Schedules.AddAsync(schedule);
+
+            _logger.LogInformation($"{count} entities has been addedto DB.");
+
+            return schedule;
         }
     }
 }
