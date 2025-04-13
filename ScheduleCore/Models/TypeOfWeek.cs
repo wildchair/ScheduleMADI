@@ -1,4 +1,4 @@
-﻿namespace ScheduleCore.Models.Madi
+﻿namespace ScheduleCore.Models
 {
     public enum TypeOfWeek
     {

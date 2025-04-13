@@ -1,4 +1,5 @@
-﻿using ScheduleCore.Models.Madi;
+﻿using ScheduleCore.Models;
+using ScheduleCore.Models.Madi;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 
