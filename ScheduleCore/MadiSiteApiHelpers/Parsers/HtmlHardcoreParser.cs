@@ -87,7 +87,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
                 new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
                 new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Class>()
-                { new Class { Name = "Выходной день", Day = "Еженедельно" } } }
+                { new Class { Name = "Выходной день", TypeOfWeek = "Еженедельно" } } }
             };
 
             bool isProfessors = false;
@@ -155,7 +155,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                                         lesson.Type = buff;
                                         break;
                                     case 3:
-                                        lesson.Day = buff;
+                                        lesson.TypeOfWeek = buff;
                                         break;
                                     case 4:
                                         lesson.Classroom = buff;
@@ -183,7 +183,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                                         lesson.Type = buff;
                                         break;
                                     case 4:
-                                        lesson.Day = buff;
+                                        lesson.TypeOfWeek = buff;
                                         break;
                                     case 5:
                                         lesson.Classroom = buff;
@@ -196,7 +196,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
                         var existingLesson = day.Lessons.SingleOrDefault(x =>
                         x.Time == lesson.Time && x.Type == lesson.Type &&
-                        x.Name == lesson.Name && x.Day == lesson.Day && x.Classroom == lesson.Classroom,
+                        x.Name == lesson.Name && x.TypeOfWeek == lesson.TypeOfWeek && x.Classroom == lesson.Classroom,
                         null);
 
                         if (existingLesson != null)
@@ -260,7 +260,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
                         buff = reader.ReadLine();
                         buff = CutHTML(buff);
-                        lesson.Day = buff;
+                        lesson.TypeOfWeek = buff;
 
 
                         day.Lessons.Add(lesson);
@@ -276,19 +276,19 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
             {
                 if (days[i].Lessons.Count == 0)
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Еженедельно" });
+                    days[i].Lessons.Add(new Class() { Name = "Выходной день", TypeOfWeek = "Еженедельно" });
                     continue;
                 }
 
-                if (!days[i].Lessons.Any(x => x.Day.Contains("Числ")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
+                if (!days[i].Lessons.Any(x => x.TypeOfWeek.Contains("Числ")) && !days[i].Lessons.Any(x => x.TypeOfWeek.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Числитель" });
+                    days[i].Lessons.Add(new Class() { Name = "Выходной день", TypeOfWeek = "Числитель" });
                     continue;
                 }
 
-                if (!days[i].Lessons.Any(x => x.Day.Contains("Знам")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
+                if (!days[i].Lessons.Any(x => x.TypeOfWeek.Contains("Знам")) && !days[i].Lessons.Any(x => x.TypeOfWeek.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Знаменатель" });
+                    days[i].Lessons.Add(new Class() { Name = "Выходной день", TypeOfWeek = "Знаменатель" });
                     continue;
                 }
             }

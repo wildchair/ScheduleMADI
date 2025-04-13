@@ -18,10 +18,10 @@ namespace ScheduleApi.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpGet(Name = "GetDb")]
-        public async Task<IEnumerable<Owner>> Get()
+        [HttpGet("{id}")]
+        public async Task<Group> Get(int id)
         {
-            return await _dbContext.Owners.Include(x => x.Lessons).ToListAsync();
+            return await _dbContext.Groups.Include(x => x.Lessons).ThenInclude(x => x.Professors).FirstAsync(x => x.Id == id);
         }
     }
 }

@@ -70,7 +70,7 @@ namespace ScheduleApi.Services
 
             var days = _parser.ParseSchedule(html);
 
-            schedule = new() { Days = days, Id = id, Owner = groups.Registry[id], LastFetch = DateTime.Now };
+            schedule = new() { Days = days, Id = id, OwnerName = groups.Registry[id], LastFetch = DateTime.Now };
 
             await _inMemoryDbMadi.Schedules.AddAsync(schedule);
 

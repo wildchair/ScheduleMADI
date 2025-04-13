@@ -45,11 +45,11 @@ namespace ScheduleMADI
 
                 for (int i = 0; i < 7; i++)//Сборка итогового двухнедельного расписания
                     foreach (var lesson in value[i].Lessons)
-                        if (lesson.Day == "Еженедельно")
+                        if (lesson.TypeOfWeek == "Еженедельно")
                         {
                             days1[i].Lessons.Add(new Class
                             {
-                                Day = lesson.Day,
+                                TypeOfWeek = lesson.TypeOfWeek,
                                 Name = lesson.Name,
                                 Visitors = lesson.Visitors,
                                 Classroom = lesson.Classroom,
@@ -58,7 +58,7 @@ namespace ScheduleMADI
                             });
                             days2[i].Lessons.Add(new Class
                             {
-                                Day = lesson.Day,
+                                TypeOfWeek = lesson.TypeOfWeek,
                                 Name = lesson.Name,
                                 Visitors = lesson.Visitors,
                                 Classroom = lesson.Classroom,
@@ -66,11 +66,11 @@ namespace ScheduleMADI
                                 Type = lesson.Type
                             });
                         }
-                        else if (lesson.Day == "Числитель" || lesson.Day == "Числ. 1 раз в месяц")
+                        else if (lesson.TypeOfWeek == "Числитель" || lesson.TypeOfWeek == "Числ. 1 раз в месяц")
                         {
                             days1[i].Lessons.Add(new Class
                             {
-                                Day = lesson.Day,
+                                TypeOfWeek = lesson.TypeOfWeek,
                                 Name = lesson.Name,
                                 Visitors = lesson.Visitors,
                                 Classroom = lesson.Classroom,
@@ -82,7 +82,7 @@ namespace ScheduleMADI
                         {
                             days2[i].Lessons.Add(new Class
                             {
-                                Day = lesson.Day,
+                                TypeOfWeek = lesson.TypeOfWeek,
                                 Name = lesson.Name,
                                 Visitors = lesson.Visitors,
                                 Classroom = lesson.Classroom,
