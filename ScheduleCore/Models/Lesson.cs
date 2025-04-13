@@ -1,6 +1,4 @@
-﻿using ScheduleCore.Models.Madi;
-
-namespace ScheduleCore.Models
+﻿namespace ScheduleCore.Models
 {
     public class Lesson
     {

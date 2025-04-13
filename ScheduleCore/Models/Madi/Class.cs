@@ -1,8 +1,11 @@
-﻿namespace ScheduleCore.Models.Madi
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ScheduleCore.Models.Madi
 {
+#warning Need renaming
+    [Owned]
     public class Class
     {
-        public int Id { get; set; }
         public string? Time { get; set; }
         public string? Day { get; set; }
         public string? Type { get; set; }

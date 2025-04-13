@@ -2,7 +2,7 @@
 using ScheduleApi.Services.Interfaces;
 using ScheduleCore.ApiClient;
 using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
-using ScheduleCore.Models.Madi;
+using ScheduleCore.Models;
 
 namespace ScheduleApi.Services
 {

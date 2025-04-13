@@ -1,8 +1,10 @@
-﻿namespace ScheduleCore.Models.Madi
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ScheduleCore.Models.Madi
 {
+    [Owned]
     public class Exam
     {
-        public int Id { get; set; }
         public string? CardDateTime { get; set; }
         public string? CardName { get; set; }
         public string? CardProf { get; set; }

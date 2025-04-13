@@ -1,13 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace ScheduleCore.Models.Madi
 {
+    [Owned]
     public class Day : INotifyPropertyChanged
     {
-        public int Id { get; set; }
-
         private ObservableCollection<Class> lessons;
         private DayOfWeek name;
         private string? typeOfWeek;

@@ -1,4 +1,5 @@
-﻿using ScheduleCore.Models.Madi;
+﻿using ScheduleCore.Models;
+using ScheduleCore.Models.Madi;
 
 namespace ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces
 {

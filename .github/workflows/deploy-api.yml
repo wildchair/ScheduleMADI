@@ -2,10 +2,10 @@ name: Deploy API
 
 on:
   push:
-    branches:
-      - dev
-      - main
-      - mobile-app-rework
+    # branches:
+    #   - dev
+    #   - main
+    #   - mobile-app-rework
 
 jobs:
   BuildAndDeployDev:
