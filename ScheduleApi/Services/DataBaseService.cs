@@ -62,6 +62,9 @@ namespace ScheduleApi.Services
                 await _scheduleService.GetScheduleAsync(professor.Key);
             }
 
+            await _dbContext.SaveChangesAsync();
+
+
             foreach (var group in await _dbContext.Groups.ToListAsync())
             {
                 var rawGroup = await _dbMadiContext.Schedules.FindAsync(group.Id);
@@ -148,7 +151,6 @@ namespace ScheduleApi.Services
                         }
                         else
                         {
-                            _dbContext.Lessons.Add(lesson);
                             professor.Lessons.Add(lesson);
                             lesson.Professors.Add(professor);
                         }
