@@ -35,6 +35,7 @@ namespace ScheduleApi.Services
                 return schedule;
 
             var groups = await _groupsService.GetGroupsAsync();
+            var professors = await _professorsService.GetProfessorsAsync();
 
             Dictionary<string, string> content;
             var date = SemesterCalculator.Calculate(DateTime.Now);
@@ -70,7 +71,7 @@ namespace ScheduleApi.Services
 
             var days = _parser.ParseSchedule(html);
 
-            schedule = new() { Days = days, Id = id, OwnerName = groups.Registry[id], LastFetch = DateTime.Now };
+            schedule = new() { Days = days, Id = id, OwnerName = groups.Registry.Concat(professors.Registry).ToDictionary()[id], LastFetch = DateTime.Now };
 
             await _inMemoryDbMadi.Schedules.AddAsync(schedule);
 
