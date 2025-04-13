@@ -5,8 +5,8 @@
         public int Id { get; set; }
         public required string Name { get; set; }
         public required TypeOfWeek Week { get; set; }
-        public TimeSpan Start { get; set; }
-        public TimeSpan End { get; set; }
+        public TimeOnly Start { get; set; }
+        public TimeOnly End { get; set; }
         public string? Type { get; set; }
         public List<Group> Groups { get; set; } = [];
         public List<Professor> Professors { get; set; } = [];
