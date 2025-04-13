@@ -2,7 +2,6 @@
 
 namespace ScheduleCore.Models.Madi
 {
-    [Owned]
     public class Exam
     {
         public string? CardDateTime { get; set; }

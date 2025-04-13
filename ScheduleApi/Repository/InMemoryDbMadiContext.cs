@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ScheduleCore.Models;
 using ScheduleCore.Models.Madi;
 
 namespace ScheduleApi.Repository
@@ -10,6 +9,26 @@ namespace ScheduleApi.Repository
 
         public InMemoryDbMadiContext(DbContextOptions options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Schedule>(schedule =>
+            {
+                schedule.OwnsMany(s => s.Days, day =>
+                {
+                    day.WithOwner();
+                    day.OwnsMany(d => d.Lessons, lesson =>
+                    {
+                        lesson.WithOwner();
+                    });
+                });
+
+                schedule.OwnsMany(s => s.Exams, exam =>
+                {
+                    exam.WithOwner();
+                });
+            });
         }
 
     }

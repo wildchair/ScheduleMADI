@@ -3,7 +3,6 @@
 namespace ScheduleCore.Models.Madi
 {
 #warning Need renaming
-    [Owned]
     public class Class
     {
         public string? Time { get; set; }

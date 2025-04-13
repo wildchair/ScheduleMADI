@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 
 namespace ScheduleCore.Models.Madi
 {
-    [Owned]
     public class Day : INotifyPropertyChanged
     {
         private ObservableCollection<Class> lessons;
