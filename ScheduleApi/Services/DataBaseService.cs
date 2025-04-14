@@ -136,6 +136,7 @@ namespace ScheduleApi.Services
                             Professors = []
                         };
 
+#warning Не сработает потому что перепутаны поля?
                         var dbLesson = await _dbContext.Lessons.SingleOrDefaultAsync(x => x.Name == lesson.Name &&
                                                                    x.End == lesson.End &&
                                                                    x.Week == lesson.Week &&
