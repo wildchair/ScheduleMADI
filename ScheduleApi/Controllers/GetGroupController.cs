@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScheduleApi.Repository;
-using ScheduleCore.Models;
 using ScheduleCore.Models.DTO;
 
 namespace ScheduleApi.Controllers
@@ -20,10 +19,10 @@ namespace ScheduleApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Group> Get(int id)
+        public async Task<GroupWithScheduleDto> Get(int id)
         {
-            var group =  await _dbContext.Groups.Include(x => x.Lessons).ThenInclude(x => x.Professors).FirstAsync(x => x.Id == id);
-            return group;
+            var group = await _dbContext.Groups.Include(x => x.Lessons).ThenInclude(x => x.Professors).FirstAsync(x => x.Id == id);
+            return new(group);
         }
     }
 }

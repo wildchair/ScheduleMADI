@@ -1,10 +1,14 @@
 ﻿namespace ScheduleCore.Models.DTO
 {
-    public class ProfessorDTO
+    public class ProfessorDto
     {
-        public required int Id { get; set; }
-        public required string Name { get; set; }
-        public required List<LessonForProfessorDTO> Lessons { get; set; }
-        //public required List<Examination> Exams { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public ProfessorDto(Professor professor)
+        {
+            Id = professor.Id;
+            Name = professor.Name;
+        }
     }
 }

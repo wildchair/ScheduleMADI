@@ -1,10 +1,14 @@
 ﻿namespace ScheduleCore.Models.DTO
 {
-    public class GroupDTO
+    public class GroupDto
     {
-        public required int Id { get; set; }
-        public required string Name { get; set; }
-        public required List<LessonForGroupDTO> Lessons { get; set; }
-        //public required List<Examination> Exams { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public GroupDto(Group group)
+        {
+            Id = group.Id;
+            Name = group.Name;
+        }
     }
 }
