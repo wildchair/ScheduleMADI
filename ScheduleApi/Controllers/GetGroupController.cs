@@ -2,17 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using ScheduleApi.Repository;
 using ScheduleCore.Models;
+using ScheduleCore.Models.DTO;
 
 namespace ScheduleApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DataBaseGetController : ControllerBase
+    public class GetGroupController : ControllerBase
     {
-        private readonly ILogger<DataBaseGetController> _logger;
+        private readonly ILogger<GetGroupController> _logger;
         private readonly InMemoryDbContext _dbContext;
 
-        public DataBaseGetController(ILogger<DataBaseGetController> logger, InMemoryDbContext dbContext)
+        public GetGroupController(ILogger<GetGroupController> logger, InMemoryDbContext dbContext)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -21,7 +22,8 @@ namespace ScheduleApi.Controllers
         [HttpGet("{id}")]
         public async Task<Group> Get(int id)
         {
-            return await _dbContext.Groups.Include(x => x.Lessons).ThenInclude(x => x.Professors).FirstAsync(x => x.Id == id);
+            var group =  await _dbContext.Groups.Include(x => x.Lessons).ThenInclude(x => x.Professors).FirstAsync(x => x.Id == id);
+            return group;
         }
     }
 }
