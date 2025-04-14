@@ -65,7 +65,7 @@ namespace ScheduleApi.Services
             await _dbContext.SaveChangesAsync();
 
 
-            foreach (var group in await _dbContext.Groups.ToListAsync())
+            foreach (var group in await _dbContext.Groups.Include(g=>g.Lessons).ToListAsync())
             {
                 var rawGroup = await _dbMadiContext.Schedules.FindAsync(group.Id);
 
@@ -112,7 +112,7 @@ namespace ScheduleApi.Services
                 }
             }
 
-            foreach (var professor in await _dbContext.Professors.ToListAsync())
+            foreach (var professor in await _dbContext.Professors.Include(p=>p.Lessons).ToListAsync())
             {
                 var rawGroup = await _dbMadiContext.Schedules.FindAsync(professor.Id);
 
