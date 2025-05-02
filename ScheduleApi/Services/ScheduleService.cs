@@ -8,7 +8,7 @@ using ScheduleCore.Models.Madi;
 
 namespace ScheduleApi.Services
 {
-    [Injectable(ServiceLifetime.Scoped)]
+    [Service(ServiceLifetime.Scoped)]
     public class ScheduleService : IScheduleService
     {
         private readonly ILogger<ScheduleService> _logger;

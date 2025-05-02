@@ -8,7 +8,7 @@ using ScheduleCore.Models;
 
 namespace ScheduleApi.Services
 {
-    [Injectable(ServiceLifetime.Scoped)]
+    [Service(ServiceLifetime.Scoped)]
     public class DataBaseService : IDataBaseService
     {
         private readonly ILogger<DataBaseService> _logger;
@@ -99,15 +99,17 @@ namespace ScheduleApi.Services
 
                         if (dbLesson != default)
                         {
-                            group.Lessons.Add(dbLesson);
                             dbLesson.Groups.Add(group);
+                            group.Lessons.Add(dbLesson);
+                            
                         }
                         else
                         {
-                            group.Lessons.Add(lesson);
                             lesson.Groups.Add(group);
+                            group.Lessons.Add(lesson);
+                            
                         }
-
+                        await _dbContext.SaveChangesAsync();
                     }
                 }
             }
@@ -155,7 +157,7 @@ namespace ScheduleApi.Services
                             professor.Lessons.Add(lesson);
                             lesson.Professors.Add(professor);
                         }
-
+                        await _dbContext.SaveChangesAsync();
                     }
                 }
             }

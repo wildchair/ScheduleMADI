@@ -13,12 +13,12 @@ namespace ScheduleApi.ServiceRegistrator
                 .Where(t =>
                     t.IsClass &&
                     !t.IsAbstract &&
-                    t.GetCustomAttribute<InjectableAttribute>() is not null
+                    t.GetCustomAttribute<ServiceAttribute>() is not null
                 );
 
             foreach (var implType in typesWithAttribute)
             {
-                var attr = implType.GetCustomAttribute<InjectableAttribute>()!;
+                var attr = implType.GetCustomAttribute<ServiceAttribute>()!;
                 var interfaces = implType.GetInterfaces();
 
                 if (interfaces.Length == 0)

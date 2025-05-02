@@ -6,7 +6,7 @@ using ScheduleCore.Models;
 
 namespace ScheduleApi.Services
 {
-    [Injectable(ServiceLifetime.Scoped)]
+    [Service(ServiceLifetime.Scoped)]
     public class WeekService : IWeekService
     {
         private readonly ILogger<WeekService> _logger;

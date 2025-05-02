@@ -98,6 +98,7 @@ namespace ScheduleCore.ApiClient
 
         private async Task<string> HandleResponseRaw(HttpResponseMessage response)
         {
+            // TODO сделать информативнее лог
             var content = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException($"Error: {response.StatusCode}, Content: {content}");
