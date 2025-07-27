@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controls="clr-namespace:ScheduleMADI" 
-             xmlns:externals="clr-namespace:ScheduleCore.Models;assembly=ScheduleCore" 
+             xmlns:vm="clr-namespace:ScheduleMADI.Interfaces"
+             xmlns:controls="clr-namespace:ScheduleMADI"
+             xmlns:externals="clr-namespace:ScheduleCore.Models.Madi;assembly=ScheduleCore" 
              x:Class="ScheduleMADI.ExamPage" x:Name="this"
-             x:DataType="controls:ExamPageVM">
+             x:DataType="vm:IExamPageViewModel">
     <StackLayout VerticalOptions="FillAndExpand">
         <Grid Margin="15">
             <Grid.ColumnDefinitions>
@@ -18,15 +19,15 @@
 
 
             <Label Grid.Column="1" HorizontalTextAlignment="End" VerticalTextAlignment="Center" 
-               Text="{Binding GroupLabel, Mode=TwoWay}"/>
+               Text="{Binding ScheduleTarget, Mode=TwoWay}"/>
 
         </Grid>
 
         <Border></Border>
 
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CollectionView x:Name="cv" ItemsSource="{Binding ExamShedule}" 
-                        EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand">
+            <CollectionView x:Name="cv" ItemsSource="{Binding Exams}" 
+                        EmptyView="{Binding Placeholder}" VerticalOptions="FillAndExpand">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="externals:Exam">

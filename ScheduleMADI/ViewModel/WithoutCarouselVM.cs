@@ -1,4 +1,5 @@
-﻿using ScheduleCore.Models.Madi;
+﻿using ScheduleCore.MadiSiteApiHelpers.Utils;
+using ScheduleCore.Models.Madi;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -43,7 +44,7 @@ namespace ScheduleMADI
             {
                 if (datepickerDate != value)
                 {
-                    CurrentDay = mainPageVM.Schedule.Find(x => x.Name == value.DayOfWeek && x.TypeOfWeek == WeekMADI.WeekByDate(today, value.Date));
+                    //CurrentDay = mainPageVM.Schedule.Find(x => x.Name == value.DayOfWeek && x.TypeOfWeek == WeekTypeCalculator.WeekByDate(today, value.Date));
                     datepickerDate = value;
                     OnPropertyChanged();
                 }
@@ -72,7 +73,7 @@ namespace ScheduleMADI
                 }
                 TapNums = 0;
                 DatepickerDate = today.Date;
-                CurrentDay = mainPageVM.Schedule.Find(x => x.Name == today.DayOfWeek && x.TypeOfWeek == WeekMADI.Week);
+                //CurrentDay = mainPageVM.Schedule.Find(x => x.Name == today.DayOfWeek && x.TypeOfWeek == WeekTypeCalculator.Week);
                 TapNums = 2;
             }
         }

@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:ScheduleMADI.Interfaces"
              x:Class="ScheduleMADI.SettingPage"
-             x:Name="settingpage">
+             x:Name="settingpage" x:DataType="viewmodel:ISettingsPageViewModel">
 
-    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-        <Grid Margin="15" ColumnSpacing="15" RowSpacing="15"
-          HorizontalOptions="Center" VerticalOptions="Center">
+    <StackLayout VerticalOptions="Center" 
+                 HorizontalOptions="Center">
+        <Grid Margin="15" 
+              ColumnSpacing="15" 
+              RowSpacing="15" 
+              HorizontalOptions="Center" 
+              VerticalOptions="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -19,9 +24,14 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Entry Grid.ColumnSpan="3" HorizontalTextAlignment="Center" Text="{Binding EntryText}"
-                   Placeholder="Группа или ФИО" IsEnabled="{Binding Entry_is_enabled}" HorizontalOptions="FillAndExpand" 
-                   ClearButtonVisibility="WhileEditing" IsSpellCheckEnabled="False">
+            <Entry Grid.ColumnSpan="3"  
+                   HorizontalTextAlignment="Center"  
+                   Text="{Binding SearchText}" 
+                   Placeholder="Группа или ФИО"  
+                   IsEnabled="{Binding IsSearchEnabled}" 
+                   HorizontalOptions="FillAndExpand" 
+                   ClearButtonVisibility="WhileEditing" 
+                   IsSpellCheckEnabled="False"> 
                 <Entry.Keyboard>
                     <Keyboard x:FactoryMethod="Create">
                         <x:Arguments>
@@ -31,34 +41,57 @@
                 </Entry.Keyboard>
             </Entry>
 
-            <CollectionView Grid.Row="1" ItemsSource="{Binding SearchResults}" HeightRequest="200"
-                            Grid.ColumnSpan="3" SelectionMode="Single" VerticalScrollBarVisibility="Always" 
-                            SelectionChangedCommand="{Binding ItemSelected}" EmptyView="Ничего не нашлось 😢"
+            <CollectionView Grid.Row="1" 
+                            ItemsSource="{Binding SearchResults}" 
+                            HeightRequest="200"
+                            Grid.ColumnSpan="3" 
+                            SelectionMode="Single" 
+                            VerticalScrollBarVisibility="Always" 
+                            SelectionChangedCommand="{Binding SelectItemCommand}" 
+                            EmptyView="Ничего не нашлось 😢"
                             SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}" 
-                            Header="Выбери группу или ФИО" WidthRequest="200" IsVisible="{Binding Coll_is_visible}">
+                            Header="Выбери группу или ФИО" 
+                            WidthRequest="200" 
+                            IsVisible="{Binding IsResultsVisible}">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" SnapPointsType="None"/>
+                    <LinearItemsLayout ItemSpacing="5" 
+                                       Orientation="Vertical" 
+                                       SnapPointsType="None"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="viewmodel:ScheduleTarget">
                         <Label Text="{Binding Value}" HorizontalTextAlignment="Center"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Label Grid.Row="2" Text="Поддержать разработчика:" 
-               VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-            <Editor Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="5536 9137 8567 4439" TextColor="CornflowerBlue" 
-                   VerticalTextAlignment="Center" HorizontalTextAlignment="Center" IsReadOnly="True">
+            <Label Grid.Row="2" 
+                   Text="Поддержать разработчика:"  
+                   VerticalTextAlignment="Center" 
+                   HorizontalTextAlignment="Start"/>
+            <Editor Grid.Row="2" 
+                    Grid.Column="1" 
+                    Grid.ColumnSpan="2" 
+                    Text="{Binding SupportCardText}" 
+                    TextColor="CornflowerBlue"  
+                    VerticalTextAlignment="Center" 
+                    HorizontalTextAlignment="Center" 
+                    IsReadOnly="True">
                 <Editor.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                    <TapGestureRecognizer Command="{Binding SupportCardTappedCommand}"/>
                 </Editor.GestureRecognizers>
             </Editor>
 
-            <Label Grid.Row="3" Text="Версия приложения:" 
-               VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-            <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding VersionApp}"
-                   VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            <Label Grid.Row="3" 
+                   Text="Версия приложения:"  
+                   VerticalTextAlignment="Center" 
+                   HorizontalTextAlignment="Start"/>
+            <Label Grid.Row="3" 
+                   Grid.Column="1" 
+                   Grid.ColumnSpan="2" 
+                   Text="{Binding AppVersion}"
+                   VerticalTextAlignment="Center" 
+                   HorizontalTextAlignment="Center"/>
         </Grid>
 
     </StackLayout>

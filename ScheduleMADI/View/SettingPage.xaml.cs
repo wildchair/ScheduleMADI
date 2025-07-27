@@ -1,21 +1,12 @@
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
+using ScheduleMADI.Interfaces;
 
 namespace ScheduleMADI;
 
 public partial class SettingPage : ContentPage
 {
-    public SettingPage()
+    public SettingPage(ISettingsPageViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = new SettingPageVM();
-    }
-
-    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
-    {
-        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        await Clipboard.Default.SetTextAsync("5536 9137 8567 4439");
-        var toast = Toast.Make("Скопировано", ToastDuration.Short);
-        await toast.Show(cancellationTokenSource.Token);
+        BindingContext = viewModel;
     }
 }

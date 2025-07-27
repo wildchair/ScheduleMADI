@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:ScheduleMADI"
-             xmlns:externals="clr-namespace:ScheduleCore.Models;assembly=ScheduleCore" 
+             xmlns:externals="clr-namespace:ScheduleCore.Models.Madi;assembly=ScheduleCore" 
+             xmlns:vm="clr-namespace:ScheduleMADI.Interfaces"
              x:Class="ScheduleMADI.MainPage" x:Name="this"
-             Loaded="Mainpage_Appearing" x:DataType="controls:MainPageVM">
+             Loaded="Mainpage_Appearing" x:DataType="vm:IMainPageViewModel">
 
     <StackLayout VerticalOptions="FillAndExpand">
         <Grid Margin="15">
@@ -18,20 +19,34 @@
             </Grid.RowDefinitions>
 
             <DatePicker x:Name="DP" Format="d MMMM, dddd" HorizontalOptions="Start"
-                        MinimumDate="{Binding MinDate, Mode=TwoWay}" 
-                        Date="{Binding withoutCarouselVM.DatepickerDate, Mode=TwoWay}"
-                        MaximumDate="{Binding MaxDate, Mode=TwoWay}" IsEnabled="{Binding Datepicker_is_enabled, Mode=TwoWay}"/>
+                        MinimumDate="{Binding MinimalDate, Mode=TwoWay}" 
+                        Date="{Binding SelectedDate, Mode=TwoWay}"
+                        MaximumDate="{Binding MaximalDate, Mode=TwoWay}" IsEnabled="{Binding IsEnabled_DataPicker, Mode=TwoWay}"/>
 
             
             <Label Grid.Column="1" HorizontalTextAlignment="End" VerticalTextAlignment="Center" 
-                   Text="{Binding GroupLabel, Mode=TwoWay}"/>
+                   Text="{Binding ScheduleTarget, Mode=TwoWay}"/>
 
         </Grid>
 
         <Border></Border>
 
-        <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CollectionView x:Name="cv" ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
+        <CarouselView ItemsSource="{Binding Schedule}" VerticalOptions="FillAndExpand">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="externals:Day">
+                    <CollectionView ItemsSource="{Binding Lessons}" VerticalOptions="FillAndExpand">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="externals:Class">
+                                <controls:SubjectCard
+                                  CardDay="{Binding Day, Mode=OneWay}" CardName="{Binding Name, Mode=OneWay}"
+                                  CardProf="{Binding Visitors, Mode=OneWay}" CardRoom="{Binding Classroom, Mode=OneWay}"
+                                  CardTime="{Binding Time, Mode=OneWay}" CardType="{Binding Type, Mode=OneWay}"/>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+            <!--<CollectionView x:Name="cv" ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
                             EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand" ChildAdded="cv_ChildAdded">
                 <CollectionView.GestureRecognizers>
                     <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums, Mode=TwoWay}"
@@ -46,7 +61,8 @@
                                   CardTime="{Binding CardTime, Mode=OneWay}" CardType="{Binding CardType, Mode=OneWay}"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
+            </CollectionView>-->
+
+        </CarouselView>
     </StackLayout>
 </ContentPage>

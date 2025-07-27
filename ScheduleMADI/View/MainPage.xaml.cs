@@ -1,15 +1,16 @@
-﻿namespace ScheduleMADI;
+﻿using ScheduleMADI.Interfaces;
+
+namespace ScheduleMADI;
 
 /// <summary>
 /// ПУБЛИКОВАТЬ НУЖНО ВСЁ ИЗ "ОПУБЛИКОВАТЬ", НЕ ИЗ КОНСОЛИ!!!!!! КОНСОЛЬ КРИВО ПОДПИСЫВАЕТ!!!
 /// </summary>
 public partial class MainPage : ContentPage
 {
-    MainPageVM mainPageVM = new();
-    public MainPage()
+    public MainPage(IMainPageViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = mainPageVM;
+        BindingContext = viewModel;
     }
 
     private async void Mainpage_Appearing(object sender, EventArgs e)
@@ -22,21 +23,21 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
-    {
-        Vibration.Vibrate(30);
+    //private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    //{
+    //    Vibration.Vibrate(30);
 
-        if (Window.Width / 2 > e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate > mainPageVM.MinDate)
-            mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(-1);
-        else if (Window.Width / 2 < e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate < mainPageVM.MaxDate)
-            mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(1);
-    }
+    //    if (Window.Width / 2 > e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate > mainPageVM.MinDate)
+    //        mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(-1);
+    //    else if (Window.Width / 2 < e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate < mainPageVM.MaxDate)
+    //        mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(1);
+    //}
 
-    private void cv_ChildAdded(object sender, ElementEventArgs e)
-    {
-        if (DP.Date.Date == DateTime.Today.Date)
-            Task.Run(() => (e.Element as SubjectCard).ProgressLoop());
-        else if (DP.Date.Date < DateTime.Today.Date)
-            Task.Run(() => (e.Element as SubjectCard).ProgressTo(1, 500, Easing.Linear));
-    }
+    //private void cv_ChildAdded(object sender, ElementEventArgs e)
+    //{
+    //    if (DP.Date.Date == DateTime.Today.Date)
+    //        Task.Run(() => (e.Element as SubjectCard).ProgressLoop());
+    //    else if (DP.Date.Date < DateTime.Today.Date)
+    //        Task.Run(() => (e.Element as SubjectCard).ProgressTo(1, 500, Easing.Linear));
+    //}
 }

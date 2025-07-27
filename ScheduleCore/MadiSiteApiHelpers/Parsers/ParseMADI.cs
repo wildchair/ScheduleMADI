@@ -619,7 +619,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
     }
 
     [Obsolete]
-    class ParseMADIException : Exception
+    public class ParseMADIException : Exception
     {
         public ParseMADIException(string message)
             : base(message) { }

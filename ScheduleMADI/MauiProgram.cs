@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+using ScheduleMADI.Interfaces;
+using ScheduleMADI.Test;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
@@ -18,6 +20,11 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
+
+		builder.Services.AddSingleton<ISettingsPageViewModel, TestSettingsPageViewModel>();
+		builder.Services.AddSingleton<IScheduleTargetProvider, TestScheduleTargetProvider>();
+		builder.Services.AddSingleton<IExamPageViewModel, TestExamPageViewModel>();
+		builder.Services.AddSingleton<IMainPageViewModel, MainPageViewModel>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

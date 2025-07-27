@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using ScheduleCore.MadiSiteApiHelpers.Parsers;
 using ScheduleCore.Models.Madi;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -186,8 +187,8 @@ namespace ScheduleMADI
                     if (BufferedMADI.BufferedDay.Value != null && !bufferedLoaded
                         && BufferedMADI.Id.Key == BufferedMADI.BufferedSchedule.Key)
                     {
-                        WeekMADI.Week = BufferedMADI.BufferedDay.Value;
-                        WeekMADI.Week = WeekMADI.WeekByDate(BufferedMADI.BufferedDay.Key, DateTime.Now.Date);
+                        //WeekMADI.Week = BufferedMADI.BufferedDay.Value;
+                        //WeekMADI.Week = WeekMADI.WeekByDate(BufferedMADI.BufferedDay.Key, DateTime.Now.Date);
                         Schedule = await ParseMADI.GetScheduleFromHTML(BufferedMADI.BufferedSchedule.Value);
 
                         Datepicker_is_enabled = true;
@@ -225,7 +226,7 @@ namespace ScheduleMADI
 
                 try
                 {
-                    Schedule = await ParseMADI.GetSchedule(BufferedMADI.Id, cancellationToken);
+                    //Schedule = await ParseMADI.GetSchedule(BufferedMADI.Id, cancellationToken);
                     break;
                 }
                 catch (ParseMADIException ex)

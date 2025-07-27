@@ -1,10 +1,12 @@
+using ScheduleMADI.Interfaces;
+
 namespace ScheduleMADI;
 
 public partial class ExamPage : ContentPage
 {
-	public ExamPage()
-	{
-		InitializeComponent();
-		BindingContext = new ExamPageVM();
-	}
+    public ExamPage(IExamPageViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+    }
 }
