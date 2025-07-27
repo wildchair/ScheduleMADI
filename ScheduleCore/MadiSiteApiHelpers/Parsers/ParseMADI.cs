@@ -436,14 +436,14 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
             }
 
             HttpClientHandler handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback =
-            (message, cert, chain, errors) =>
-            {
-                if (cert.Issuer.Equals("CN=R10, O=Let's Encrypt, C=US") && cert.Subject.Equals("CN=*.madi.ru"))
-                    return cert.GetCertHashString(HashAlgorithmName.SHA256)
-                               .Equals("c94c0e2a3e30fe9105b79d84c2f709f7b0e22e52791d9b9cd10d1767f8975dd9".ToUpper());
-                return errors == System.Net.Security.SslPolicyErrors.None;
-            };
+            //handler.ServerCertificateCustomValidationCallback =
+            //(message, cert, chain, errors) =>
+            //{
+            //    if (cert.Issuer.Equals("CN=R10, O=Let's Encrypt, C=US") && cert.Subject.Equals("CN=*.madi.ru"))
+            //        return cert.GetCertHashString(HashAlgorithmName.SHA256)
+            //                   .Equals("c94c0e2a3e30fe9105b79d84c2f709f7b0e22e52791d9b9cd10d1767f8975dd9".ToUpper());
+            //    return errors == System.Net.Security.SslPolicyErrors.None;
+            //};
 
             HttpClient httpClient = new(handler);
 
