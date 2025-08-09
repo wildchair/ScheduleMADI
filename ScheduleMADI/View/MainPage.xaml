@@ -31,10 +31,21 @@
 
         <Border></Border>
 
-        <CarouselView ItemsSource="{Binding Schedule}" VerticalOptions="FillAndExpand">
+        <CarouselView ItemsSource="{Binding Schedule}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" PeekAreaInsets="0" Loop="False">
+            <CarouselView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal"
+                                   SnapPointsType="MandatorySingle"
+                                   SnapPointsAlignment="Center"
+                                   />
+            </CarouselView.ItemsLayout>
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="externals:Day">
-                    <CollectionView ItemsSource="{Binding Lessons}" VerticalOptions="FillAndExpand">
+                    <CollectionView ItemsSource="{Binding Lessons}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                        <CollectionView.HeaderTemplate>
+                            <DataTemplate>
+                                <Label Text="Day" TextColor="DarkRed" FontSize="Subtitle" HorizontalTextAlignment="Center"/>
+                            </DataTemplate>
+                        </CollectionView.HeaderTemplate>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="externals:Class">
                                 <controls:SubjectCard

@@ -21,9 +21,9 @@ namespace ScheduleMADI.Test
         public partial ObservableCollection<Day> Schedule { get; set; } =
         [
             new(DayOfWeek.Monday, [new(),new(),new(),new(),new()], "Ужуну"),
-            new(DayOfWeek.Monday, [new(),new(),new(),new(),new()], "Ужуну"),
-            new(DayOfWeek.Monday, [new(),new(),new(),new(),new()], "Ужуну"),
-            new(DayOfWeek.Monday, [new(),new(),new(),new(),new()], "Ужуну"),
+            new(DayOfWeek.Thursday, [new(),new(),new(),new(),new()], "Ужуну"),
+            new(DayOfWeek.Wednesday, [new(),new(),new(),new(),new()], "Ужуну"),
+            new(DayOfWeek.Saturday, [new(),new(),new(),new(),new()], "Ужуну"),
         ];
         [ObservableProperty]
         public partial string Placeholder { get; set; } = "Ниче нету";
