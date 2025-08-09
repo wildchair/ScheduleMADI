@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Security.Cryptography;
 
 namespace ScheduleMADI
 {
@@ -11,17 +10,7 @@ namespace ScheduleMADI
         private static TimeSpan TIMEOUT = new(0, 0, 10);
         public async static Task GetWeek(CancellationToken cancellationToken)
         {
-            HttpClientHandler handler = new HttpClientHandler();
-            //handler.ServerCertificateCustomValidationCallback =
-            //(message, cert, chain, errors) =>
-            //{
-            //    if (cert.Issuer.Equals("CN=R10, O=Let's Encrypt, C=US") && cert.Subject.Equals("CN=*.madi.ru"))
-            //        return cert.GetCertHashString(HashAlgorithmName.SHA256)
-            //                   .Equals("c94c0e2a3e30fe9105b79d84c2f709f7b0e22e52791d9b9cd10d1767f8975dd9".ToUpper());
-            //    return errors == System.Net.Security.SslPolicyErrors.None;
-            //};
-
-            HttpClient httpClient = new(handler);
+            HttpClient httpClient = new();
             httpClient.Timeout = TIMEOUT;
             string responseString;
 
@@ -38,17 +27,7 @@ namespace ScheduleMADI
         }
         public async static Task GetGroups(CancellationToken cancellationToken)
         {
-            HttpClientHandler handler = new HttpClientHandler();
-            //handler.ServerCertificateCustomValidationCallback =
-            //(message, cert, chain, errors) =>
-            //{
-            //    if (cert.Issuer.Equals("CN=R10, O=Let's Encrypt, C=US") && cert.Subject.Equals("CN=*.madi.ru"))
-            //        return cert.GetCertHashString(HashAlgorithmName.SHA256)
-            //                   .Equals("c94c0e2a3e30fe9105b79d84c2f709f7b0e22e52791d9b9cd10d1767f8975dd9".ToUpper());
-            //    return errors == System.Net.Security.SslPolicyErrors.None;
-            //};
-
-            HttpClient httpClient = new(handler);
+            HttpClient httpClient = new();
 
             httpClient.Timeout = TIMEOUT;
 
@@ -64,14 +43,22 @@ namespace ScheduleMADI
             var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php", content, cancellationToken);
             responseString = await response.Content.ReadAsStringAsync(cancellationToken);
 
-            StringReader reader = new(responseString);
+            using StringReader reader = new(responseString);
 
-            for (int i = 0; i < 11; i++)
-                reader.ReadLine();
-            var list_buff = reader.ReadLine().Split("</li>").ToList();
-            list_buff.RemoveAll(x => x == string.Empty);
-            reader.Close();
-            reader.Dispose();
+            List<string> list_buff = new();
+            try
+            {
+                for (int i = 0; i < 11; i++)
+                    reader.ReadLine();
+                list_buff = reader.ReadLine().Trim().Split("<li").ToList();
+                list_buff.RemoveAll(x => x == string.Empty);
+                reader.Close();
+                reader.Dispose();
+            }
+            catch (NullReferenceException)
+            {
+                return;
+            }
 
             foreach (var buff in list_buff)
             {
@@ -118,14 +105,22 @@ namespace ScheduleMADI
             var response = await httpClient.PostAsync("https://raspisanie.madi.ru/tplan/tasks/task8_prepview.php", content);
             responseString = await response.Content.ReadAsStringAsync();
 
-            StringReader reader = new(responseString);
+            using StringReader reader = new(responseString);
 
-            for (int i = 0; i < 13; i++)
-                reader.ReadLine();
-            var list_buff = reader.ReadLine().Split("<option").ToList();
-            list_buff.RemoveAll(x => x == string.Empty);
-            reader.Close();
-            reader.Dispose();
+            List<string> list_buff = new();
+            try
+            {
+                for (int i = 0; i < 11; i++)
+                    reader.ReadLine();
+                list_buff = reader.ReadLine().Trim().Split("<li").ToList();
+                list_buff.RemoveAll(x => x == string.Empty);
+                reader.Close();
+                reader.Dispose();
+            }
+            catch (NullReferenceException ex)
+            {
+                return;
+            }
 
             foreach (var buff in list_buff)
             {
@@ -198,6 +193,8 @@ namespace ScheduleMADI
 
             if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
                 throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
+            else if (responseString.Contains("Данная информация будет доступна с"))
+                throw new ParseMADIException(responseString);
             else
             {
                 var a = ParseHTML(responseString);
@@ -485,6 +482,8 @@ namespace ScheduleMADI
 
             if (responseString == "Извините, по данным атрибутам информация не найдена. Пожалуйста, укажите другие атрибуты")
                 throw new ParseMADIException("На сайте сейчас нет данных об этой группе.");
+            else if (responseString.Contains("Данная информация будет доступна с"))
+                throw new ParseMADIException(responseString);
             else
             {
                 var a = ParseExamHTML(responseString);
