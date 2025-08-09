@@ -2,9 +2,6 @@ name: CI/CD pipeline
 
 on:
   push:
-    paths:
-      - 'ScheduleMADI/**'
-  workflow_dispatch:
 
 jobs:
   tests:
