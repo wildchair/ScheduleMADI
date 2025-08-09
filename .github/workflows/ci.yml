@@ -1,0 +1,35 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    paths:
+      - 'ScheduleMADI/**'
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/dotnet/sdk:9.0
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.nuget/packages
+          ~/.dotnet/packs
+          ~/.dotnet/workloadmanifests
+          ~/.dotnet/sdk-manifests
+        key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-dotnet-
+
+    - name: Restore solution
+      run: |
+          dotnet workload restore
+          dotnet restore
+
+    - name: Run tests
+      run: dotnet test --no-restore --verbosity normal
