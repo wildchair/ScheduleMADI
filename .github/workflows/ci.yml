@@ -10,6 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
   
     - uses: actions/setup-dotnet@v4
       with:
@@ -32,15 +34,15 @@ jobs:
           dotnet restore
 
     - name: Run tests
-      run: dotnet test --no-restore --verbosity normal --logger "junit;LogFileName=tests-results.xml"
+      run: dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=tests-results.trx"
 
     - name: Test Report
       uses: dorny/test-reporter@v2
       if: ${{ !cancelled() }}
       with:
          name: Tests
-         path: '**/tests-results.xml'
-         reporter: junit
+         path: '**/tests-results.trx'
+         reporter: dotnet-trx
 
     - name: Build signed AAB
       run: |
