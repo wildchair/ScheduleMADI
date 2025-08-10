@@ -36,7 +36,7 @@ jobs:
     - name: Run tests
       run: dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=tests-results.trx"
 
-    - name: Test Report
+    - name: Publish test reports
       uses: dorny/test-reporter@v2
       if: ${{ !cancelled() }}
       with:
