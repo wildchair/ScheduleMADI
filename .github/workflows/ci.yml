@@ -32,4 +32,28 @@ jobs:
           dotnet restore
 
     - name: Run tests
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-restore --verbosity normal --logger "junit;LogFileName=tests-results.xml"
+
+    - name: Test Report
+      uses: dorny/test-reporter@v2
+      if: ${{ !cancelled() }}
+      with:
+         name: Tests
+         path: '**/tests-results.xml'
+         reporter: junit
+
+    - name: Build signed AAB
+      run: |
+        dotnet publish ScheduleMADI/ScheduleMADI.csproj \
+          -c Release -f net9.0-android35.0 \
+          -p:AndroidPackageFormat=aab \
+          -p:AndroidSigningKeyStore=keystore.jks \
+          -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
+          -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
+          -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} 
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: apk
+        path: ScheduleMADI/bin/Release/net9.0-android35.0/publish/com.wildchair.schedulemadi-Signed.apk

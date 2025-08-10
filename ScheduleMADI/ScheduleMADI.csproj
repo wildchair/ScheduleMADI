@@ -23,8 +23,8 @@
 		<Authors>WildChair</Authors>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.1.7</ApplicationDisplayVersion>
-		<ApplicationVersion>21</ApplicationVersion>
+		<ApplicationDisplayVersion>$(GitVersion_FullSemVer)</ApplicationDisplayVersion>
+		<ApplicationVersion>$(GitVersion_CommitsSinceVersionSource)</ApplicationVersion>
 
 		<!-- <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion> -->
 		<!-- <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion> -->
@@ -45,6 +45,12 @@
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	</PropertyGroup>
 	
+	<Target Name="ShowGitVersion" AfterTargets="GenerateAssemblyInfo">
+	  <Message Importance="high" Text="GitVersion_FullSemVer: $(GitVersion_FullSemVer)" />
+	  <Message Importance="high" Text="GitVersion_AssemblySemVer: $(GitVersion_AssemblySemVer)" />
+	  <Message Importance="high" Text="GitVersion_AssemblyVersion: $(GitVersion_AssemblyVersion)" />
+	</Target>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#dae1ec" />
@@ -67,10 +73,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="12.1.0" />
-		<PackageReference Include="CommunityToolkit.Maui.Core" Version="12.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="12.2.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" />
+		<PackageReference Include="GitVersion.MsBuild" Version="6.4.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.90" />
 	</ItemGroup>
