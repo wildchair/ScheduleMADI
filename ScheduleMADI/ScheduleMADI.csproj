@@ -49,6 +49,7 @@
 	  <Message Importance="high" Text="GitVersion_FullSemVer: $(GitVersion_FullSemVer)" />
 	  <Message Importance="high" Text="GitVersion_AssemblySemVer: $(GitVersion_AssemblySemVer)" />
 	  <Message Importance="high" Text="GitVersion_AssemblyVersion: $(GitVersion_AssemblyVersion)" />
+		<Message Importance="high" Text="GitVersion_CommitsSinceVersionSource: $(GitVersion_CommitsSinceVersionSource)" />
 	</Target>
 
 	<ItemGroup>
