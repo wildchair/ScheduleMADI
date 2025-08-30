@@ -110,9 +110,9 @@ namespace ScheduleMADI
             List<string> list_buff = new();
             try
             {
-                for (int i = 0; i < 11; i++)
+                for (int i = 0; i < 13; i++)
                     reader.ReadLine();
-                list_buff = reader.ReadLine().Trim().Split("<li").ToList();
+                list_buff = reader.ReadLine().Trim().Split("<option").ToList();
                 list_buff.RemoveAll(x => x == string.Empty);
                 reader.Close();
                 reader.Dispose();
