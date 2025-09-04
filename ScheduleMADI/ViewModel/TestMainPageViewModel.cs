@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ScheduleCore.Models.Madi;
+using ScheduleCore.Models.RawModels;
 using ScheduleMADI.Interfaces;
 using System.Collections.ObjectModel;
 

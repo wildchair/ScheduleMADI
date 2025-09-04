@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ScheduleMADI.Interfaces"
              xmlns:controls="clr-namespace:ScheduleMADI"
-             xmlns:externals="clr-namespace:ScheduleCore.Models.Madi;assembly=ScheduleCore" 
+             xmlns:externals="clr-namespace:ScheduleCore.Models.RawModels;assembly=ScheduleCore" 
              x:Class="ScheduleMADI.ExamPage" x:Name="this"
              x:DataType="vm:IExamPageViewModel">
     <StackLayout VerticalOptions="FillAndExpand">

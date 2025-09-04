@@ -1,25 +1,22 @@
 ﻿using ScheduleCore.MadiSiteApiHelpers.Parsers.Interfaces;
-using ScheduleCore.Models.Madi;
+using ScheduleCore.Models.RawModels;
 using System.Collections.ObjectModel;
 
 namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 {
     public class HtmlHardcoreParser : IParser
     {
-        public TypeOfWeek ParseWeek(string json)
+        public string ParseWeek(string json)
         {
-            switch (json)
+            return json switch
             {
-                case "{\"aaData\":[\"\\u0437\"]}":
-                    return TypeOfWeek.Denominator;
-                case "{\"aaData\":[\"\\u0447\"]}":
-                    return TypeOfWeek.Numerator;
-                default:
-                    throw new FormatException("Couldn't parse the day of the week.");
-            }
+                "{\"aaData\":[\"\\u0437\"]}" => "Знаменатель",
+                "{\"aaData\":[\"\\u0447\"]}" => "Числитель",
+                _ => throw new FormatException("Couldn't parse the day of the week."),
+            };
         }
 
-        public MadiEntityRegistry ParseGroups(string html)
+        public Dictionary<int, string> ParseGroups(string html)
         {
             var groups = new Dictionary<int, string>();
 
@@ -43,10 +40,10 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 catch (ArgumentOutOfRangeException) { continue; }
             }
 
-            return new() { Registry = groups };
+            return groups;
         }
 
-        public MadiEntityRegistry ParseProfessors(string html)
+        public Dictionary<int, string> ParseProfessors(string html)
         {
             var professors = new Dictionary<int, string>();
 
@@ -75,7 +72,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 catch (ArgumentOutOfRangeException) { continue; }
             }
 
-            return new() { Registry = professors };
+            return professors;
         }
 
         public List<Day> ParseSchedule(string html)
@@ -85,8 +82,8 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 new Day(DayOfWeek.Monday), new Day(DayOfWeek.Tuesday),
                 new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
                 new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
-                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Class>()
-                { new Class { Name = "Выходной день", Day = "Еженедельно" } } }
+                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { Name = "Выходной день", Day = "Еженедельно" } } }
             };
 
             bool isProfessors = false;
@@ -136,7 +133,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
                     while (true)
                     {
-                        var lesson = new Class();
+                        var lesson = new Lesson();
                         for (int i = 0; i < 6; i++)//парсинг данных Lesson-а
                         {
                             buff = reader.ReadLine();
@@ -250,7 +247,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                         }
                         var day = days.Find(x => x.Name == dayOfWeek);
 
-                        var lesson = new Class();
+                        var lesson = new Lesson();
                         reader.ReadLine();
 
                         buff = reader.ReadLine();
@@ -275,19 +272,19 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
             {
                 if (days[i].Lessons.Count == 0)
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Еженедельно" });
+                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Еженедельно" });
                     continue;
                 }
 
                 if (!days[i].Lessons.Any(x => x.Day.Contains("Числ")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Числитель" });
+                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Числитель" });
                     continue;
                 }
 
                 if (!days[i].Lessons.Any(x => x.Day.Contains("Знам")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Знаменатель" });
+                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Знаменатель" });
                     continue;
                 }
             }

@@ -1,4 +1,4 @@
-using ScheduleCore.Models.Madi;
+using ScheduleCore.Models.RawModels;
 using System.Collections.ObjectModel;
 
 namespace ScheduleMADI.Interfaces;

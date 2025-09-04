@@ -68,8 +68,6 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\AppIcon\appicon.svg" />
-	  <None Remove="Resources\Images\schedule.svg" />
-	  <None Remove="Resources\Images\setting.svg" />
 	  <None Remove="Resources\Splash\logo.svg" />
 	</ItemGroup>
 

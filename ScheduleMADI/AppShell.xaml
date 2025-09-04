@@ -11,15 +11,15 @@
     </Shell.Behaviors>
     
     <TabBar>
-        <Tab Title="Расписание" Icon="schedule.svg">
+        <Tab Title="Расписание" Icon="schedule_ico.png">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
         </Tab>
 
-        <Tab Title="Экзамены" Icon="exam2.svg">
+        <Tab Title="Экзамены" Icon="exam_ico.png">
             <ShellContent ContentTemplate="{DataTemplate local:ExamPage}"/>
         </Tab>
 
-        <Tab Title="Настройки" Icon="setting.svg">
+        <Tab Title="Настройки" Icon="setting_ico.png">
             <ShellContent ContentTemplate="{DataTemplate local:SettingPage}"/>
         </Tab>
     </TabBar>

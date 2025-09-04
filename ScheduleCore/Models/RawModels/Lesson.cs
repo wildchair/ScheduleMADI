@@ -1,7 +1,10 @@
-﻿namespace ScheduleCore.Models.Madi
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ScheduleCore.Models.RawModels
 {
-    public class Class
+    public class Lesson
     {
+        [Key]
         public int Id { get; set; }
         public string? Time { get; set; }
         public string? Day { get; set; }

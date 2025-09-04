@@ -1,18 +1,20 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
-namespace ScheduleCore.Models.Madi
+namespace ScheduleCore.Models.RawModels
 {
     public class Day : INotifyPropertyChanged
     {
+        [Key]
         public int Id { get; set; }
 
-        private ObservableCollection<Class> lessons;
+        private ObservableCollection<Lesson> lessons;
         private DayOfWeek name;
         private string? typeOfWeek;
 
-        public ObservableCollection<Class> Lessons
+        public ObservableCollection<Lesson> Lessons
         {
             get => lessons;
             set
@@ -51,14 +53,14 @@ namespace ScheduleCore.Models.Madi
         public Day() { }
         public Day(DayOfWeek name)
         {
-            Lessons = new ObservableCollection<Class>();
+            Lessons = new ObservableCollection<Lesson>();
             Name = name;
         }
-        public Day(DayOfWeek name, ObservableCollection<Class> lessons) : this(name)
+        public Day(DayOfWeek name, ObservableCollection<Lesson> lessons) : this(name)
         {
             Lessons = lessons;
         }
-        public Day(DayOfWeek name, ObservableCollection<Class> lessons, string typeOfWeek) : this(name, lessons)
+        public Day(DayOfWeek name, ObservableCollection<Lesson> lessons, string typeOfWeek) : this(name, lessons)
         {
             TypeOfWeek = typeOfWeek;
         }

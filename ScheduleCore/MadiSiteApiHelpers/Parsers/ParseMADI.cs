@@ -1,6 +1,5 @@
-﻿using ScheduleCore.Models.Madi;
+﻿using ScheduleCore.Models.RawModels;
 using System.Collections.ObjectModel;
-using System.Security.Cryptography;
 
 namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 {
@@ -11,7 +10,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
         public static Dictionary<int, string> id_professors = new();
 
         private static TimeSpan TIMEOUT = new(0, 0, 10);
-        public async static Task<TypeOfWeek> GetWeek(CancellationToken cancellationToken)
+        public async static Task<string> GetWeek(CancellationToken cancellationToken)
         {
             HttpClient httpClient = new();
             httpClient.Timeout = TIMEOUT;
@@ -29,9 +28,9 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
             //BufferedMADI.BufferedDay = new KeyValuePair<DateTime, string>(DateTime.Now.Date, WeekMADI.Week);
 
             if (WeekMADI.Week == "Числитель")
-                return TypeOfWeek.Numerator;
+                return "Числитель";
             else
-                return TypeOfWeek.Denominator;
+                return "Знаменатель";
         }
         public async static Task<Dictionary<int, string>> GetGroups(CancellationToken cancellationToken)
         {
@@ -69,7 +68,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 group_buff.RemoveAll(x => x == string.Empty);
                 try//в полученном html могут быть айди группы без имен
                 {
-                    var id = int.Parse( group_buff[0].Trim());
+                    var id = int.Parse(group_buff[0].Trim());
                     var name = group_buff[1].Replace(" ", string.Empty);
                     if (!id_groups.ContainsKey(id)) // может быть плохо при повторном коннекте
                         id_groups.Add(id, name);
@@ -113,7 +112,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 proff_buff.RemoveAll(x => x == string.Empty);
                 try//в полученном html могут быть айди группы без имен
                 {
-                    var id =int.Parse( proff_buff[0].Trim());
+                    var id = int.Parse(proff_buff[0].Trim());
                     var name_buff = proff_buff[1].Split().ToList();
                     name_buff.RemoveAll(x => x == string.Empty);
                     var name = name_buff[0] + " " + name_buff[1];
@@ -193,8 +192,8 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 new Day(DayOfWeek.Monday), new Day(DayOfWeek.Tuesday),
                 new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
                 new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
-                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Class>()
-                { new Class { Name = "Выходной день", Day = "Еженедельно" } } }
+                new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
+                { new Lesson { Name = "Выходной день", Day = "Еженедельно" } } }
             };
 
             bool isProfessors = false;
@@ -244,7 +243,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
                     while (true)
                     {
-                        var lesson = new Class();
+                        var lesson = new Lesson();
                         for (int i = 0; i < 6; i++)//парсинг данных Lesson-а
                         {
                             buff = reader.ReadLine();
@@ -358,7 +357,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                         }
                         var day = days.Find(x => x.Name == dayOfWeek);
 
-                        var lesson = new Class();
+                        var lesson = new Lesson();
                         reader.ReadLine();
 
                         buff = reader.ReadLine();
@@ -383,19 +382,19 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
             {
                 if (days[i].Lessons.Count == 0)
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Еженедельно" });
+                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Еженедельно" });
                     continue;
                 }
 
                 if (!days[i].Lessons.Any(x => x.Day.Contains("Числ")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Числитель" });
+                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Числитель" });
                     continue;
                 }
 
                 if (!days[i].Lessons.Any(x => x.Day.Contains("Знам")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Class() { Name = "Выходной день", Day = "Знаменатель" });
+                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Знаменатель" });
                     continue;
                 }
             }

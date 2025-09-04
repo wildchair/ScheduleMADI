@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScheduleApi.Services.Interfaces;
-using ScheduleCore.Models.Madi;
 
 namespace ScheduleApi.Controllers
 {

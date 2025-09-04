@@ -63,11 +63,11 @@ namespace ScheduleApi.Services
                     {
                         var rightLesson = new Lesson()
                         {
-                            Name = lesson.Name,
+                            Subject = lesson.Name,
                             Classroom = lesson.Classroom,
                             Day = day.Name,
                             Type = lesson.Type,
-                            Week = lesson.Day switch
+                            Period = lesson.Day switch
                             {
                                 "Числитель" => TypeOfWeek.Numerator,
                                 "Знаменатель" => TypeOfWeek.Denominator,
