@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace ScheduleMADI.Test
 {
-    public partial class MainPageViewModel : ObservableObject, IMainPageViewModel
+    public partial class TestMainPageViewModel : ObservableObject, IMainPageViewModel
     {
         [ObservableProperty]
         public partial string ScheduleTarget { get; set; }
@@ -30,7 +30,7 @@ namespace ScheduleMADI.Test
 
         private IScheduleTargetProvider _scheduleTargetProvider;
 
-        public MainPageViewModel(IScheduleTargetProvider scheduleTargetProvider)
+        public TestMainPageViewModel(IScheduleTargetProvider scheduleTargetProvider)
         {
             _scheduleTargetProvider = scheduleTargetProvider;
             _scheduleTargetProvider.OnCurrentTargetChanged += (sender, args) => ScheduleTarget = args.NewTarget.Value;

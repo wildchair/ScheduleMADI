@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui;
 using ScheduleMADI.Interfaces;
 using ScheduleMADI.Test;
+using ScheduleMADI.ViewModel;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
@@ -24,7 +25,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ISettingsPageViewModel, TestSettingsPageViewModel>();
 		builder.Services.AddSingleton<IScheduleTargetProvider, TestScheduleTargetProvider>();
 		builder.Services.AddSingleton<IExamPageViewModel, TestExamPageViewModel>();
-		builder.Services.AddSingleton<IMainPageViewModel, MainPageViewModel>();
+		builder.Services.AddSingleton<IMainPageViewModel, TestMainPageViewModel>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

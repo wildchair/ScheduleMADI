@@ -1,7 +1,7 @@
 ﻿using ScheduleMADI.Interfaces;
 using System.Collections.ObjectModel;
 
-namespace ScheduleMADI.Test
+namespace ScheduleMADI.ViewModel
 {
     public class TestScheduleTargetProvider : IScheduleTargetProvider
     {

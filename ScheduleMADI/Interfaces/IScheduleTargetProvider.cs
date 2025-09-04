@@ -1,4 +1,4 @@
-﻿using ScheduleMADI.Test;
+﻿using ScheduleMADI.ViewModel;
 using System.Collections.ObjectModel;
 
 namespace ScheduleMADI.Interfaces

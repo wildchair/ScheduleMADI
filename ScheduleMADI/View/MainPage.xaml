@@ -5,7 +5,7 @@
              xmlns:externals="clr-namespace:ScheduleCore.Models.Madi;assembly=ScheduleCore" 
              xmlns:vm="clr-namespace:ScheduleMADI.Interfaces"
              x:Class="ScheduleMADI.MainPage" x:Name="this"
-             Loaded="Mainpage_Appearing" x:DataType="vm:IMainPageViewModel">
+             x:DataType="vm:IMainPageViewModel">
 
     <StackLayout VerticalOptions="FillAndExpand">
         <Grid Margin="15">
@@ -57,23 +57,6 @@
                     </CollectionView>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
-            <!--<CollectionView x:Name="cv" ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
-                            EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand" ChildAdded="cv_ChildAdded">
-                <CollectionView.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums, Mode=TwoWay}"
-                                          Tapped="TapGestureRecognizer_Tapped"/>
-                </CollectionView.GestureRecognizers>
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="externals:Lesson">
-                        <controls:SubjectCard
-                                  CardDay="{Binding CardDay, Mode=OneWay}" CardName="{Binding CardName, Mode=OneWay}"
-                                  CardProf="{Binding CardProf, Mode=OneWay}" CardRoom="{Binding CardRoom, Mode=OneWay}"
-                                  CardTime="{Binding CardTime, Mode=OneWay}" CardType="{Binding CardType, Mode=OneWay}"/>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>-->
-
         </CarouselView>
     </StackLayout>
 </ContentPage>
