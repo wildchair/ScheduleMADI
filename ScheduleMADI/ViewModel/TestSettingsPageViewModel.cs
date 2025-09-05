@@ -39,6 +39,7 @@ public partial class TestSettingsPageViewModel : ObservableObject, ISettingsPage
     [RelayCommand]
     private void SelectItem(ScheduleTarget item)
     {
+        if (item == null) return;
         _provider.CurrentTarget = item;
         SearchText = item.Value;
     }

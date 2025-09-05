@@ -193,7 +193,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 new Day(DayOfWeek.Wednesday), new Day(DayOfWeek.Thursday),
                 new Day(DayOfWeek.Friday), new Day(DayOfWeek.Saturday),
                 new Day(DayOfWeek.Sunday) {Lessons = new ObservableCollection<Lesson>()
-                { new Lesson { Name = "Выходной день", Day = "Еженедельно" } } }
+                { new Lesson { Subject = "Выходной день", Day = "Еженедельно" } } }
             };
 
             bool isProfessors = false;
@@ -255,7 +255,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                                         lesson.Time = buff;
                                         break;
                                     case 1:
-                                        lesson.Name = buff;
+                                        lesson.Subject = buff;
                                         break;
                                     case 2:
                                         lesson.Type = buff;
@@ -283,7 +283,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                                         lesson.Time = buff;
                                         break;
                                     case 2:
-                                        lesson.Name = buff;
+                                        lesson.Subject = buff;
                                         break;
                                     case 3:
                                         lesson.Type = buff;
@@ -302,7 +302,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
                         var existingLesson = day.Lessons.SingleOrDefault(x =>
                         x.Time == lesson.Time && x.Type == lesson.Type &&
-                        x.Name == lesson.Name && x.Day == lesson.Day && x.Classroom == lesson.Classroom,
+                        x.Subject == lesson.Subject && x.Day == lesson.Day && x.Classroom == lesson.Classroom,
                         null);
 
                         if (existingLesson != null)
@@ -362,7 +362,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
                         buff = reader.ReadLine();
                         buff = CutHTML(buff);
-                        lesson.Name = buff;
+                        lesson.Subject = buff;
 
                         buff = reader.ReadLine();
                         buff = CutHTML(buff);
@@ -382,19 +382,19 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
             {
                 if (days[i].Lessons.Count == 0)
                 {
-                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Еженедельно" });
+                    days[i].Lessons.Add(new Lesson() { Subject = "Выходной день", Day = "Еженедельно" });
                     continue;
                 }
 
                 if (!days[i].Lessons.Any(x => x.Day.Contains("Числ")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Числитель" });
+                    days[i].Lessons.Add(new Lesson() { Subject = "Выходной день", Day = "Числитель" });
                     continue;
                 }
 
                 if (!days[i].Lessons.Any(x => x.Day.Contains("Знам")) && !days[i].Lessons.Any(x => x.Day.Contains("Еже")))
                 {
-                    days[i].Lessons.Add(new Lesson() { Name = "Выходной день", Day = "Знаменатель" });
+                    days[i].Lessons.Add(new Lesson() { Subject = "Выходной день", Day = "Знаменатель" });
                     continue;
                 }
             }
@@ -480,7 +480,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
 
             if (html == CutHTML(html))
             {
-                exams.Add(new() { CardName = html });
+                exams.Add(new() { Subject = html });
             }
             else if (html.Contains("timetable") && (html.Contains("Информация по") || html.Contains("Данная информация")))
             {
@@ -499,7 +499,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                         var room = CutHTML(reader.ReadLine());
                         var name = CutHTML(reader.ReadLine());
 
-                        exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
+                        exams.Add(new() { Time = datetime, Subject = name, Visitors = group, Classroom = room });
                     }
                     else
                     {
@@ -508,7 +508,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                         var room = CutHTML(reader.ReadLine());
                         var group = CutHTML(reader.ReadLine());
 
-                        exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
+                        exams.Add(new() { Time = datetime, Subject = name, Visitors = group, Classroom = room });
                     }
                 }
 
@@ -517,7 +517,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 var infoStrings = resp.Split("</p>");
 
                 for (int i = 0; i < infoStrings.Length - 1; i++)
-                    exams.Add(new() { CardName = CutHTML(infoStrings[i]) });
+                    exams.Add(new() { Subject = CutHTML(infoStrings[i]) });
             }
             else if (html.Contains("timetable") && !(html.Contains("Информация по") || html.Contains("Данная информация")))
             {
@@ -536,7 +536,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                         var room = CutHTML(reader.ReadLine());
                         var name = CutHTML(reader.ReadLine());
 
-                        exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
+                        exams.Add(new() { Time = datetime, Subject = name, Visitors = group, Classroom = room });
                     }
                     else
                     {
@@ -545,7 +545,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                         var room = CutHTML(reader.ReadLine());
                         var group = CutHTML(reader.ReadLine());
 
-                        exams.Add(new() { CardDateTime = datetime, CardName = name, CardProf = group, CardRoom = room });
+                        exams.Add(new() { Time = datetime, Subject = name, Visitors = group, Classroom = room });
                     }
                 }
             }
@@ -556,7 +556,7 @@ namespace ScheduleCore.MadiSiteApiHelpers.Parsers
                 var infoStrings = resp.Split("</p>");
 
                 for (int i = 0; i < infoStrings.Length - 1; i++)
-                    exams.Add(new() { CardName = CutHTML(infoStrings[i]) });
+                    exams.Add(new() { Subject = CutHTML(infoStrings[i]) });
             }
 
             return exams;

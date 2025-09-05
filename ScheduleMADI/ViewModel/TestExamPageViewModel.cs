@@ -27,7 +27,7 @@ public partial class TestExamPageViewModel : ObservableObject, IExamPageViewMode
         Exams.Clear();
         for (int i = 0; i < Random.Shared.Next(1, 7); i++)
         {
-            Exams.Add(new() { CardName = "Test" });
+            Exams.Add(new() { Subject = "Test" });
         }
     }
 }

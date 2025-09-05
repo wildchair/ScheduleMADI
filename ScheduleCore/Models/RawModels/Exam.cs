@@ -6,9 +6,9 @@ namespace ScheduleCore.Models.RawModels
     {
         [Key]
         public int Id { get; set; }
-        public string? CardDateTime { get; set; }
-        public string? CardName { get; set; }
-        public string? CardProf { get; set; }
-        public string? CardRoom { get; set; }
+        public string? Time { get; set; }
+        public string? Subject { get; set; }
+        public string? Visitors { get; set; }
+        public string? Classroom { get; set; }
     }
 }
