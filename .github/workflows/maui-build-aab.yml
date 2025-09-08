@@ -50,7 +50,7 @@ jobs:
       run: |
         dotnet publish ScheduleMADI/ScheduleMADI.csproj \
           -c Release -f net9.0-android35.0 \
-          -o releaseOut/ \
+          -o:releaseOut/ \
           -p:AndroidKeyStore=true \
           -p:AndroidPackageFormat=aab \
           -p:AndroidSigningKeyStore=../keystore.jks \
