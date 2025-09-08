@@ -44,7 +44,7 @@ jobs:
 
     - name: Decode keystore
       run: |
-        echo "${{ secrets.AAB_KEYSTORE_FILE }}" | base64 -d > keystore.jks
+        echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > keystore.jks
 
     - name: Build signed AAB
       run: |
@@ -54,9 +54,9 @@ jobs:
           -p:AndroidKeyStore=true \
           -p:AndroidPackageFormat=aab \
           -p:AndroidSigningKeyStore=keystore.jks \
-          -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
-          -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
-          -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} 
+          -p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+          -p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
+          -p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }} 
 
     - name: Upload AAB artifact
       uses: actions/upload-artifact@v4
