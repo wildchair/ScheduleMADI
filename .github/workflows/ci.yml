@@ -50,6 +50,30 @@ jobs:
     needs: tests
 
     steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+  
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.x'
+
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.nuget/packages
+          ~/.dotnet/packs
+          ~/.dotnet/workloadmanifests
+          ~/.dotnet/sdk-manifests
+        key: ${{ runner.os }}-dotnet-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-dotnet-
+
+    - name: Restore solution
+      run: |
+          dotnet workload restore
+          dotnet restore
+
     - name: Decode keystore
       run: |
         echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > keystore.jks
