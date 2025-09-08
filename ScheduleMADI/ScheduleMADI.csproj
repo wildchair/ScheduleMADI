@@ -23,7 +23,7 @@
 		<Authors>WildChair</Authors>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>$(GitVersion_FullSemVer)</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>$(GitVersion_MajorMinorPatch)-$(GitVersion_PreReleaseLabel).$(GitVersion_CommitsSinceVersionSource)</ApplicationDisplayVersion>
 		<ApplicationVersion>$(GitVersion_CommitsSinceVersionSource)</ApplicationVersion>
 
 		<!-- <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion> -->

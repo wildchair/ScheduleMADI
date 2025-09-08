@@ -90,14 +90,10 @@ jobs:
           -p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
           -p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }} 
 
-    - name: Upload AAB artifact
+    - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: aab
-        path: ./releaseOut/com.wildchair.schedulemadi-Signed.aab
-
-    - name: Upload APK artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: apk
-        path: ./releaseOut/com.wildchair.schedulemadi-Signed.apk
+        name: build
+        path: |
+          ./releaseOut/com.wildchair.schedulemadi-Signed.aab
+          ./releaseOut/com.wildchair.schedulemadi-Signed.apk
