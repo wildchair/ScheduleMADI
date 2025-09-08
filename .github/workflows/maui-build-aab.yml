@@ -33,8 +33,8 @@ jobs:
       with:
         dotnet-version: '9.x'
 
-    - name: Limit to Android target only
-      run: sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFramework>net8.0-android<\/TargetFramework>/' ScheduleMADI/ScheduleMADI.csproj
+    # - name: Limit to Android target only
+    #   run: sed -i 's/<TargetFrameworks>.*<\/TargetFrameworks>/<TargetFramework>net8.0-android<\/TargetFramework>/' ScheduleMADI/ScheduleMADI.csproj
 
     - name: Restore MAUI Android workload
       run: dotnet workload restore
