@@ -44,18 +44,31 @@ jobs:
          path: '**/tests-results.trx'
          reporter: dotnet-trx
 
-    # - name: Build signed AAB
-    #   run: |
-    #     dotnet publish ScheduleMADI/ScheduleMADI.csproj \
-    #       -c Release -f net9.0-android35.0 \
-    #       -p:AndroidPackageFormat=aab \
-    #       -p:AndroidSigningKeyStore=keystore.jks \
-    #       -p:AndroidSigningStorePass=${{ secrets.AAB_KEYSTORE_PASSWORD }} \
-    #       -p:AndroidSigningKeyAlias=${{ secrets.AAB_KEY_ALIAS }} \
-    #       -p:AndroidSigningKeyPass=${{ secrets.AAB_KEY_PASSWORD }} 
+  build:
+    name: Build
+    runs-on: macos-latest
 
-    # - name: Upload APK artifact
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: apk
-    #     path: ScheduleMADI/bin/Release/net9.0-android35.0/publish/com.wildchair.schedulemadi-Signed.apk
+    steps:
+    - name: Build signed AAB
+      run: |
+        dotnet publish ScheduleMADI/ScheduleMADI.csproj \
+          -c Release -f net9.0-android35.0 \
+          -o:releaseOut/ \
+          -p:AndroidKeyStore=true \
+          -p:AndroidPackageFormat=aab \
+          -p:AndroidSigningKeyStore=keystore.jks \
+          -p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+          -p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
+          -p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }} 
+
+    - name: Upload AAB artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: aab
+        path: ./releaseOut/com.wildchair.schedulemadi-Signed.aab
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: apk
+        path: ./releaseOut/com.wildchair.schedulemadi-Signed.apk
