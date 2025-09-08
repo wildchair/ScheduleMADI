@@ -53,7 +53,7 @@ jobs:
           -o releaseOut/ \
           -p:AndroidKeyStore=true \
           -p:AndroidPackageFormat=aab \
-          -p:AndroidSigningKeyStore=keystore.jks \
+          -p:AndroidSigningKeyStore=../keystore.jks \
           -p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
           -p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
           -p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }} 
