@@ -47,6 +47,7 @@ jobs:
   build:
     name: Build
     runs-on: macos-latest
+    needs: tests
 
     steps:
     - name: Build signed AAB
