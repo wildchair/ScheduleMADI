@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src/ScheduleMadi.Api/ScheduleMadi.Api.csproj" />
+  <Project Path="src/ScheduleMadi.Core/ScheduleMadi.Core.csproj" />
+  <Project Path="src/ScheduleMadi.App/ScheduleMadi.App.csproj">
+    <Deploy />
+  </Project>
+</Solution>

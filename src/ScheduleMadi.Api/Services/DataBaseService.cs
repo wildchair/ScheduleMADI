@@ -1,0 +1,169 @@
+﻿using Microsoft.EntityFrameworkCore;
+using ScheduleApi.ServiceRegistrator;
+using ScheduleCore.Models;
+using ScheduleMadi.Api.Repository;
+using ScheduleMadi.Api.Services.Interfaces;
+using ScheduleMadi.Core.ApiClient;
+using ScheduleMadi.Core.MadiSiteApiHelpers.Parsers.Interfaces;
+using ScheduleMadi.Core.Models;
+
+namespace ScheduleMadi.Api.Services
+{
+    [Service(ServiceLifetime.Scoped)]
+    public class DataBaseService : IDataBaseService
+    {
+        private readonly ILogger<DataBaseService> _logger;
+        private readonly UniversityApiClient _apiClient;
+        private readonly IParser _parser;
+
+        private readonly IGroupsService _groupsService;
+        private readonly IProfessorsService _professorsService;
+        private readonly IScheduleService _scheduleService;
+
+        private readonly InMemoryDbContext _dbContext;
+        private readonly InMemoryDbMadiContext _dbMadiContext;
+
+        public DataBaseService(ILogger<DataBaseService> logger,
+                               UniversityApiClient apiClient,
+                               IParser parser,
+                               IGroupsService groupsService,
+                               IScheduleService scheduleService,
+                               IProfessorsService professorsService,
+                               InMemoryDbContext dbContext,
+                               InMemoryDbMadiContext dbMadiContext)
+        {
+            _logger = logger;
+            _apiClient = apiClient;
+            _parser = parser;
+            _scheduleService = scheduleService;
+            _groupsService = groupsService;
+            _dbContext = dbContext;
+            _professorsService = professorsService;
+            _dbMadiContext = dbMadiContext;
+        }
+
+        public async Task<int> InitDbAsync()
+        {
+            var groups = await _groupsService.GetGroupsAsync();
+            var professors = await _professorsService.GetProfessorsAsync();
+
+            foreach (var group in groups.Registry)
+            {
+                if (!await _dbContext.Groups.AnyAsync(g => g.Id == group.Key))
+                    await _dbContext.Groups.AddAsync(new() { Id = group.Key, Name = group.Value, Lessons = new() });
+
+                await _scheduleService.GetScheduleAsync(group.Key);
+            }
+
+            foreach (var professor in professors.Registry)
+            {
+                if (!await _dbContext.Professors.AnyAsync(p => p.Id == professor.Key))
+                    await _dbContext.Professors.AddAsync(new() { Id = professor.Key, Name = professor.Value, Lessons = new() });
+
+                await _scheduleService.GetScheduleAsync(professor.Key);
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+
+            foreach (var group in await _dbContext.Groups.Include(g=>g.Lessons).ToListAsync())
+            {
+                var rawGroup = await _dbMadiContext.Schedules.FindAsync(group.Id);
+
+                foreach(var day in rawGroup.Days)
+                {
+                    foreach(var rawLesson in day.Lessons)
+                    {
+                        var lesson = new Lesson()
+                        {
+                            Day = day.Name,
+                            Classroom = rawLesson.Classroom,
+                            Type = rawLesson.Type,
+                            Week = rawLesson.TypeOfWeek switch
+                            {
+                                "Числитель" => TypeOfWeek.Numerator,
+                                "Знаменатель" => TypeOfWeek.Denominator,
+                                _ => TypeOfWeek.None
+                            },
+                            Name = rawLesson.Name,
+                            Groups = [],
+                            Professors = []
+                        };
+
+                        var dbLesson = await _dbContext.Lessons.SingleOrDefaultAsync(x => x.Name == lesson.Name &&
+                                                                   x.End == lesson.End &&
+                                                                   x.Week == lesson.Week &&
+                                                                   x.Classroom == lesson.Classroom &&
+                                                                   x.Day == lesson.Day &&
+                                                                   x.Start == lesson.Start &&
+                                                                   x.Type == lesson.Type);
+
+                        if (dbLesson != default)
+                        {
+                            dbLesson.Groups.Add(group);
+                            group.Lessons.Add(dbLesson);
+                            
+                        }
+                        else
+                        {
+                            lesson.Groups.Add(group);
+                            group.Lessons.Add(lesson);
+                            
+                        }
+                        await _dbContext.SaveChangesAsync();
+                    }
+                }
+            }
+
+            foreach (var professor in await _dbContext.Professors.Include(p=>p.Lessons).ToListAsync())
+            {
+                var rawGroup = await _dbMadiContext.Schedules.FindAsync(professor.Id);
+
+                foreach (var day in rawGroup.Days)
+                {
+                    foreach (var rawLesson in day.Lessons)
+                    {
+                        var lesson = new Lesson()
+                        {
+                            Day = day.Name,
+                            Classroom = rawLesson.Classroom,
+                            Type = rawLesson.Type,
+                            Week = rawLesson.TypeOfWeek switch
+                            {
+                                "Числитель" => TypeOfWeek.Numerator,
+                                "Знаменатель" => TypeOfWeek.Denominator,
+                                _ => TypeOfWeek.None
+                            },
+                            Name = rawLesson.Name,
+                            Groups = [],
+                            Professors = []
+                        };
+
+#warning Не сработает потому что перепутаны поля?
+                        var dbLesson = await _dbContext.Lessons.SingleOrDefaultAsync(x => x.Name == lesson.Name &&
+                                                                   x.End == lesson.End &&
+                                                                   x.Week == lesson.Week &&
+                                                                   x.Classroom == lesson.Classroom &&
+                                                                   x.Day == lesson.Day &&
+                                                                   x.Start == lesson.Start &&
+                                                                   x.Type == lesson.Type);
+
+                        if (dbLesson != default)
+                        {
+                            professor.Lessons.Add(dbLesson);
+                            dbLesson.Professors.Add(professor);
+                        }
+                        else
+                        {
+                            professor.Lessons.Add(lesson);
+                            lesson.Professors.Add(professor);
+                        }
+                        await _dbContext.SaveChangesAsync();
+                    }
+                }
+            }
+
+            return await _dbContext.SaveChangesAsync();
+        }
+    }
+}
