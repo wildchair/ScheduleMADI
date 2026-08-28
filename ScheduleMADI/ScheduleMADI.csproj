@@ -52,7 +52,7 @@
 		<MauiFont Include="Resources\Fonts\*" />
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-		<MauiAsset Include="Platforms\Android\Resources\raw\deccert.pem" />
+		<MauiAsset Include="Platforms\Android\Resources\raw\madi.pem" />
 	</ItemGroup>
 
 	<ItemGroup>

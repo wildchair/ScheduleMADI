@@ -4,7 +4,7 @@
 		<domain includeSubdomains="true">madi.ru</domain>
 		<trust-anchors>
 			<certificates src="system" />
-			<certificates src="@raw/deccert" />
+			<certificates src="@raw/madi" />
 		</trust-anchors>
 	</domain-config>
 </network-security-config>
