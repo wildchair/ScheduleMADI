@@ -124,7 +124,7 @@ jobs:
         id: git-cliff
         with:
           config: scopesorted
-          args: -vv --latest --strip header
+          args: -u -t v${{ needs.build.outputs.semVer }}
         env:
           OUTPUT: CHANGELOG.md
 
