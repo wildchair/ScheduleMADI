@@ -76,7 +76,7 @@ jobs:
         run: |
           dotnet publish ScheduleMADI/ScheduleMADI.csproj \
             -c Release -f net9.0-android35.0 \
-            -o:releaseAAB/ \
+            -o:release_aab/ \
             -p:ApplicationDisplayVersion=${{ steps.gitversion.outputs.majorMinorPatch }} \
             -p:ApplicationVersion=${{ github.run_number }} \
             -p:AndroidPackageFormats="aab" \
@@ -90,7 +90,7 @@ jobs:
         run: |
           dotnet publish ScheduleMADI/ScheduleMADI.csproj \
             -c Release -f net9.0-android35.0 \
-            -o:releaseAPK/ \
+            -o:release_apk/ \
             -p:ApplicationDisplayVersion=${{ steps.gitversion.outputs.majorMinorPatch }} \
             -p:ApplicationVersion=${{ github.run_number }} \
             -p:AndroidPackageFormats="apk" \
@@ -105,8 +105,8 @@ jobs:
         with:
           name: android-artifacts
           path: |
-            ./releaseAAB/*-Signed.aab
-            ./releaseAPK/*-Signed.apk
+            ./release_aab/*-Signed.aab
+            ./release_apk/*-Signed.apk
 
   release:
     name: Create GitHub Release
@@ -132,7 +132,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: android-artifacts
-          path: releaseAPK
+          path: release_apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
@@ -142,4 +142,4 @@ jobs:
           body_path: CHANGELOG.md
           target_commitish: ${{ github.sha }}
           files: |
-            releaseAPK/*-Signed.apk
+            release_apk/*-Signed.apk
