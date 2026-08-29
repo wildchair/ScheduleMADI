@@ -24,9 +24,7 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '9.x'
-
-      - name: Install MAUI workload
-        run: dotnet workload install maui --temp-dir "${{ runner.temp }}"
+          workloads: maui-android
           
       - name: Restore dependencies
         run: dotnet restore ScheduleMADI.sln
@@ -66,6 +64,7 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '9.x'
+          workloads: maui-android
 
       - name: Install MAUI workload
         run: dotnet workload install maui --temp-dir "${{ runner.temp }}"
