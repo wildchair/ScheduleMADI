@@ -24,6 +24,9 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '9.x'
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui --temp-dir "${{ runner.temp }}"
           
       - name: Restore dependencies
         run: dotnet restore ScheduleMADI.sln
@@ -63,6 +66,9 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '9.x'
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui --temp-dir "${{ runner.temp }}"
 
       - name: Restore MAUI Android workload
         run: dotnet workload restore ScheduleMADI/ScheduleMADI.csproj
@@ -110,7 +116,7 @@ jobs:
         id: git-cliff
         with:
           config: cliff.toml
-          args: -vv --latest --strip header
+          args: -c scopesorted -vv --latest --strip header
         env:
           OUTPUT: CHANGELOG.md
 
@@ -128,5 +134,4 @@ jobs:
           body_path: CHANGELOG.md
           target_commitish: ${{ github.sha }}
           files: |
-            releaseOut/*-Signed.aab
             releaseOut/*-Signed.apk
