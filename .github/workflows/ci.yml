@@ -142,4 +142,4 @@ jobs:
           body_path: CHANGELOG.md
           target_commitish: ${{ github.sha }}
           files: |
-            releaseOut/*-Signed.apk
+            releaseAPK/*-Signed.apk
