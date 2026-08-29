@@ -191,6 +191,6 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
           packageName: com.wildchair.schedulemadi
           releaseFiles: release_aab/*-Signed.aab
-          tracks: internal
+          tracks: production
           status: completed
           whatsNewDirectory: whatsnew
