@@ -132,7 +132,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: android-artifacts
-          path: releaseOut
+          path: releaseAPK
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
