@@ -81,7 +81,7 @@ jobs:
             -o:releaseOut/ \
             -p:ApplicationDisplayVersion=${{ steps.gitversion.outputs.majorMinorPatch }} \
             -p:ApplicationVersion=${{ github.run_number }} \
-            -p:AndroidPackageFormats="aab;apk" \
+            -p:AndroidPackageFormats="aab%3Bapk" \
             -p:AndroidKeyStore=true \
             -p:AndroidSigningKeyStore=../keystore.jks \
             -p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
