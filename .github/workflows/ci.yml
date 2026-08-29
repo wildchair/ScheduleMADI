@@ -66,9 +66,6 @@ jobs:
           dotnet-version: '9.x'
           workloads: maui-android
 
-      - name: Install MAUI workload
-        run: dotnet workload install maui --temp-dir "${{ runner.temp }}"
-
       - name: Restore MAUI Android workload
         run: dotnet workload restore ScheduleMADI/ScheduleMADI.csproj
 
