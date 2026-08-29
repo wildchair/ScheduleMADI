@@ -166,7 +166,7 @@ jobs:
       - name: Prepare Release Notes (English)
         run: |
           mkdir -p whatsnew
-          head -c 500 CHANGELOG.md > whatsnew/whatsnew-en-US.txt
+          head -c 500 CHANGELOG.md > whatsnew/en-US.txt
 
       - name: Download Artifacts
         uses: actions/download-artifact@v8
@@ -179,6 +179,6 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
           packageName: com.wildchair.schedulemadi
           releaseFiles: release_aab/*-Signed.aab
-          track: internal
+          tracks: internal
           status: completed
           whatsNewDirectory: whatsnew
