@@ -76,7 +76,7 @@ jobs:
         run: |
           dotnet publish ScheduleMADI/ScheduleMADI.csproj \
             -c Release -f net9.0-android35.0 \
-            -o:releaseOut/ \
+            -o:releaseAAB/ \
             -p:ApplicationDisplayVersion=${{ steps.gitversion.outputs.majorMinorPatch }} \
             -p:ApplicationVersion=${{ github.run_number }} \
             -p:AndroidPackageFormats="aab" \
@@ -90,7 +90,7 @@ jobs:
         run: |
           dotnet publish ScheduleMADI/ScheduleMADI.csproj \
             -c Release -f net9.0-android35.0 \
-            -o:releaseOut/ \
+            -o:releaseAPK/ \
             -p:ApplicationDisplayVersion=${{ steps.gitversion.outputs.majorMinorPatch }} \
             -p:ApplicationVersion=${{ github.run_number }} \
             -p:AndroidPackageFormats="apk" \
@@ -105,8 +105,8 @@ jobs:
         with:
           name: android-artifacts
           path: |
-            ./releaseOut/*-Signed.aab
-            ./releaseOut/*-Signed.apk
+            ./releaseAAB/*-Signed.aab
+            ./releaseAPK/*-Signed.apk
 
   release:
     name: Create GitHub Release
