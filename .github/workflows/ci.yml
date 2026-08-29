@@ -163,10 +163,15 @@ jobs:
         env:
           OUTPUT: CHANGELOG.md
 
-      - name: Prepare Release Notes (English)
+      - name: Prepare Release Notes
         run: |
           mkdir -p whatsnew
           head -c 500 CHANGELOG.md > whatsnew/en-US.txt
+          cp whatsnew/en-US.txt whatsnew/ru-RU.txt
+
+          echo "--- СОДЕРЖИМОЕ ЧЕНДЖЛОГА ---"
+          cat whatsnew/ru-RU.txt
+          echo "----------------------------"
 
       - name: Download Artifacts
         uses: actions/download-artifact@v8
