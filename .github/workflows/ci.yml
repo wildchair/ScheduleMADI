@@ -166,7 +166,7 @@ jobs:
       - name: Prepare Release Notes (English)
         run: |
           mkdir -p whatsnew
-          head -c 500 CHANGELOG.md > whatsnew/en-US.txt
+          head -c 500 CHANGELOG.md > whatsnew/whatsnew-en-US
 
       - name: Download Artifacts
         uses: actions/download-artifact@v8
