@@ -132,14 +132,13 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: android-artifacts
-          path: release_apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ needs.build.outputs.semVer }}
-          name: Release v${{ needs.build.outputs.semVer }}
+          name: v${{ needs.build.outputs.semVer }}
           body_path: CHANGELOG.md
           target_commitish: ${{ github.sha }}
           files: |
-            android-artifacts/release_apk/*-Signed.apk
+            ./release_apk/*-Signed.apk
