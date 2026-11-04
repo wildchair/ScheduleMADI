@@ -16,7 +16,7 @@ public partial class MainPage : ContentPage
     {
         if (!Preferences.Default.ContainsKey("tap_instr"))
         {
-            await DisplayAlert("Подсказка", "Двойное касание правой/левой части экрана позволяет переключаться между днями." +
+            await DisplayAlertAsync("Подсказка", "Двойное касание правой/левой части экрана позволяет переключаться между днями." +
                 "Конкретную дату можно выбрать в календаре.", "Ок");
             Preferences.Default.Set("tap_instr", 1);
         }
@@ -34,9 +34,12 @@ public partial class MainPage : ContentPage
 
     private void cv_ChildAdded(object sender, ElementEventArgs e)
     {
-        if (DP.Date.Date == DateTime.Today.Date)
+        if (DP.Date is not DateTime selectedDate)
+            return;
+
+        if (selectedDate.Date == DateTime.Today.Date)
             Task.Run(() => (e.Element as SubjectCard).ProgressLoop());
-        else if (DP.Date.Date < DateTime.Today.Date)
+        else if (selectedDate.Date < DateTime.Today.Date)
             Task.Run(() => (e.Element as SubjectCard).ProgressTo(1, 500, Easing.Linear));
     }
 }

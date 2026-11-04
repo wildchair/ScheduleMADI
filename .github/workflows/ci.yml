@@ -2,7 +2,7 @@ name: ScheduleMADI CI/CD
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "**" ]
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
@@ -16,14 +16,18 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Set up .NET 9
+      - name: Set up .NET 10
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '9.x'
+          global-json-file: global.json
           workloads: maui-android
           
       - name: Restore dependencies
@@ -38,6 +42,13 @@ jobs:
         if: always()
         with:
           files: "**/*.trx"
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-results
+          path: "**/*.trx"
 
   build:
     name: Build MAUI Android
@@ -60,22 +71,31 @@ jobs:
         id: gitversion
         uses: gittools/actions/gitversion/execute@v4
 
-      - name: Set up .NET 9
+      - name: Set up .NET 10
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '9.x'
-          workloads: maui-android
+          global-json-file: global.json
 
       - name: Restore MAUI Android workload
         run: dotnet workload restore ScheduleMADI/ScheduleMADI.csproj
 
+      - name: Build validation APK
+        if: github.event_name == 'pull_request' || github.repository != 'wildchair/ScheduleMADI' || github.ref != 'refs/heads/master'
+        run: |
+          dotnet publish ScheduleMADI/ScheduleMADI.csproj \
+            -c Release -f net10.0-android36.0 \
+            -o:release_apk/ \
+            -p:AndroidPackageFormats="apk"
+
       - name: Decode keystore
+        if: github.event_name != 'pull_request' && github.repository == 'wildchair/ScheduleMADI' && github.ref == 'refs/heads/master'
         run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > keystore.jks
 
       - name: Build signed AAB
+        if: github.event_name != 'pull_request' && github.repository == 'wildchair/ScheduleMADI' && github.ref == 'refs/heads/master'
         run: |
           dotnet publish ScheduleMADI/ScheduleMADI.csproj \
-            -c Release -f net9.0-android35.0 \
+            -c Release -f net10.0-android36.0 \
             -o:release_aab/ \
             -p:ApplicationDisplayVersion=${{ steps.gitversion.outputs.majorMinorPatch }} \
             -p:ApplicationVersion=${{ github.run_number }} \
@@ -87,9 +107,10 @@ jobs:
             -p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - name: Build signed APK
+        if: github.event_name != 'pull_request' && github.repository == 'wildchair/ScheduleMADI' && github.ref == 'refs/heads/master'
         run: |
           dotnet publish ScheduleMADI/ScheduleMADI.csproj \
-            -c Release -f net9.0-android35.0 \
+            -c Release -f net10.0-android36.0 \
             -o:release_apk/ \
             -p:ApplicationDisplayVersion=${{ steps.gitversion.outputs.majorMinorPatch }} \
             -p:ApplicationVersion=${{ github.run_number }} \
@@ -112,7 +133,7 @@ jobs:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    if: github.repository == 'wildchair/ScheduleMADI' && github.ref == 'refs/heads/master' && github.event_name == 'push'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -147,7 +168,7 @@ jobs:
     name: Deploy to Google Play
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    if: github.repository == 'wildchair/ScheduleMADI' && github.ref == 'refs/heads/master' && github.event_name == 'push'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
