@@ -16,6 +16,10 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -25,25 +29,73 @@ jobs:
         with:
           global-json-file: global.json
           
+      # Единственный тестовый проект решения; MAUI не нужен этому Ubuntu job.
+      # При добавлении тестовых проектов расширьте ОБЕ команды restore/test.
       - name: Restore dependencies
         run: dotnet restore ScheduleMadi.Tests/ScheduleMadi.Tests.csproj
 
       - name: Run Tests
-        # Флаг --logger "trx" нужен для генерации отчетов в формате, понятном GitHub
-        run: dotnet test ScheduleMadi.Tests/ScheduleMadi.Tests.csproj --no-restore --verbosity normal --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test ScheduleMadi.Tests/ScheduleMadi.Tests.csproj --no-restore --verbosity normal --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+
+      # Summary не требует write-token и доступен также для PR из форков.
+      - name: Test Results Summary
+        if: always()
+        shell: python
+        run: |
+          import html
+          import os
+          from collections import Counter
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          def text(value):
+              return html.escape(value or "").replace("|", "&#124;").replace("\n", " ").replace("\r", " ")
+
+          reports = sorted(Path("TestResults").glob("*.trx"))
+          lines = ["## Test results", ""]
+          if not reports:
+              lines += ["No TRX report was produced. Check the restore/test step logs.", ""]
+          for report in reports:
+              root = ET.parse(report).getroot()
+              ns = {"t": "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"}
+              results = root.findall(".//t:UnitTestResult", ns)
+              counts = Counter(r.get("outcome", "Unknown") for r in results)
+              lines += ["### " + text(report.name), "", ", ".join(f"{text(k)}: {v}" for k, v in sorted(counts.items())) or "No completed tests.", ""]
+              lines += ["| Test | Outcome | Duration |", "| --- | --- | --- |"]
+              for result in results:
+                  lines.append("| " + " | ".join(text(result.get(k)) for k in ("testName", "outcome", "duration")) + " |")
+              lines.append("")
+              for result in results:
+                  if result.get("outcome") in ("Passed", "NotExecuted"):
+                      continue
+                  details = "\n".join(result.find("t:Output", ns).itertext()) if result.find("t:Output", ns) is not None else "No failure details recorded."
+                  lines += ["<details><summary>" + text(result.get("testName")) + "</summary>", "", "<pre>" + html.escape(details[:16000]) + "</pre>", "", "</details>", ""]
+              for info in root.findall(".//t:RunInfo", ns):
+                  lines += ["<pre>" + html.escape("".join(info.itertext())[:16000]) + "</pre>", ""]
+          lines += ["Full TRX files are available in the test-results artifact.", ""]
+          body = "\n".join(lines).encode("utf-8")
+          if len(body) > 900000:
+              body = body[:900000] + b"\n\nSummary truncated; see the full TRX artifact.\n"
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as output:
+              output.write(body.decode("utf-8", errors="ignore"))
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always() && github.event_name != 'pull_request'
+        # Fork/Dependabot PR имеют read-only token; отчёт выше остаётся доступен.
+        if: >-
+          always() && hashFiles('TestResults/*.trx') != '' && github.actor != 'dependabot[bot]' &&
+          (github.event_name != 'pull_request' ||
+          (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]'))
         with:
-          files: "**/*.trx"
+          files: "TestResults/*.trx"
+          job_summary: false
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v7
         if: always()
         with:
           name: test-results
-          path: "**/*.trx"
+          path: "TestResults/*.trx"
 
   build:
     name: Build MAUI Android
