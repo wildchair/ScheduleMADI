@@ -1,51 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:ScheduleMADI"
-             x:Class="ScheduleMADI.MainPage" x:Name="this"
+             x:Class="ScheduleMADI.MainPage"
              Loaded="Mainpage_Appearing" x:DataType="controls:MainPageVM">
 
-    <StackLayout VerticalOptions="FillAndExpand">
-        <Grid Margin="15">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <DatePicker x:Name="DP" Format="d MMMM, dddd" HorizontalOptions="Start"
-                        MinimumDate="{Binding MinDate, Mode=TwoWay}" 
-                        Date="{Binding withoutCarouselVM.DatepickerDate, Mode=TwoWay}"
-                        MaximumDate="{Binding MaxDate, Mode=TwoWay}" IsEnabled="{Binding Datepicker_is_enabled, Mode=TwoWay}"/>
-
-            
-            <Label Grid.Column="1" HorizontalTextAlignment="End" VerticalTextAlignment="Center" 
-                   Text="{Binding GroupLabel, Mode=TwoWay}"/>
-
+    <Grid RowDefinitions="Auto,1,*">
+        <Grid Margin="15" ColumnDefinitions="*,*">
+            <DatePicker Format="d MMMM, dddd" HorizontalOptions="Start"
+                        MinimumDate="{Binding MinDate}"
+                        MaximumDate="{Binding MaxDate}"
+                        Date="{Binding Carousel.SelectedDate, Mode=TwoWay}"
+                        IsEnabled="{Binding Datepicker_is_enabled}" />
+            <Label Grid.Column="1" HorizontalTextAlignment="End"
+                   VerticalTextAlignment="Center" Text="{Binding GroupLabel}" />
         </Grid>
 
-        <Border></Border>
+        <Border Grid.Row="1" />
 
-        <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand">
-            <CollectionView x:Name="cv" ItemsSource="{Binding  withoutCarouselVM.CurrentDay.Lessons}" 
-                            EmptyView="{Binding EmptyString}" VerticalOptions="FillAndExpand" ChildAdded="cv_ChildAdded">
-                <CollectionView.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="TapRecognizer" NumberOfTapsRequired ="{Binding withoutCarouselVM.TapNums, Mode=TwoWay}"
-                                          Tapped="TapGestureRecognizer_Tapped"/>
-                </CollectionView.GestureRecognizers>
+        <Label Grid.Row="2" Text="{Binding EmptyString}" Margin="20"
+               HorizontalTextAlignment="Center" VerticalOptions="Center">
+            <Label.Triggers>
+                <DataTrigger TargetType="Label" Binding="{Binding Datepicker_is_enabled}" Value="True">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </Label.Triggers>
+        </Label>
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="controls:Lesson">
-                        <controls:SubjectCard
-                                  CardDay="{Binding CardDay, Mode=OneWay}" CardName="{Binding CardName, Mode=OneWay}"
-                                  CardProf="{Binding CardProf, Mode=OneWay}" CardRoom="{Binding CardRoom, Mode=OneWay}"
-                                  CardTime="{Binding CardTime, Mode=OneWay}" CardType="{Binding CardType, Mode=OneWay}"/>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
-    </StackLayout>
+        <CarouselView x:Name="ScheduleCarousel" Grid.Row="2"
+                      ItemsSource="{Binding Carousel.Days}"
+                      Position="{Binding Carousel.Position, Mode=OneWay}"
+                      PositionChanged="Carousel_PositionChanged"
+                      Loaded="Carousel_Loaded" Unloaded="Carousel_Unloaded"
+                      IsVisible="{Binding Datepicker_is_enabled}"
+                      IsSwipeEnabled="{Binding Datepicker_is_enabled}"
+                      Loop="False" IsBounceEnabled="False">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="controls:ScheduleDate">
+                    <Grid>
+                        <CollectionView ItemsSource="{Binding Lessons}"
+                                        EmptyView="На этот день занятий нет."
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="controls:Lesson">
+                                    <controls:SubjectCard
+                                        CardDate="{Binding Source={RelativeSource AncestorType={x:Type controls:ScheduleDate}}, Path=Date, x:DataType=controls:ScheduleDate}"
+                                        CardDay="{Binding CardDay}"
+                                        CardName="{Binding CardName}"
+                                        CardProf="{Binding CardProf}"
+                                        CardRoom="{Binding CardRoom}"
+                                        CardTime="{Binding CardTime}"
+                                        CardType="{Binding CardType}" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+    </Grid>
 </ContentPage>

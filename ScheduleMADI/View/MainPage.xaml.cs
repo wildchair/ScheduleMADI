@@ -1,45 +1,116 @@
-﻿namespace ScheduleMADI;
+using System.ComponentModel;
+
+namespace ScheduleMADI;
 
 /// <summary>
 /// ПУБЛИКОВАТЬ НУЖНО ВСЁ ИЗ "ОПУБЛИКОВАТЬ", НЕ ИЗ КОНСОЛИ!!!!!! КОНСОЛЬ КРИВО ПОДПИСЫВАЕТ!!!
 /// </summary>
 public partial class MainPage : ContentPage
 {
-    MainPageVM mainPageVM = new();
+    private readonly MainPageVM mainPageVM = new();
+    private bool carouselLoaded;
+    private bool restoringPosition;
+    private bool pageAppeared;
+    private bool acceptingUserPosition;
+    private int restoreGeneration;
+
     public MainPage()
     {
         InitializeComponent();
+        mainPageVM.PropertyChanged += MainPageVM_PropertyChanged;
+        mainPageVM.Carousel.PropertyChanged += Carousel_PropertyChanged;
+        ScheduleCarousel.HandlerChanging += (_, _) => InvalidateRestore();
+        ScheduleCarousel.HandlerChanged += (_, _) => RestoreCarouselPosition();
         BindingContext = mainPageVM;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        pageAppeared = true;
+        RestoreCarouselPosition();
+    }
+
+    protected override void OnDisappearing()
+    {
+        pageAppeared = false;
+        InvalidateRestore();
+        base.OnDisappearing();
+    }
+
+    private void InvalidateRestore()
+    {
+        restoringPosition = true;
+        restoreGeneration++;
     }
 
     private async void Mainpage_Appearing(object sender, EventArgs e)
     {
-        if (!Preferences.Default.ContainsKey("tap_instr"))
+        if (!Preferences.Default.ContainsKey("swipe_instr"))
         {
-            await DisplayAlertAsync("Подсказка", "Двойное касание правой/левой части экрана позволяет переключаться между днями." +
+            await DisplayAlertAsync("Подсказка",
+                "Перелистывайте расписание свайпом влево или вправо. " +
                 "Конкретную дату можно выбрать в календаре.", "Ок");
-            Preferences.Default.Set("tap_instr", 1);
+            Preferences.Default.Set("swipe_instr", 1);
         }
     }
 
-    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    private void Carousel_Loaded(object sender, EventArgs e)
     {
-        Vibration.Vibrate(30);
-
-        if (Window.Width / 2 > e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate > mainPageVM.MinDate)
-            mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(-1);
-        else if (Window.Width / 2 < e.GetPosition(null).Value.X && mainPageVM.withoutCarouselVM.DatepickerDate < mainPageVM.MaxDate)
-            mainPageVM.withoutCarouselVM.DatepickerDate = mainPageVM.withoutCarouselVM.DatepickerDate.AddDays(1);
+        carouselLoaded = true;
+        RestoreCarouselPosition();
     }
 
-    private void cv_ChildAdded(object sender, ElementEventArgs e)
+    private void Carousel_Unloaded(object sender, EventArgs e)
     {
-        if (DP.Date is not DateTime selectedDate)
+        carouselLoaded = false;
+        InvalidateRestore();
+    }
+
+    private void Carousel_PositionChanged(object sender, PositionChangedEventArgs e)
+    {
+        if (!pageAppeared || !carouselLoaded || restoringPosition || !mainPageVM.Datepicker_is_enabled)
             return;
 
-        if (selectedDate.Date == DateTime.Today.Date)
-            Task.Run(() => (e.Element as SubjectCard).ProgressLoop());
-        else if (selectedDate.Date < DateTime.Today.Date)
-            Task.Run(() => (e.Element as SubjectCard).ProgressTo(1, 500, Easing.Linear));
+        acceptingUserPosition = true;
+        try { mainPageVM.Carousel.Position = e.CurrentPosition; }
+        finally { acceptingUserPosition = false; }
+    }
+
+    private void Carousel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        // Выбор даты в нативном календаре не обязан повторно вызывать OnAppearing страницы.
+        if (!acceptingUserPosition && e.PropertyName == nameof(CarouselVM.Position))
+            RestoreCarouselPosition();
+    }
+
+    private void MainPageVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MainPageVM.Datepicker_is_enabled) && mainPageVM.Datepicker_is_enabled)
+            RestoreCarouselPosition();
+    }
+
+    private void RestoreCarouselPosition()
+    {
+        restoringPosition = true;
+        var generation = ++restoreGeneration;
+        var position = mainPageVM.Carousel.Position;
+        Dispatcher.Dispatch(() =>
+        {
+            if (generation != restoreGeneration || !pageAppeared || !carouselLoaded || !mainPageVM.Datepicker_is_enabled)
+                return;
+
+            try
+            {
+                // Position может уже совпадать с VM, пока нативная страница осталась на прежнем дне.
+                ScheduleCarousel.Position = position;
+                ScheduleCarousel.ScrollTo(position, position: ScrollToPosition.Center, animate: false);
+            }
+            finally
+            {
+                if (generation == restoreGeneration)
+                    restoringPosition = false;
+            }
+        });
     }
 }
