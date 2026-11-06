@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -16,6 +16,15 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../ScheduleMADI/Model/Day.cs" Link="App/Day.cs" />
+    <Compile Include="../ScheduleMADI/Model/Lesson.cs" Link="App/Lesson.cs" />
+    <Compile Include="../ScheduleMADI/Model/WeekMADI.cs" Link="App/WeekMADI.cs" />
+    <Compile Include="../ScheduleMADI/Model/ScheduleDate.cs" Link="App/ScheduleDate.cs" />
+    <Compile Include="../ScheduleMADI/Model/LessonProgress.cs" Link="App/LessonProgress.cs" />
+    <Compile Include="../ScheduleMADI/ViewModel/CarouselVM.cs" Link="App/CarouselVM.cs" />
   </ItemGroup>
 
 </Project>

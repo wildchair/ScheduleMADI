@@ -1,8 +1,17 @@
+using Microsoft.Maui.Dispatching;
+
 namespace ScheduleMADI;
 
 public partial class SubjectCard : ContentView
 {
-    public static readonly BindableProperty CardTimeProperty = BindableProperty.Create(nameof(CardTime), typeof(string), typeof(SubjectCard), string.Empty);
+    public static readonly BindableProperty CardDateProperty = BindableProperty.Create(nameof(CardDate), typeof(DateTime), typeof(SubjectCard), default(DateTime), propertyChanged: OnProgressInputChanged);
+    public DateTime CardDate
+    {
+        get => (DateTime)GetValue(CardDateProperty);
+        set => SetValue(CardDateProperty, value);
+    }
+
+    public static readonly BindableProperty CardTimeProperty = BindableProperty.Create(nameof(CardTime), typeof(string), typeof(SubjectCard), string.Empty, propertyChanged: OnProgressInputChanged);
     public string CardTime
     {
         get => (string)GetValue(SubjectCard.CardTimeProperty);
@@ -44,50 +53,43 @@ public partial class SubjectCard : ContentView
         set => SetValue(SubjectCard.CardRoomProperty, value);
     }
 
+    private readonly IDispatcherTimer progressTimer;
+    private bool isLoaded;
+
     public SubjectCard()
     {
         InitializeComponent();
+        progressTimer = Dispatcher.CreateTimer();
+        progressTimer.Interval = TimeSpan.FromSeconds(1);
+        progressTimer.Tick += (_, _) => UpdateProgress();
+        Loaded += (_, _) =>
+        {
+            isLoaded = true;
+            UpdateProgress();
+        };
+        Unloaded += (_, _) =>
+        {
+            isLoaded = false;
+            progressTimer.Stop();
+        };
     }
 
-    public async Task ProgressLoop()
-    {
-        string[] times;
-        TimeSpan start;
-        TimeSpan end;
+    private static void OnProgressInputChanged(BindableObject bindable, object oldValue, object newValue) =>
+        ((SubjectCard)bindable).UpdateProgress();
 
-        if (CardTime == null)
+    private void UpdateProgress()
+    {
+        if (!isLoaded)
+            return;
+
+        var now = DateTime.Now;
+        bar.Progress = LessonProgress.Calculate(CardDate, CardTime, now);
+        if (CardDate.Date == now.Date && bar.Progress < 1)
         {
-            start = TimeSpan.FromMinutes(0);
-            end = TimeSpan.FromMinutes(1440);
+            if (!progressTimer.IsRunning)
+                progressTimer.Start();
         }
         else
-        {
-            times = CardTime.Split("-");
-            start = TimeSpan.Parse(times[0]);
-            end = TimeSpan.Parse(times[1]);
-        }
-
-        if (DateTime.Now.TimeOfDay >= end)
-        {
-            await bar.ProgressTo(1, 500, Easing.Linear);
-            return;
-        }
-
-        var duration = (end - start);
-
-        while (DateTime.Now.TimeOfDay < end)
-        {
-            if (DateTime.Now.TimeOfDay >= start)
-            {
-                await bar.ProgressTo((DateTime.Now.TimeOfDay - start).TotalMinutes / duration.TotalMinutes, 500, Easing.Linear);
-                await bar.ProgressTo(1, (uint)(end - DateTime.Now.TimeOfDay).TotalMilliseconds, Easing.Linear);
-                return;
-            }
-            await Task.Delay(60000);
-        }
-    }
-    public async Task ProgressTo(double value, uint length, Easing easing)
-    {
-        await bar.ProgressTo(value, length, easing);
+            progressTimer.Stop();
     }
 }
