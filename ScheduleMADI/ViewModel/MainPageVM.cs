@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,7 +8,7 @@ namespace ScheduleMADI
 {
     public class MainPageVM : INotifyPropertyChanged
     {
-        public WithoutCarouselVM withoutCarouselVM { get; set; }
+        public CarouselVM Carousel { get; }
         public List<Day> Schedule//принимает семидневное, устанавливает 14дневное
         {
             get => schedule;
@@ -17,6 +17,7 @@ namespace ScheduleMADI
                 if (value == null)
                 {
                     schedule = null;
+                    Carousel.SetSchedule(schedule, DateTime.Today);
                     OnPropertyChanged();
                     return;
                 }
@@ -91,6 +92,7 @@ namespace ScheduleMADI
                         }
 
                 schedule = days1.Concat(days2).ToList();
+                Carousel.SetSchedule(schedule, DateTime.Today);
 
                 OnPropertyChanged();
             }
@@ -152,7 +154,7 @@ namespace ScheduleMADI
         {
             BufferedMADI.PropertyChanged += OnIdMADIPropertyChanged;
 
-            withoutCarouselVM = new(this);
+            Carousel = new(MinDate, MaxDate, DateTime.Today);
 
             LoadFirstData();//тут токен наверное не нужен, пусть грузит себе всё вместе и норм. Вопрос лишь в том,грузить все id или выборочно
 
@@ -219,7 +221,6 @@ namespace ScheduleMADI
 
             while (true)
             {
-                withoutCarouselVM.TapNums = 0;
                 EmptyString = "Загрузка расписания...";
 
                 try
@@ -278,6 +279,7 @@ namespace ScheduleMADI
                 if (Schedule != null)
                 {
                     Schedule.Clear();
+                    Carousel.SetSchedule(Schedule, DateTime.Today);
                     OnPropertyChanged(nameof(Schedule));
                 }
 
