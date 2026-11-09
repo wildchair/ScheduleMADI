@@ -15,7 +15,7 @@ public partial class SettingPage : ContentPage
     {
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         await Clipboard.Default.SetTextAsync("5536 9137 8567 4439");
-        var toast = Toast.Make("Скопировано", ToastDuration.Short);
+        var toast = Toast.Make("РЎРєРѕРїРёСЂРѕРІР°РЅРѕ", ToastDuration.Short);
         await toast.Show(cancellationTokenSource.Token);
     }
 }
