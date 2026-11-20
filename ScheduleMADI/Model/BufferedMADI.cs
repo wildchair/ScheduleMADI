@@ -5,6 +5,9 @@ namespace ScheduleMADI
 {
     internal static class BufferedMADI
     {
+        private const string ScheduleKey = "schedule_cache";
+        private const string ExamsKey = "exam_cache";
+
         private static KeyValuePair<string, string> id;
         public static KeyValuePair<string, string> Id
         {
@@ -25,8 +28,7 @@ namespace ScheduleMADI
             set
             {
                 bufferedSchedule = value;
-                Preferences.Default.Set("buff_sche", value.Value);
-                Preferences.Default.Set("buff_id", value.Key);
+                Preferences.Default.Set(ScheduleKey, EncodeCache(value));
             }
         }
 
@@ -49,33 +51,31 @@ namespace ScheduleMADI
             set
             {
                 bufferedExamSchedule = value;
-                Preferences.Default.Set("buff_exam_sche", value.Value);
-                Preferences.Default.Set("buff_id", value.Key);
+                Preferences.Default.Set(ExamsKey, EncodeCache(value));
             }
         }
 
-        public static KeyValuePair<string, string> LoadSavedID()//загрузка сохраненного idшника
+        public static void Restore()
         {
-            return new KeyValuePair<string, string>(Preferences.Default.Get("id_group", "8810"),//данные по-умолчанию никогда не
-                                                    Preferences.Default.Get("name_group", "1бАС1"));//возникнут, тк вызовы функции
-        }                                                                                           //сопровождаются проверкой наличия
+            if (Preferences.Default.ContainsKey("id_group"))
+                id = new(Preferences.Default.Get("id_group", string.Empty),
+                         Preferences.Default.Get("name_group", string.Empty));
 
-        public static KeyValuePair<string, string> LoadBufferedSchedule()
-        {
-            return new KeyValuePair<string, string>(Preferences.Default.Get("buff_id", String.Empty),
-                                                    Preferences.Default.Get("buff_sche", String.Empty));
+            bufferedDay = new(Preferences.Default.Get("day", DateTime.MinValue),
+                              Preferences.Default.Get<string>("typeofWeek", null));
+            bufferedSchedule = DecodeCache(Preferences.Default.Get(ScheduleKey, string.Empty));
+            bufferedExamSchedule = DecodeCache(Preferences.Default.Get(ExamsKey, string.Empty));
         }
 
-        public static KeyValuePair<string, string> LoadBufferedExamSchedule()
-        {
-            return new KeyValuePair<string, string>(Preferences.Default.Get("buff_id", String.Empty),
-                                                    Preferences.Default.Get("buff_exam_sche", String.Empty));
-        }
+        // Идентификатор и HTML записываются вместе, чтобы не связать старые данные с новой группой.
+        private static string EncodeCache(KeyValuePair<string, string> value) => value.Key + "\n" + value.Value;
 
-        public static KeyValuePair<DateTime, string> LoadBufferedDay()
+        private static KeyValuePair<string, string> DecodeCache(string entry)
         {
-            return new KeyValuePair<DateTime, string>(Preferences.Default.Get("day", DateTime.MinValue),
-                                                    Preferences.Default.Get("typeofWeek", String.Empty));
+            var separator = entry.IndexOf('\n');
+            return separator > 0 && separator < entry.Length - 1
+                ? new(entry[..separator], entry[(separator + 1)..])
+                : default;
         }
 
         public static event PropertyChangedEventHandler PropertyChanged;

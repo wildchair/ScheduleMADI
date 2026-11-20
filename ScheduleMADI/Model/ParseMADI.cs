@@ -227,10 +227,6 @@ namespace ScheduleMADI
 
             StringReader reader = new(html);
 
-            foreach (var day in days)//это че такое вообще?
-                if (day.Name != DayOfWeek.Sunday)
-                    day.Lessons.Clear();//как это родилось?
-
             string buff;
             for (int row = 0; (buff = reader.ReadLine()) != null; row++)
             {
