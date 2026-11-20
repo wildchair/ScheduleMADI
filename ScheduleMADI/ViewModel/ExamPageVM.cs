@@ -66,7 +66,7 @@ namespace ScheduleMADI
 
             if (BufferedMADI.Id.Value != null)
             {
-                LoadSecondData(false, _tokenDistributor.GetNewToken());
+                _ = LoadSecondData(_tokenDistributor.GetNewToken());
                 GroupLabel = BufferedMADI.Id.Value;
             }
             else
@@ -74,56 +74,72 @@ namespace ScheduleMADI
 
         }
 
-        private async Task<bool> LoadSecondData(bool bufferedLoaded, CancellationToken cancellationToken)//загрузка по группе
+        private async Task LoadSecondData(CancellationToken cancellationToken)
         {
-            while (true)
+            var requested = BufferedMADI.Id;
+            bool showingCache = false;
+
+            while (!cancellationToken.IsCancellationRequested)
             {
                 EmptyString = "Загрузка экзаменов...";
-
                 try
                 {
-                    var exams = await ParseMADI.GetExamSchedule(BufferedMADI.Id, cancellationToken);
+                    var exams = await ParseMADI.GetExamSchedule(requested, cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
                     ExamShedule = exams.ToObservableCollection();
+                    EmptyString = string.Empty;
                     break;
                 }
-                catch (ParseMADIException ex)
+                catch (ParseMADIException error)
                 {
-                    EmptyString = ex.Message;
-                    return false;
+                    if (!cancellationToken.IsCancellationRequested)
+                        EmptyString = error.Message;
+                    return;
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {
-                    //CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                    //var toast = Toast.Make("Отменено", ToastDuration.Short);
-                    //await toast.Show(cancellationTokenSource.Token);
-                    return false;
+                    return;
                 }
-                catch
+                catch (Exception error)
                 {
-                    if (BufferedMADI.BufferedExamSchedule.Value != null &&
-                        BufferedMADI.Id.Key == BufferedMADI.BufferedExamSchedule.Key && !bufferedLoaded)
-                    {
-                        var exams = await ParseMADI.GetExamScheduleFromHTML(BufferedMADI.BufferedExamSchedule.Value);
-                        ExamShedule = exams.ToObservableCollection();
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
 
-                        bufferedLoaded = true;
-                    }
+                    System.Diagnostics.Debug.WriteLine(error);
+                    if (!showingCache)
+                        showingCache = await TryShowCachedExams(requested.Key, cancellationToken);
 
-                    for (int i = 5; i > 0; i--)
-                    {
-                        EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
-                        await Task.Delay(1000);
-                    }
+                    if (!await MainPageVM.WaitForRetry(seconds =>
+                        EmptyString = $"Не удалось подключиться. Повторная попытка через: {seconds} секунд...", cancellationToken))
+                        return;
                 }
             }
 
-            if (bufferedLoaded)
+            if (showingCache && !cancellationToken.IsCancellationRequested)
+                await Toast.Make("Подключение восстановлено", ToastDuration.Short).Show();
+        }
+
+        private async Task<bool> TryShowCachedExams(string groupId, CancellationToken cancellationToken)
+        {
+            var cached = BufferedMADI.BufferedExamSchedule;
+            if (string.IsNullOrEmpty(groupId) || groupId != cached.Key || string.IsNullOrEmpty(cached.Value))
+                return false;
+
+            List<Exam> exams;
+            try
             {
-                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                var toast = Toast.Make("Подключение восстановлено", ToastDuration.Short);
-                await toast.Show(cancellationTokenSource.Token);
+                exams = await ParseMADI.GetExamScheduleFromHTML(cached.Value);
+            }
+            catch (Exception error)
+            {
+                System.Diagnostics.Debug.WriteLine(error);
+                return false;
             }
 
+            if (cancellationToken.IsCancellationRequested || groupId != BufferedMADI.Id.Key)
+                return false;
+
+            ExamShedule = exams.ToObservableCollection();
             return true;
         }
 
@@ -140,7 +156,7 @@ namespace ScheduleMADI
 
                 _tokenDistributor.CancelActiveToken();
 
-                LoadSecondData(false, _tokenDistributor.GetNewToken());
+                _ = LoadSecondData(_tokenDistributor.GetNewToken());
             }
         }
 

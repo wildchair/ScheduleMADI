@@ -149,126 +149,153 @@ namespace ScheduleMADI
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly TokenDistributor tokenDistributor = new();
+        private bool initialDataLoaded;
 
         public MainPageVM()
         {
             BufferedMADI.PropertyChanged += OnIdMADIPropertyChanged;
-
             Carousel = new(MinDate, MaxDate, DateTime.Today);
+            GroupLabel = BufferedMADI.Id.Value;
 
-            LoadFirstData();//тут токен наверное не нужен, пусть грузит себе всё вместе и норм. Вопрос лишь в том,грузить все id или выборочно
-
-            if (BufferedMADI.Id.Value == null)
-                EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";
-            else
-                GroupLabel = BufferedMADI.Id.Value;
+            // Сначала загружаем справочники и учебную неделю, затем расписание выбранной группы.
+            _ = LoadFirstData();
         }
 
-        private async Task<bool> LoadFirstData()//загрузка с нуля
+        private async Task LoadFirstData()
         {
-            Datepicker_is_enabled = false;
-            bool bufferedLoaded = false;
+            string cachedGroup = null;
 
             while (true)
             {
                 EmptyString = "Загрузка групп и недели...";
-
-
-                var getGroups = ParseMADI.GetGroups(new CancellationToken());
-                var getWeek = ParseMADI.GetWeek(new CancellationToken());
-                var GetProfessors = ParseMADI.GetProfessors(new CancellationToken());
                 try
                 {
-                    await Task.WhenAll(getGroups, getWeek, GetProfessors);
+                    await Task.WhenAll(ParseMADI.GetGroups(CancellationToken.None),
+                        ParseMADI.GetWeek(CancellationToken.None),
+                        ParseMADI.GetProfessors(CancellationToken.None));
                     break;
                 }
-                catch(Exception ex)
+                catch (Exception error)
                 {
-                    if (BufferedMADI.BufferedDay.Value != null && !bufferedLoaded
-                        && BufferedMADI.Id.Key == BufferedMADI.BufferedSchedule.Key)
+                    System.Diagnostics.Debug.WriteLine(error);
+                    var requested = BufferedMADI.Id;
+                    if ((requested.Key != cachedGroup || Schedule is not { Count: > 0 })
+                        && await TryShowCachedSchedule(requested.Key, CancellationToken.None, restoreWeek: true))
                     {
-                        WeekMADI.Week = BufferedMADI.BufferedDay.Value;
-                        WeekMADI.Week = WeekMADI.WeekByDate(BufferedMADI.BufferedDay.Key, DateTime.Now.Date);
-                        Schedule = await ParseMADI.GetScheduleFromHTML(BufferedMADI.BufferedSchedule.Value);
-
-                        Datepicker_is_enabled = true;
-
-                        CancellationTokenSource cancellationToken = new CancellationTokenSource();
-                        var toast1 = Toast.Make($"Загружено расписание от {BufferedMADI.BufferedDay.Key.Date.ToShortDateString()}.", ToastDuration.Long);
-                        await toast1.Show(cancellationToken.Token);
-
-                        bufferedLoaded = true;
+                        cachedGroup = requested.Key;
+                        var toast = Toast.Make($"Загружено расписание от {BufferedMADI.BufferedDay.Key.Date.ToShortDateString()}.", ToastDuration.Long);
+                        await toast.Show();
                     }
 
-                    for (int i = 5; i > 0; i--)
-                    {
-                        EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
-                        await Task.Delay(1000);
-                    }
+                    await WaitForRetry(CancellationToken.None);
                 }
             }
 
+            initialDataLoaded = true;
             if (BufferedMADI.Id.Value != null)
-                return await LoadSecondData(bufferedLoaded, tokenDistributor.GetNewToken());
+                await LoadSecondData(cachedGroup == BufferedMADI.Id.Key && Schedule is { Count: > 0 },
+                    tokenDistributor.GetNewToken());
+            else
+                EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";
+        }
 
-            EmptyString = "Введите группу. \"Настройки\" -> \"Группа\"";
+        private async Task LoadSecondData(bool showingCache, CancellationToken cancellationToken)
+        {
+            var requested = BufferedMADI.Id;
+            Datepicker_is_enabled = showingCache;
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                EmptyString = "Загрузка расписания...";
+                try
+                {
+                    var schedule = await ParseMADI.GetSchedule(requested, cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    Schedule = schedule;
+                    Datepicker_is_enabled = true;
+                    EmptyString = string.Empty;
+                    break;
+                }
+                catch (ParseMADIException error)
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                        EmptyString = error.Message;
+                    return;
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                catch (Exception error)
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
+
+                    System.Diagnostics.Debug.WriteLine(error);
+                    if (!showingCache)
+                        showingCache = await TryShowCachedSchedule(requested.Key, cancellationToken);
+
+                    if (!await WaitForRetry(cancellationToken))
+                        return;
+                }
+            }
+
+            if (showingCache && !cancellationToken.IsCancellationRequested)
+                await Toast.Make("Подключение восстановлено", ToastDuration.Short).Show();
+        }
+
+        private async Task<bool> TryShowCachedSchedule(string groupId, CancellationToken cancellationToken, bool restoreWeek = false)
+        {
+            var cached = BufferedMADI.BufferedSchedule;
+            var week = BufferedMADI.BufferedDay;
+            if (string.IsNullOrEmpty(groupId) || cached.Key != groupId || string.IsNullOrEmpty(cached.Value)
+                || (restoreWeek && (week.Value is not ("Числитель" or "Знаменатель") || week.Key == DateTime.MinValue)))
+                return false;
+
+            List<Day> schedule;
+            try
+            {
+                schedule = await ParseMADI.GetScheduleFromHTML(cached.Value);
+            }
+            catch (Exception error)
+            {
+                System.Diagnostics.Debug.WriteLine(error);
+                return false;
+            }
+
+            if (schedule?.Count != 7 || cancellationToken.IsCancellationRequested || groupId != BufferedMADI.Id.Key)
+                return false;
+
+            if (restoreWeek)
+            {
+                WeekMADI.Week = week.Value;
+                WeekMADI.Week = WeekMADI.WeekByDate(week.Key.Date, DateTime.Today);
+            }
+            Schedule = schedule;
+            Datepicker_is_enabled = true;
             return true;
         }
 
-        private async Task<bool> LoadSecondData(bool bufferedLoaded, CancellationToken cancellationToken)//загрузка по группе
+        private Task<bool> WaitForRetry(CancellationToken cancellationToken) =>
+            WaitForRetry(seconds => EmptyString = $"Не удалось подключиться. Повторная попытка через: {seconds} секунд...",
+                cancellationToken);
+
+        internal static async Task<bool> WaitForRetry(Action<int> reportRemaining, CancellationToken cancellationToken)
         {
-            Datepicker_is_enabled = false;
-
-            while (true)
+            try
             {
-                EmptyString = "Загрузка расписания...";
-
-                try
+                for (int seconds = 5; seconds > 0; seconds--)
                 {
-                    Schedule = await ParseMADI.GetSchedule(BufferedMADI.Id, cancellationToken);
-                    break;
+                    cancellationToken.ThrowIfCancellationRequested();
+                    reportRemaining(seconds);
+                    await Task.Delay(1000, cancellationToken);
                 }
-                catch (ParseMADIException ex)
-                {
-                    EmptyString = ex.Message;
-                    return false;
-                }
-                catch (OperationCanceledException)
-                {
-                    //CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                    //var toast = Toast.Make("Отменено", ToastDuration.Short);
-                    //await toast.Show(cancellationTokenSource.Token);
-                    return false;
-                }
-                catch
-                {
-                    if (BufferedMADI.BufferedSchedule.Value != null &&
-                        BufferedMADI.Id.Key == BufferedMADI.BufferedSchedule.Key && !bufferedLoaded)
-                    {
-                        Schedule = await ParseMADI.GetScheduleFromHTML(BufferedMADI.BufferedSchedule.Value);
-
-                        Datepicker_is_enabled = true;
-                        bufferedLoaded = true;
-                    }
-
-                    for (int i = 5; i > 0; i--)
-                    {
-                        EmptyString = $"Не удалось подключиться. Повторная попытка через: {i} секунд...";
-                        await Task.Delay(1000);
-                    }
-                }
+                return !cancellationToken.IsCancellationRequested;
             }
-
-            Datepicker_is_enabled = true;
-
-            if (bufferedLoaded)
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
-                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                var toast = Toast.Make("Подключение восстановлено", ToastDuration.Short);
-                await toast.Show(cancellationTokenSource.Token);
+                return false;
             }
-
-            return true;
         }
 
         private void OnIdMADIPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -283,9 +310,12 @@ namespace ScheduleMADI
                     OnPropertyChanged(nameof(Schedule));
                 }
 
-                tokenDistributor.CancelActiveToken();
-
-                LoadSecondData(false, tokenDistributor.GetNewToken());
+                Datepicker_is_enabled = false;
+                if (initialDataLoaded)
+                {
+                    tokenDistributor.CancelActiveToken();
+                    _ = LoadSecondData(false, tokenDistributor.GetNewToken());
+                }
             }
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)
